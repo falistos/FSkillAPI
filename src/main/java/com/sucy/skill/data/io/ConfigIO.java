@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * IO manager that saves/loads to a .yml configuration file
@@ -117,7 +118,7 @@ public class ConfigIO extends IOManager
     @Override
     public void saveAll()
     {
-        HashMap<String, PlayerAccounts> data = SkillAPI.getPlayerAccountData();
+        Map<String, PlayerAccounts> data = SkillAPI.getPlayerAccountData();
         ArrayList<String> keys = new ArrayList<String>(data.keySet());
         for (String key : keys)
             saveData(data.get(key));

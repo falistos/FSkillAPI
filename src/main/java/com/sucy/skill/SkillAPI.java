@@ -69,6 +69,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>The main class of the plugin which has the accessor methods into most of the API.</p>
@@ -79,7 +81,7 @@ public class SkillAPI extends JavaPlugin {
 
     private final HashMap<String, Skill>          skills  = new HashMap<>();
     private final HashMap<String, RPGClass>       classes = new HashMap<>();
-    private final HashMap<String, PlayerAccounts> players = new HashMap<>();
+    private final ConcurrentHashMap<String, PlayerAccounts> players = new ConcurrentHashMap<>();
     private final ArrayList<String>               groups  = new ArrayList<>();
 
     private final List<SkillAPIListener> listeners = new ArrayList<>();
@@ -574,7 +576,7 @@ public class SkillAPI extends JavaPlugin {
      *
      * @return all SkillAPI player data
      */
-    public static HashMap<String, PlayerAccounts> getPlayerAccountData() {
+    public static Map<String, PlayerAccounts> getPlayerAccountData() {
         return singleton().players;
     }
 
