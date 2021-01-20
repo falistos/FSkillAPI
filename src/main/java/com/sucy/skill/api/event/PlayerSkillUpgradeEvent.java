@@ -28,6 +28,7 @@ package com.sucy.skill.api.event;
 
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -64,6 +65,13 @@ public class PlayerSkillUpgradeEvent extends Event implements Cancellable
     public PlayerData getPlayerData()
     {
         return player;
+    }
+
+    /**
+     * @return bukkit player
+     */
+    public Player getPlayer() {
+        return player.getPlayer();
     }
 
     /**
