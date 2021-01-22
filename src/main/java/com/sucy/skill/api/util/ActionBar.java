@@ -29,9 +29,12 @@ package com.sucy.skill.api.util;
 import com.rit.sucy.reflect.Reflection;
 import com.rit.sucy.text.TextFormatter;
 import com.rit.sucy.version.VersionManager;
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.ActionBarShowsEvent;
 import com.sucy.skill.log.Logger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
@@ -115,11 +118,18 @@ public class ActionBar
         if (!initialized) initialize();
         if (!isSupported()) return;
 
+        ActionBarShowsEvent event = new ActionBarShowsEvent(player, message);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            return;
+        }
+
         try
         {
-            Object text = constructText.newInstance(TextFormatter.colorString(message));
+            Object text = constructText.newInstance(TextFormatter.colorString(event.getMessage()));
             Object data = constructPacket.newInstance(text, messageType);
-            Object handle = getHandle.invoke(player);
+            Object handle = getHandle.invoke(event.getPlayer());
             Object connection = Reflection.getValue(handle, "playerConnection");
             Method send = Reflection.getMethod(connection, "sendPacket", packet);
             send.invoke(connection, data);
