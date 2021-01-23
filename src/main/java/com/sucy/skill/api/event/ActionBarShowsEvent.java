@@ -13,6 +13,7 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 
 	private final Player player;
 	private final String message;
+	private boolean cancelled;
 
 	public ActionBarShowsEvent(Player player, String message) {
 		this.player = player;
@@ -39,7 +40,7 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 	 */
 	@Override
 	public boolean isCancelled() {
-		return false;
+		return cancelled;
 	}
 
 	/**
@@ -49,6 +50,6 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 	 */
 	@Override
 	public void setCancelled(boolean cancel) {
-
+		this.cancelled = cancel;
 	}
 }
