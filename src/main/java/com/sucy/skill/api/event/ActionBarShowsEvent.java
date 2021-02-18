@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Event called when a action bar shows
@@ -13,23 +14,43 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 
 	private final Player player;
 	private final String message;
+	private final JavaPlugin source;
 	private boolean cancelled;
 
-	public ActionBarShowsEvent(Player player, String message) {
+	public ActionBarShowsEvent(Player player, String message, JavaPlugin source)
+	{
 		this.player = player;
 		this.message = message;
+		this.source = source;
 	}
 
-	public Player getPlayer() {
+	/**
+	 * @return Who this action bar shows for
+	 */
+	public Player getPlayer()
+	{
 		return player;
 	}
 
-	public String getMessage() {
+	/**
+	 * @return Message for this action bar
+	 */
+	public String getMessage()
+	{
 		return message;
 	}
 
+	/**
+	 * @return Which plugin made the action bar
+	 */
+	public JavaPlugin getSource()
+	{
+		return source;
+	}
+
 	@Override
-	public HandlerList getHandlers() {
+	public HandlerList getHandlers()
+	{
 		return handlers;
 	}
 
@@ -39,7 +60,8 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 	 * @return true if this event is cancelled
 	 */
 	@Override
-	public boolean isCancelled() {
+	public boolean isCancelled()
+	{
 		return cancelled;
 	}
 
@@ -49,7 +71,8 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 	 * @param cancel true if you wish to cancel this event
 	 */
 	@Override
-	public void setCancelled(boolean cancel) {
+	public void setCancelled(boolean cancel)
+	{
 		this.cancelled = cancel;
 	}
 }

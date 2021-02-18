@@ -36,6 +36,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -115,13 +116,20 @@ public class ActionBar
      */
     public static void show(Player player, String message)
     {
+        JavaPlugin source = SkillAPI.getPlugin(SkillAPI.class);
+        show(player, message, source);
+    }
+
+    public static void show(Player player, String message, JavaPlugin source)
+    {
         if (!initialized) initialize();
         if (!isSupported()) return;
 
-        ActionBarShowsEvent event = new ActionBarShowsEvent(player, message);
+        ActionBarShowsEvent event = new ActionBarShowsEvent(player, message, source);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) {
+        if (event.isCancelled())
+        {
             return;
         }
 
