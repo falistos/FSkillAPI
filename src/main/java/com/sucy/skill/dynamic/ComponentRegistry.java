@@ -254,6 +254,7 @@ public class ComponentRegistry {
         register(new LightningMechanic());
         register(new ManaMechanic());
         register(new MessageMechanic());
+        register(new MythicSkillsMechanic());
         register(new ParticleMechanic());
         register(new ParticleAnimationMechanic());
         register(new ParticleEffectMechanic());

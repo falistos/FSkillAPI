@@ -21,4 +21,7 @@ public class MythicMobsHook {
     public static boolean isMonster(final LivingEntity target) {
         return MythicMobs.inst().getAPIHelper().isMythicMob(target);
     }
+    public static void skills(final  LivingEntity target,  final String skills) {
+        MythicMobs.inst().getAPIHelper().castSkill(target, skills);
+    }
 }
