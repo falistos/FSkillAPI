@@ -1478,7 +1478,7 @@ function ConditionValue()
 extend('ConditionDistance', 'Component');
 function ConditionDistance()
 {
-    this.super('距离', Type.CONDITION, true);
+    this.super('Distance', Type.CONDITION, true);
 
     this.description = '目标必须在设定的距离之内.';
 
