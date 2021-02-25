@@ -187,6 +187,7 @@ public class ComponentRegistry {
         register(new ClassLevelCondition());
         register(new CombatCondition());
         register(new CrouchCondition());
+        register(new DistanceCondition());
         register(new DirectionCondition());
         register(new ElevationCondition());
         register(new ElseCondition());

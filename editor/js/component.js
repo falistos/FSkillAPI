@@ -73,6 +73,7 @@ var Condition = {
     COMBAT:      { name: 'Combat',      container: true, construct: ConditionCombat     },
     CROUCH:      { name: 'Crouch',      container: true, construct: ConditionCrouch     },
     DIRECTION:   { name: 'Direction',   container: true, construct: ConditionDirection  },
+	DISTANCE:    { name: 'Distance',    container: true, construct: ConditionDistance   },
     ELEVATION:   { name: 'Elevation',   container: true, construct: ConditionElevation  },
     ELSE:        { name: 'Else',        container: true, construct: ConditionElse       },
     ENTITY_TYPE: { name: 'Entity Type', container: true, construct: ConditionEntityType },
@@ -141,6 +142,7 @@ var Mechanic = {
     LIGHTNING:           { name: 'Lightning',           container: false, construct: MechanicLightning          },
     MANA:                { name: 'Mana',                container: false, construct: MechanicMana               },
     MESSAGE:             { name: 'Message',             container: false, construct: MechanicMessage            },
+    MYTHICSKILLS:        { name: 'MythicSkills',        container: false, construct: MechanicMythicSkills       },
     PARTICLE:            { name: 'Particle',            container: false, construct: MechanicParticle           },
     PARTICLE_ANIMATION:  { name: 'Particle Animation',  container: false, construct: MechanicParticleAnimation  },
     PARTICLE_EFFECT:     { name: 'Particle Effect',     container: false, construct: MechanicParticleEffect     },
@@ -1473,6 +1475,21 @@ function ConditionValue()
     );
 }
 
+extend('ConditionDistance', 'Component');
+function ConditionDistance()
+{
+    this.super('距离', Type.CONDITION, true);
+
+    this.description = '目标必须在设定的距离之内.';
+
+    this.data.push(new AttributeValue('Min Value', 'min-value', 1, 0)
+        .setTooltip('The lower bound of the required value')
+    );
+    this.data.push(new AttributeValue('Max Value', 'max-value', 999, 0)
+        .setTooltip('The upper bound of the required value')
+    );
+}
+
 extend('ConditionWater', 'Component');
 function ConditionWater()
 {
@@ -2624,6 +2641,18 @@ function MechanicTrigger()
     this.data.push(new DoubleValue("Max Damage", "dmg-max", 999)
         .requireValue('trigger', damageTriggers)
         .setTooltip('The maximum damage that needs to be dealt')
+    );
+}
+
+extend('MechanicMythicSkills', 'Component');
+function MechanicMythicSkills()
+{
+    this.super('MythicSkills', Type.MECHANIC, false);
+
+    this.description = '施法MythicMobs的技能';
+
+    this.data.push(new StringValue('Skills', 'skills', 'skills')
+        .setTooltip('你要施法的MythicMobs技能')
     );
 }
 
