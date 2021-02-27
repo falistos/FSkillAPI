@@ -10,69 +10,79 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Event called when a action bar shows
  */
 public class ActionBarShowsEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private final Player player;
-	private final String message;
-	private final JavaPlugin source;
-	private boolean cancelled;
+    private final Player player;
+    private final String message;
+    private final JavaPlugin source;
+    private boolean cancelled;
 
-	public ActionBarShowsEvent(Player player, String message, JavaPlugin source)
-	{
-		this.player = player;
-		this.message = message;
-		this.source = source;
-	}
+    public ActionBarShowsEvent(Player player, String message, JavaPlugin source)
+    {
+        this.player = player;
+        this.message = message;
+        this.source = source;
+    }
 
-	/**
-	 * @return Who this action bar shows for
-	 */
-	public Player getPlayer()
-	{
-		return player;
-	}
+    /**
+     * @return Who this action bar shows for
+     */
+    public Player getPlayer()
+    {
+        return player;
+    }
 
-	/**
-	 * @return Message for this action bar
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
+    /**
+     * @return Message for this action bar
+     */
+    public String getMessage()
+    {
+        return message;
+    }
 
-	/**
-	 * @return Which plugin made the action bar
-	 */
-	public JavaPlugin getSource()
-	{
-		return source;
-	}
+    /**
+     * @return Which plugin made the action bar
+     */
+    public JavaPlugin getSource()
+    {
+        return source;
+    }
 
-	@Override
-	public HandlerList getHandlers()
-	{
-		return handlers;
-	}
+    /**
+     * @return gets the handlers for the event
+     */
+    @Override
+    public HandlerList getHandlers()
+    {
+        return handlers;
+    }
 
-	/**
-	 * Checks whether or not the event is cancelled
-	 *
-	 * @return true if this event is cancelled
-	 */
-	@Override
-	public boolean isCancelled()
-	{
-		return cancelled;
-	}
+    /**
+     * @return gets the handlers for the event
+     */
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	/**
-	 * Sets whether or not the event should be cancelled
-	 *
-	 * @param cancel true if you wish to cancel this event
-	 */
-	@Override
-	public void setCancelled(boolean cancel)
-	{
-		this.cancelled = cancel;
-	}
+    /**
+     * Checks whether or not the event is cancelled
+     *
+     * @return true if this event is cancelled
+     */
+    @Override
+    public boolean isCancelled()
+    {
+        return cancelled;
+    }
+
+    /**
+     * Sets whether or not the event should be cancelled
+     *
+     * @param cancel true if you wish to cancel this event
+     */
+    @Override
+    public void setCancelled(boolean cancel)
+    {
+        this.cancelled = cancel;
+    }
 }
