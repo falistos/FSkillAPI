@@ -273,6 +273,7 @@ public class ComponentRegistry {
         register(new SoundMechanic());
         register(new StatusMechanic());
         register(new TauntMechanic());
+        register(new TitleMechanic());
         register(new TriggerMechanic());
         register(new ValueAddMechanic());
         register(new ValueAttributeMechanic());
