@@ -34,6 +34,7 @@ import com.sucy.skill.api.event.ActionBarShowsEvent;
 import com.sucy.skill.log.Logger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -122,22 +123,28 @@ public class ActionBar
 
     public static void show(Player player, String message, JavaPlugin source)
     {
-        if (!initialized) initialize();
-        if (!isSupported()) return;
-
         ActionBarShowsEvent event = new ActionBarShowsEvent(player, message, source);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if (event.isCancelled())
-        {
-            return;
+        if (event.isCancelled()) return;
+
+        if (VersionManager.isVersionAtLeast(11000)) {
+            showViaSpigot(event.getPlayer(), event.getMessage());
+        } else {
+            showViaNMS(event.getPlayer(), event.getMessage());
         }
+    }
+
+    private static void showViaNMS(Player player, String message)
+    {
+        if (!initialized) initialize();
+        if (!isSupported()) return;
 
         try
         {
-            Object text = constructText.newInstance(TextFormatter.colorString(event.getMessage()));
+            Object text = constructText.newInstance(TextFormatter.colorString(message));
             Object data = constructPacket.newInstance(text, messageType);
-            Object handle = getHandle.invoke(event.getPlayer());
+            Object handle = getHandle.invoke(player);
             Object connection = Reflection.getValue(handle, "playerConnection");
             Method send = Reflection.getMethod(connection, "sendPacket", packet);
             send.invoke(connection, data);
@@ -149,5 +156,10 @@ public class ActionBar
             // Failed to send
             supported = false;
         }
+    }
+
+    private static void showViaSpigot(Player player, String message)
+    {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }

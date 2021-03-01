@@ -1,5 +1,6 @@
 package com.sucy.skill.api.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -19,6 +20,12 @@ public class ActionBarShowsEvent extends Event implements Cancellable {
 
     public ActionBarShowsEvent(Player player, String message, JavaPlugin source)
     {
+        this(player, message, source, !Bukkit.isPrimaryThread());
+    }
+
+    public ActionBarShowsEvent(Player player, String message, JavaPlugin source, boolean isAsync)
+    {
+        super(isAsync);
         this.player = player;
         this.message = message;
         this.source = source;

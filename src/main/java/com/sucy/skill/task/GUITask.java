@@ -194,11 +194,7 @@ public class GUITask extends RepeatThreadTask
                     Object value = DynamicSkill.getCastData(player).get(key);
                     filtered = filtered.replace("{value:" + key + "}", (value == null ? "None" : value.toString()));
                 }
-                if (VersionManager.isVersionAtLeast(11000)) {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(filtered));
-                } else {
-                    ActionBar.show(player, filtered);
-                }
+                ActionBar.show(player, filtered);
             }
         }
     }
