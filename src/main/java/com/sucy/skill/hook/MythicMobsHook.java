@@ -24,4 +24,7 @@ public class MythicMobsHook {
     public static void skills(final  LivingEntity target,  final String skills) {
         MythicMobs.inst().getAPIHelper().castSkill(target, skills);
     }
+    public static void summonmobs(final String mobname,final Location location,final int level){
+        MythicMobs.inst().getMobManager().spawnMob(mobname,location,level);
+    }
 }

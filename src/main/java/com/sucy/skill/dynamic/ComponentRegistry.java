@@ -272,6 +272,7 @@ public class ComponentRegistry {
         register(new SpeedMechanic());
         register(new SoundMechanic());
         register(new StatusMechanic());
+        register(new SummonMythicMobsMechanic());
         register(new TauntMechanic());
         register(new TitleMechanic());
         register(new TriggerMechanic());
