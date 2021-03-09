@@ -27,6 +27,7 @@
 package com.sucy.skill.dynamic.mechanic;
 
 import com.sucy.skill.dynamic.DynamicSkill;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.HashMap;
@@ -38,6 +39,9 @@ import java.util.List;
 public class ValueAddMechanic extends MechanicComponent {
     private static final String KEY    = "key";
     private static final String AMOUNT = "amount";
+    private static final String MODE = "mode";
+    private static final String SECONDS = "delay";
+    private static final String BOOST = "boost";
 
     @Override
     public String getKey() {
@@ -60,9 +64,30 @@ public class ValueAddMechanic extends MechanicComponent {
         }
 
         String key = settings.getString(KEY);
+        String mode = settings.getString(MODE,"normal");
         double amount = parseValues(caster, AMOUNT, level, 1) * targets.size();
+        double seconds = parseValues(caster, SECONDS, level, 1.0);
+        double boost = parseValues(caster, BOOST, level,1);
         HashMap<String, Object> data = DynamicSkill.getCastData(caster);
-        if (!data.containsKey(key)) { data.put(key, amount); } else { data.put(key, amount + (Double) data.get(key)); }
+            if (!data.containsKey(key)) {
+                data.put(key, amount);
+            } else {
+                data.put(key, amount + (Double) data.get(key));
+            }
+            if (mode.equals("timeAdd")){
+                Bukkit.getScheduler().runTaskLater(
+                        Bukkit.getPluginManager().getPlugin("SkillAPI"),
+                        () -> data.put(key, -amount + (Double) data.get(key)),
+                        (long) (seconds * 20)
+                );
+            }
+            if (mode.equals("timeValue")){
+                for(double i = seconds;i>0;i= i + 0.001) {
+                    data.put(key, boost + (Double) data.get(key));
+                }
+            }
         return true;
     }
 }
+
+
