@@ -1,6 +1,7 @@
 package com.sucy.skill.hook;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 /**
@@ -24,7 +25,7 @@ public class MythicMobsHook {
     public static void skills(final  LivingEntity target,  final String skills) {
         MythicMobs.inst().getAPIHelper().castSkill(target, skills);
     }
-    public static void summonmobs(final String mobname,final Location location,final int level){
-        MythicMobs.inst().getMobManager().spawnMob(mobname,location,level);
+    public static void summonMobs(final String mobName, final Location location, final int level){
+        MythicMobs.inst().getMobManager().spawnMob(mobName,location,level);
     }
 }
