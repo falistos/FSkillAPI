@@ -7,16 +7,11 @@ If you want to report a bug or make a suggestion, feel free to create an issue o
 ## New dynamic editor
 If you use this version, I strongly recommend using the mantained Dynamic editor.
 Skills made with the old editor should still mantain full functionality, but the new one has new stuff.
-* New, mantained editor: http://sentropic.github.io/SkillAPI-s/
+* New, mantained editor: https://skillapi.herosteve.com/
 
-## Donations
-I accept donations via PayPal, which I'll be using for the development of my MMORPG Minecraft server: Craftec
-* https://www.paypal.com/paypalme/Sentropic
 
-## Craftec:
-* Discord | https://discord.gg/tr7eRaf
-* Twitter | https://twitter.com/CraftecCR
-* Instagram | https://www.instagram.com/craftec.cr/
+## RPGPRO:
+[![Discord](https://img.shields.io/badge/discord-join_chat-7289da.svg)](https://discord.com/invite/RhTyRReKyP)  
 
 ## Useful links
 * Original SkillAPI Wiki    | https://github.com/Eniripsa96/SkillAPI/wiki
@@ -25,3 +20,5 @@ I accept donations via PayPal, which I'll be using for the development of my MMO
 * Old Dynamic Editor   | http://eniripsa96.github.io/SkillAPI/
 * Examples Database | https://skillexamples.herokuapp.com/
 * G.E.A.R.S. Discord server        | https://discord.gg/KX2ygZJ
+
+[![](https://jitpack.io/v/BigTreasureD/SkillAPI-s.svg)](https://jitpack.io/#BigTreasureD/SkillAPI-s)
