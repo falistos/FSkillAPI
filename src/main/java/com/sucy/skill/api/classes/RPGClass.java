@@ -74,9 +74,11 @@ public abstract class RPGClass implements IconHolder
     private String    prefix;
     private String    group;
     private String    mana;
+    private String    stamina;
     private int       maxLevel;
     private int       expSources;
     private double    manaRegen;
+    private double    staminaRegen;
 
     /**
      * Whether or not the class requires permissions
@@ -149,6 +151,7 @@ public abstract class RPGClass implements IconHolder
         this.prefix = name;
         this.group = group == null ? "class" : group.toLowerCase();
         this.mana = "Mana";
+        this.stamina = "STAMINA";
         this.maxLevel = maxLevel;
         this.tree = DefaultTreeType.REQUIREMENT;
 
@@ -421,6 +424,18 @@ public abstract class RPGClass implements IconHolder
     }
 
     /**
+     * Retrieves the amount of max stamina this class provides
+     *
+     * @param level current level of the class
+     *
+     * @return amount of max stamina the class provides
+     */
+    public double getStamina(int level)
+    {
+        return settings.getAttr(ClassAttribute.STAMINA, level);
+    }
+
+    /**
      * Retrieves the base amount of mana for the class
      *
      * @return base amount of mana for the class
@@ -431,6 +446,16 @@ public abstract class RPGClass implements IconHolder
     }
 
     /**
+     * Retrieves the base amount of stamina for the class
+     *
+     * @return base amount of stamina for the class
+     */
+    public double getBaseStamina()
+    {
+        return settings.getBase(ClassAttribute.STAMINA);
+    }
+
+    /**
      * Retrieves the amount of mana gained per level for the class
      *
      * @return mana gained per level
@@ -438,6 +463,16 @@ public abstract class RPGClass implements IconHolder
     public double getManaScale()
     {
         return settings.getScale(ClassAttribute.MANA);
+    }
+
+    /**
+     * Retrieves the amount of stamina gained per level for the class
+     *
+     * @return stamina gained per level
+     */
+    public double getStaminaScale()
+    {
+        return settings.getScale(ClassAttribute.STAMINA);
     }
 
     /**
@@ -474,6 +509,16 @@ public abstract class RPGClass implements IconHolder
     }
 
     /**
+     * Retrieves the alias for stamina this class uses
+     *
+     * @return stamina alias for the class
+     */
+    public String getStaminaName()
+    {
+        return stamina;
+    }
+
+    /**
      * Retrieves the list of skills this class provides a player
      *
      * @return list of skills provided by the class
@@ -497,6 +542,16 @@ public abstract class RPGClass implements IconHolder
     }
 
     /**
+     * Checks whether or not this class has stamina regeneration
+     *
+     * @return true if has stamina regeneration, false otherwise
+     */
+    public boolean hasStaminaRegen()
+    {
+        return staminaRegen > 0;
+    }
+
+    /**
      * Retrieves the amount of mana regeneration this class has
      *
      * @return mana regeneration per update or a non-positive number if no regeneration
@@ -504,6 +559,16 @@ public abstract class RPGClass implements IconHolder
     public double getManaRegen()
     {
         return manaRegen;
+    }
+
+    /**
+     * Retrieves the amount of stamina regeneration this class has
+     *
+     * @return stamina regeneration per update or a non-positive number if no regeneration
+     */
+    public double getStaminaRegen()
+    {
+        return staminaRegen;
     }
 
     /**
@@ -585,6 +650,16 @@ public abstract class RPGClass implements IconHolder
     }
 
     /**
+     * Sets the stamina alias for the class
+     *
+     * @param name stamina alias
+     */
+    public void setStaminaName(String name)
+    {
+        stamina = name;
+    }
+
+    /**
      * Sets the experience sources this class can receive experience from.
      *
      * @param sources allowed sources of experience
@@ -629,6 +704,15 @@ public abstract class RPGClass implements IconHolder
         this.manaRegen = amount;
     }
 
+    /**
+     * Sets the amount of stamina regen this class has
+     *
+     * @param amount amount of stamina regen
+     */
+    public void setStaminaRegen(double amount)
+    {
+        this.staminaRegen = amount;
+    }
     ///////////////////////////////////////////////////////
     //                                                   //
     //                    IO Methods                     //
@@ -642,9 +726,11 @@ public abstract class RPGClass implements IconHolder
     private static final String ACTION_BAR = "action-bar";
     private static final String GROUP  = "group";
     private static final String MANA   = "mana";
+    private static final String STAMINA = "stamina";
     private static final String MAX    = "max-level";
     private static final String EXP    = "exp-source";
     private static final String REGEN  = "mana-regen";
+    private static final String SREGEN = "stamina-regen";
     private static final String PERM   = "needs-permission";
     private static final String ATTR   = "attributes";
     private static final String TREE   = "tree";
@@ -662,11 +748,13 @@ public abstract class RPGClass implements IconHolder
         config.set(PREFIX, prefix.replace(ChatColor.COLOR_CHAR, '&'));
         config.set(GROUP, group);
         config.set(MANA, mana.replace(ChatColor.COLOR_CHAR, '&'));
+        config.set(STAMINA, stamina.replace(ChatColor.COLOR_CHAR, '&'));
         config.set(MAX, maxLevel);
         config.set(PARENT, parent);
         config.set(PERM, needsPermission);
         settings.save(config.createSection(ATTR));
         config.set(REGEN, manaRegen);
+        config.set(SREGEN, staminaRegen);
         config.set(TREE, tree.toString());
         config.set(BLACKLIST, new ArrayList<Material>(blacklist));
 
@@ -710,9 +798,11 @@ public abstract class RPGClass implements IconHolder
         prefix = TextFormatter.colorString(config.getString(PREFIX, prefix));
         group = config.getString(GROUP, "class");
         mana = TextFormatter.colorString(config.getString(MANA, mana));
+        stamina = TextFormatter.colorString(config.getString(STAMINA, stamina));
         maxLevel = config.getInt(MAX, maxLevel);
         expSources = config.getInt(EXP, expSources);
         manaRegen = config.getDouble(REGEN, manaRegen);
+        staminaRegen = config.getDouble(SREGEN, staminaRegen);
         needsPermission = config.getString(PERM, needsPermission + "").equalsIgnoreCase("true");
         tree = DefaultTreeType.getByName(config.getString(TREE, "requirement"));
         for (final String type : config.getList(BLACKLIST)) {

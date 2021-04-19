@@ -43,6 +43,11 @@ public enum SkillStatus
     MISSING_MANA,
 
     /**
+     * The player requires more stamina before using the skill
+     */
+    MISSING_STAMINA,
+
+    /**
      * The skill is ready to be used
      */
     READY

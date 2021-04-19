@@ -104,8 +104,9 @@ public class TriggerHandler implements Listener {
             final PlayerSkill skill = data.getSkill(this.skill.getName());
             final boolean cd = component.getSettings().getBool("cooldown", false);
             final boolean mana = component.getSettings().getBool("mana", false);
+            final boolean stamina = component.getSettings().getBool("stamina", false);
 
-            if ((cd || mana) && !data.check(skill, cd, mana)) { return false; }
+            if ((cd || mana || stamina ) && !data.check(skill, cd, mana, stamina)) { return false; }
 
             if (component.trigger(user, target, level)) {
                 if (cd) { skill.startCooldown(); }

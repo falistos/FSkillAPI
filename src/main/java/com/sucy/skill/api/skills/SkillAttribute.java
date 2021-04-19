@@ -61,4 +61,10 @@ public final class SkillAttribute
     public static final String INCOMPATIBLE = "incompatible";
 
     public static final String POINTS_SPENT_REQ = "points-spent-req";
+
+    /**
+     * <p>STAMINA cost attribute of a skill</p>
+     * <p>This is not required by passive abilities</p>
+     */
+    public static final String STAMINA = "stamina";
 }

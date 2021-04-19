@@ -93,9 +93,12 @@ public class PlayerData {
     private String         scheme;
     private String         menuClass;
     private double         mana;
+    private double         stamina;
     private double         maxMana;
+    private double         maxStamina;
     private double         bonusHealth;
     private double         bonusMana;
+    private double         bonusStamina;
     private double         lastHealth;
     private double         hunger;
     private boolean        init;
@@ -1351,9 +1354,11 @@ public class PlayerData {
         // Update maxes
         double health = bonusHealth;
         maxMana = bonusMana;
+        maxStamina = bonusStamina;
         for (PlayerClass c : classes.values()) {
             health += c.getHealth();
             maxMana += c.getMana();
+            maxStamina += c.getStamina();
         }
         if (health == bonusHealth) {
             health += SkillAPI.getSettings().getDefaultHealth();
@@ -1363,6 +1368,7 @@ public class PlayerData {
         }
         if (SkillAPI.getSettings().isModifyHealth()) { player.setMaxHealth(health); }
         mana = Math.min(mana, maxMana);
+        stamina = Math.min(stamina, maxStamina);
 
         // Health scaling is available starting with 1.6.2
         if (SkillAPI.getSettings().isOldHealth()) {
@@ -1411,11 +1417,33 @@ public class PlayerData {
     }
 
     /**
+     * Gives max stamina to the player. This does not carry over to other accounts
+     * and will reset when SkillAPI is disabled. This does however carry over through
+     * death and professions. This will accept negative values.
+     *
+     * @param amount amount of bonus stamina to give
+     */
+    public void addMaxStamina(double amount) {
+        bonusStamina += amount;
+        maxStamina += amount;
+        stamina += amount;
+    }
+
+    /**
      * Retrieves the amount of mana the player currently has.
      *
      * @return current player mana
      */
     public double getMana() {
+        return mana;
+    }
+
+    /**
+     * Retrieves the amount of stamina the player currently has.
+     *
+     * @return current player stamina
+     */
+    public double getStamina() {
         return mana;
     }
 
@@ -1431,12 +1459,32 @@ public class PlayerData {
     }
 
     /**
+     * Checks whether or not the player has at least the specified amount of stamina
+     *
+     * @param amount required stamina amount
+     *
+     * @return true if has the amount of stamina, false otherwise
+     */
+    public boolean hasStamina(double amount) {
+        return stamina >= amount;
+    }
+
+    /**
      * Retrieves the max amount of mana the player can have including bonus mana
      *
      * @return max amount of mana the player can have
      */
     public double getMaxMana() {
         return maxMana;
+    }
+
+    /**
+     * Retrieves the max amount of stamina the player can have including bonus stamina
+     *
+     * @return max amount of stamina the player can have
+     */
+    public double getMaxStamina() {
+        return maxStamina;
     }
 
     /**
@@ -1455,6 +1503,21 @@ public class PlayerData {
     }
 
     /**
+     * Regenerates stamina for the player based on the regen amounts of professed classes
+     */
+    public void regenStamina() {
+        double amount = 0;
+        for (PlayerClass c : classes.values()) {
+            if (c.getData().hasStaminaRegen()) {
+                amount += c.getData().getStaminaRegen();
+            }
+        }
+        if (amount > 0) {
+            giveStamina(amount, StaminaSource.REGEN);
+        }
+    }
+
+    /**
      * Sets the player's amount of mana without launching events
      *
      * @param amount current mana
@@ -1464,12 +1527,31 @@ public class PlayerData {
     }
 
     /**
+     * Sets the player's amount of stamina without launching events
+     *
+     * @param amount current stamina
+     */
+    public void setStamina(double amount) {
+        this.stamina = amount;
+    }
+
+    /**
      * Gives mana to the player from an unknown source. This will not
      * cause the player's mana to go above their max amount.
      *
      * @param amount amount of mana to give
      */
     public void giveMana(double amount) {
+        giveMana(amount, ManaSource.SPECIAL);
+    }
+
+    /**
+     * Gives stamina to the player from an unknown source. This will not
+     * cause the player's stamina to go above their max amount.
+     *
+     * @param amount amount of stamina to give
+     */
+    public void giveStamina(double amount) {
         giveMana(amount, ManaSource.SPECIAL);
     }
 
@@ -1501,6 +1583,33 @@ public class PlayerData {
     }
 
     /**
+     * Gives mana to the player from the given mana source. This will not
+     * cause the player's mana to go above the max amount.
+     *
+     * @param amount amount of mana to give
+     * @param source source of the mana
+     */
+    public void giveStamina(double amount, StaminaSource source) {
+        PlayerStaminaGainEvent event = new PlayerStaminaGainEvent(this, amount, source);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (!event.isCancelled()) {
+            Logger.log(
+                    LogType.STAMINA,
+                    2,
+                    getPlayerName() + " gained " + amount + " stamina due to " + event.getSource().name());
+
+            stamina += event.getAmount();
+            if (stamina > maxStamina) {
+                stamina = maxStamina;
+            }
+            if (stamina < 0) {
+                stamina = 0;
+            }
+        } else { Logger.log(LogType.STAMINA, 2, getPlayerName() + " had their stamina gain cancelled"); }
+    }
+
+    /**
      * Takes mana away from the player for an unknown reason. This will not
      * cause the player to fall below 0 mana.
      *
@@ -1509,6 +1618,17 @@ public class PlayerData {
     public void useMana(double amount) {
         useMana(amount, ManaCost.SPECIAL);
     }
+
+    /**
+     * Takes stamina away from the player for an unknown reason. This will not
+     * cause the player to fall below 0 stamina.
+     *
+     * @param amount stamina of mana to take away
+     */
+    public void useStamina(double amount) {
+        useStamina(amount, StaminaCost.SPECIAL);
+    }
+
 
     /**
      * Takes mana away from the player for the specified reason. This will not
@@ -1535,10 +1655,35 @@ public class PlayerData {
     }
 
     /**
+     * Takes mana away from the player for the specified reason. This will not
+     * cause the player to fall below 0 mana.
+     *
+     * @param amount amount of mana to take away
+     * @param cost   source of the mana cost
+     */
+    public void useStamina(double amount, StaminaCost cost) {
+        PlayerStaminaLossEvent event = new PlayerStaminaLossEvent(this, amount, cost);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (!event.isCancelled()) {
+            Logger.log(
+                    LogType.STAMINA,
+                    2,
+                    getPlayerName() + " used " + amount + " stamina due to " + event.getSource().name());
+
+            stamina -= event.getAmount();
+            if (stamina < 0) {
+                stamina = 0;
+            }
+        }
+    }
+
+    /**
      * Clears bonus health/mana
      */
     public void clearBonuses() {
         bonusMana = 0;
+        bonusStamina = 0;
         bonusHealth = 0;
         bonusAttrib.clear();
         equips = new PlayerEquips(this);
@@ -1754,7 +1899,7 @@ public class PlayerData {
         int level = skill.getLevel();
 
         // Not unlocked or on cooldown
-        if (!check(skill, true, true)) { return false; }
+        if (!check(skill, true, true, true)) { return false; }
 
         // Dead players can't cast skills
         Player p = getPlayer();
@@ -1836,11 +1981,26 @@ public class PlayerData {
      * @return true if can use
      */
     public boolean check(PlayerSkill skill, boolean cooldown, boolean mana) {
+        return check(skill, cooldown, mana, false);
+    }
+
+    /**
+     * Checks the cooldown and mana requirements for a skill
+     *
+     * @param skill    skill to check for
+     * @param cooldown whether or not to check cooldowns
+     * @param mana     whether or not to check mana requirements
+     * @param stamina  whether or not to check stamina requirements
+     *
+     * @return true if can use
+     */
+    public boolean check(PlayerSkill skill, boolean cooldown, boolean mana, boolean stamina) {
         if (skill == null || System.currentTimeMillis() < skillTimer) { return false; }
 
         SkillStatus status = skill.getStatus();
         int level = skill.getLevel();
         double cost = skill.getData().getManaCost(level);
+        double staminaCost = skill.getData().getStaminaCost(level);
 
         // Not unlocked
         if (level <= 0) {
@@ -1857,6 +2017,20 @@ public class PlayerData {
                     RPGFilter.SKILL.setReplacement(skill.getData().getName())
             );
             return PlayerSkillCastFailedEvent.invoke(skill, ON_COOLDOWN);
+        }
+
+        // Not enough stamina
+        else if (status == SkillStatus.MISSING_STAMINA && stamina) {
+            SkillAPI.getLanguage().sendMessage(
+                    ErrorNodes.STAMINA,
+                    getPlayer(),
+                    FilterType.COLOR,
+                    RPGFilter.SKILL.setReplacement(skill.getData().getName()),
+                    RPGFilter.STAMINA.setReplacement(getStamina() + ""),
+                    RPGFilter.COST.setReplacement((int) Math.ceil(staminaCost) + ""),
+                    RPGFilter.MISSING.setReplacement((int) Math.ceil(staminaCost - getStamina()) + "")
+            );
+            return PlayerSkillCastFailedEvent.invoke(skill, NO_STAMINA);
         }
 
         // Not enough mana

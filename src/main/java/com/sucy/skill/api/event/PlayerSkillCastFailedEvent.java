@@ -17,6 +17,7 @@ public class PlayerSkillCastFailedEvent extends Event {
         CASTER_DEAD,
         EFFECT_FAILED,
         NO_MANA,
+        NO_STAMINA,
         NO_TARGET,
         NOT_UNLOCKED,
         ON_COOLDOWN,

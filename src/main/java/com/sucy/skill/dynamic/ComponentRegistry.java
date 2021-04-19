@@ -210,6 +210,7 @@ public class ComponentRegistry {
         register(new SkillLevelCondition());
         register(new SlotCondition());
         register(new StatusCondition());
+        register(new StaminaCondition());
         register(new TimeCondition());
         register(new ToolCondition());
         register(new ValueCondition());

@@ -110,6 +110,7 @@ public class Settings {
         loadAccountSettings();
         loadClassSettings();
         loadManaSettings();
+        loadStaminaSettings();
         loadSkillSettings();
         loadItemSettings();
         loadGUISettings();
@@ -701,6 +702,42 @@ public class Settings {
     private void loadManaSettings() {
         manaEnabled = config.getBoolean(MANA_ENABLED);
         gainFreq = (int) (config.getDouble(MANA_FREQ) * 20);
+    }
+
+    ///////////////////////////////////////////////////////
+    //                                                   //
+    //                 Stamina Settings                  //
+    //                                                   //
+    ///////////////////////////////////////////////////////
+
+    private static final String STAMINA_BASE    = "Stamina.";
+    private static final String STAMINA_ENABLED = STAMINA_BASE + "enabled";
+    private static final String STAMINA_FREQ    = STAMINA_BASE + "freq";
+
+    private boolean staminaEnabled;
+    private int     gainFreqStamina;
+
+    /**
+     * Checks whether or not stamina is enabled
+     *
+     * @return true if enabled, false otherwise
+     */
+    public boolean isStaminaEnabled() {
+        return staminaEnabled;
+    }
+
+    /**
+     * Retrieves the frequency of stamina gain
+     *
+     * @return the frequency of stamina gain
+     */
+    public int getGainFreqStamina() {
+        return gainFreqStamina;
+    }
+
+    private void loadStaminaSettings() {
+        staminaEnabled = config.getBoolean(STAMINA_ENABLED);
+        gainFreqStamina = (int) (config.getDouble(STAMINA_FREQ) * 20);
     }
 
     ///////////////////////////////////////////////////////

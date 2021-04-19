@@ -395,6 +395,18 @@ public abstract class Skill implements IconHolder
     }
 
     /**
+     * Retrieves the stamina cost of the skill
+     *
+     * @param level current level of the skill
+     *
+     * @return stamina cost
+     */
+    public double getStaminaCost(int level)
+    {
+        return settings.getAttr(SkillAttribute.STAMINA, level);
+    }
+
+    /**
      * Retrieves the cooldown of the skill in seconds
      *
      * @param level current level of the skill

@@ -202,6 +202,16 @@ public class PlayerClass
         return classData.getMana(level);
     }
 
+    /**
+     * Retrieves the amount of stamina this class provides the player
+     *
+     * @return stamina provided for the player by this class
+     */
+    public double getStamina()
+    {
+        return classData.getStamina(level);
+    }
+
     ///////////////////////////////////////////////////////
     //                                                   //
     //                Functional Methods                 //

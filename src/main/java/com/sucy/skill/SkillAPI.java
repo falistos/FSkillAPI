@@ -50,10 +50,7 @@ import com.sucy.skill.hook.PluginChecker;
 import com.sucy.skill.listener.*;
 import com.sucy.skill.manager.*;
 import com.sucy.skill.packet.PacketInjector;
-import com.sucy.skill.task.CooldownTask;
-import com.sucy.skill.task.GUITask;
-import com.sucy.skill.task.ManaTask;
-import com.sucy.skill.task.SaveTask;
+import com.sucy.skill.task.*;
 import com.sucy.skill.thread.MainThread;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -97,6 +94,7 @@ public class SkillAPI extends JavaPlugin {
 
     private MainThread mainThread;
     private BukkitTask manaTask;
+    private BukkitTask staminaTask;
 
     private boolean loaded = false;
     private boolean disabling = false;
@@ -185,6 +183,19 @@ public class SkillAPI extends JavaPlugin {
                 MainThread.register(new ManaTask());
             }
         }
+        if(settings.isStaminaEnabled()) {
+            if (VersionManager.isVersionAtLeast(11400)) {
+                staminaTask = Bukkit.getScheduler().runTaskTimer(
+                        this,
+                        new StaminaTask(),
+                        SkillAPI.getSettings().getGainFreq(),
+                        SkillAPI.getSettings().getGainFreq()
+                );
+            } else {
+                MainThread.register(new StaminaTask());
+            }
+
+        }
         if (settings.isSkillBarCooldowns()) { MainThread.register(new CooldownTask()); }
         if (settings.isAutoSave()) { MainThread.register(new SaveTask(this)); }
         MainThread.register(new GUITask(this));
@@ -235,6 +246,11 @@ public class SkillAPI extends JavaPlugin {
         if (manaTask != null) {
             manaTask.cancel();
             manaTask = null;
+        }
+
+        if (staminaTask != null) {
+            staminaTask.cancel();
+            staminaTask = null;
         }
 
         for (SkillAPIListener listener : listeners) { listener.cleanup(); }

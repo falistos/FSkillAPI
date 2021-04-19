@@ -40,4 +40,9 @@ public final class ClassAttribute
      * Maximum mana for a class
      */
     public static final String MANA = "mana";
+
+    /**
+     * Maximum stamina for a class
+     */
+    public static final String STAMINA = "stamina";
 }

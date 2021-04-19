@@ -178,6 +178,14 @@ public final class PlayerSkill
     }
 
     /**
+     * @return stamina cost to use the skill
+     */
+    public double getStaminaCost()
+    {
+        return skill.getStaminaCost(level);
+    }
+
+    /**
      * Retrieves the level requirement of the skill to get to the next level
      *
      * @return the level requirement to get to the next level

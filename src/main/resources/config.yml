@@ -126,6 +126,13 @@ Mana:
   # How frequently mana is gained in seconds
   freq: 1
 #
+Stamina:
+  #
+  # Where or not to use SkillAPI's stamina system
+  enable: true
+  #
+  # How frequently stamina is gained is seconds
+  freq: 1
 Skills:
   #
   # Whether or not players are allowed to downgrade skills

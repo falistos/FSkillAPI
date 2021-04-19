@@ -35,6 +35,7 @@ public enum LogType
     BUFF,
     GUI,
     MANA,
+    STAMINA,
     REGISTRATION,;
 
     /**
