@@ -48,9 +48,11 @@ public class GUITask extends RepeatThreadTask
 {
     private final boolean levelMana;
     private final boolean levelLevel;
+    private final boolean levelStamina;
 
     private final boolean foodMana;
     private final boolean foodExp;
+    private final boolean foodStamina;
 
     private final boolean forceScaling;
     private final boolean oldHealth;
@@ -70,10 +72,12 @@ public class GUITask extends RepeatThreadTask
         String levelBar = SkillAPI.getSettings().getLevelBar().toLowerCase();
         levelMana = levelBar.equals("mana");
         levelLevel = levelBar.equals("level");
+        levelStamina = levelBar.equals("stamina");
 
         String foodBar = SkillAPI.getSettings().getFoodBar().toLowerCase();
         foodMana = foodBar.equals("mana");
         foodExp = foodBar.equals("exp");
+        foodStamina = foodBar.equals("stamina");
 
         forceScaling = SkillAPI.getSettings().isForceScaling();
         oldHealth = SkillAPI.getSettings().isOldHealth();
@@ -139,6 +143,18 @@ public class GUITask extends RepeatThreadTask
                     player.setExp((float) main.getExp() / main.getRequiredExp());
                 }
             }
+            else if(levelStamina)
+            {
+                Logger.log(LogType.GUI, 2, "Updating level bar with stamina");
+                if (data.getMaxStamina() == 0) {
+                    player.setLevel((0));
+                    player.setExp(0);
+                }
+                else {
+                    player.setLevel((int) data.getStamina());
+                    player.setExp(Math.min(0.999f, (float) (0.999 * data.getStamina() / data.getMaxStamina())));
+                }
+            }
 
             // Food bar options
             if (foodMana)
@@ -166,7 +182,17 @@ public class GUITask extends RepeatThreadTask
                     player.setFoodLevel((int) Math.floor(20 * main.getExp() / main.getRequiredExp()));
                 }
             }
-
+            else if (foodStamina)
+            {
+                Logger.log(LogType.GUI, 2, "Updating food bar with stamina");
+                player.setSaturation(20);
+                if (data.getMaxStamina() == 0) {
+                    player.setFoodLevel(20);;
+                }
+                else {
+                    player.setFoodLevel((int) Math.ceil(20 * data.getStamina() / data.getMaxStamina()));
+                }
+            }
             // Action bar options
             if (useAction && data.hasClass())
             {
@@ -185,7 +211,9 @@ public class GUITask extends RepeatThreadTask
                     .replace("{health}", "" + (int) player.getHealth())
                     .replace("{maxHealth}", "" + (int) player.getMaxHealth())
                     .replace("{attr}", "" + data.getAttributePoints())
-                    .replace("{sp}", "" + main.getPoints());
+                    .replace("{sp}", "" + main.getPoints())
+                    .replace("{stamina}", "" +(int) data.getStamina())
+                    .replace("{maxStamina}", "" +(int) data.getMaxStamina());
                 while (filtered.contains("{value:"))
                 {
                     int index = filtered.indexOf("{value:");

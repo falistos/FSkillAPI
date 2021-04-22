@@ -72,7 +72,7 @@ public class ValueAddMechanic extends MechanicComponent {
         } else {
             data.put(key, amount + (double) data.get(key));
         }
-        if (type.equals("limited time")) {
+        if (type.equals("limited-time")) {
             double seconds = parseValues(caster, SECONDS, level, 0);
             Bukkit.getScheduler().runTaskLater(SkillAPI.getPlugin(SkillAPI.class),
                     () -> data.put(key, (double) data.get(key) - amount),

@@ -94,6 +94,7 @@ var Condition = {
     SKILL_LEVEL: { name: 'Skill Level', container: true, construct: ConditionSkillLevel },
     SLOT:        { name: 'Slot',        container: true, construct: ConditionSlot       },
     STATUS:      { name: 'Status',      container: true, construct: ConditionStatus     },
+	STAMINA:     { name: 'Stamina',     container: true, construct: ConditionStamina    },
     TIME:        { name: 'Time',        container: true, construct: ConditionTime       },
     TOOL:        { name: 'Tool',        container: true, construct: ConditionTool       },
     VALUE:       { name: 'Value',       container: true, construct: ConditionValue      },
@@ -160,6 +161,7 @@ var Mechanic = {
     SOUND:               { name: 'Sound',               container: false, construct: MechanicSound              },
     SPEED:               { name: 'Speed',               container: false, construct: MechanicSpeed              },
     STATUS:              { name: 'Status',              container: false, construct: MechanicStatus             },
+	STMIANA:             { name: 'Stamina',             container: false, construct: MechanicStamina            },
     TAUNT:               { name: 'Taunt',               container: false, construct: MechanicTaunt              },
     TRIGGER:             { name: 'Trigger',             container: true,  construct: MechanicTrigger            },
     VALUE_ADD:           { name: 'Value Add',           container: false, construct: MechanicValueAdd           },
@@ -1298,6 +1300,24 @@ function ConditionMana()
     );
 }
 
+extend('ConditionStamina', 'Component');
+function ConditionStamina()
+{
+    this.super('Stamina', Type.CONDITION, true);
+
+    this.description = "Applies child components when the target's stamina matches the settings.";
+
+    this.data.push(new ListValue('Type', 'type', [ 'Stamina', 'Percent', 'Difference', 'Difference Percent' ], 'Stamina')
+        .setTooltip('The type of measurement to use for the stamina. Stamina is their flat stamina left. Percent is the percentage of stamina they have left. Difference is the difference between the target\'s flat stamina and the caster\'s. Difference percent is the difference between the target\'s percentage stamina left and the caster\s')
+    );
+    this.data.push(new AttributeValue('Min Value', 'min-value', 0, 0)
+        .setTooltip('The minimum amount of stamina needed')
+    );
+    this.data.push(new AttributeValue('Max Value', 'max-value', 10, 2)
+        .setTooltip('The maximum amount of stamina needed')
+    );
+}
+
 extend('ConditionMounted', 'Component');
 function ConditionMounted()
 {
@@ -2241,6 +2261,21 @@ function MechanicMana()
     );
 }
 
+extend('MechanicStamina', 'Component');
+function MechanicStamina()
+{
+    this.super('Stamina', Type.MECHANIC, false);
+
+    this.description = 'Restores or deducts stamina from the target.';
+
+    this.data.push(new ListValue('Type', 'type', [ 'Stamina', 'Percent' ], 'Stamina')
+        .setTooltip('The unit to use for the amount of stamina to restore/drain. Stamina does a flat amount while Percent does a percentage of their max stamina')
+    );
+    this.data.push(new AttributeValue('Value', 'value', 1, 0)
+        .setTooltip('The amount of stamina to restore/drain')
+    );
+}
+
 extend('MechanicMessage', 'Component');
 function MechanicMessage()
 {
@@ -2662,7 +2697,14 @@ function MechanicValueAdd()
     this.super('Value Add', Type.MECHANIC, false);
     
     this.description = 'Adds to a stored value under a unique key for the caster. If the value wasn\'t set before, this will set the value to the given amount.';
-    
+
+	this.data.push(new ListValue('Type', 'type', ['normal', 'limited-time'], 'normal')
+	    .setTooltip('If you chose limited time, the value will be disapper in time')
+    );
+	this.data.push(new AttributeValue('Duration', 'delay', 1, 0)
+	    .setTooltip('The duration time of value')
+	    .requireValue('Type', limited-time)
+	);
     this.data.push(new StringValue('Key', 'key', 'value')
         .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
     );

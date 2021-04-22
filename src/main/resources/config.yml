@@ -224,11 +224,11 @@ GUI:
   force-scaling: false
   #
   # This is what to display using the level bar, if anything.
-  # Options are: none, mana, level
+  # Options are: none, mana, level, stamina
   level-bar: none
   #
   # This is what to display using the food bar, if anything.
-  # Options are: none, mana, exp
+  # Options are: none, mana, exp, stamina
   food-bar: none
   #
   # Whether or not to use the action bar
@@ -250,6 +250,8 @@ GUI:
   #   {attr}        - the player's attribute points
   #   {sp}          - the player's main class skill points
   #   {value:<key>} - a skill value
+  #   {stamina}     - the player's current stamina
+  #   {maxStamina}  - the player's max stamina
   action-bar-text: '{combo}'
   #
   # Whether or not to use title messages
