@@ -9,10 +9,6 @@ If you use this version, I strongly recommend using the mantained Dynamic editor
 Skills made with the old editor should still mantain full functionality, but the new one has new stuff.
 * New, mantained editor: https://skillapi.herosteve.com/
 
-
-## RPGPRO:
-[![Discord](https://img.shields.io/badge/discord-join_chat-7289da.svg)](https://discord.com/invite/RhTyRReKyP)  
-
 ## Useful links
 * Original SkillAPI Wiki    | https://github.com/Eniripsa96/SkillAPI/wiki
 * Original Spigot Page      | https://www.spigotmc.org/resources/skillapi.4824/
