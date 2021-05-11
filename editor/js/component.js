@@ -2701,16 +2701,17 @@ function MechanicValueAdd()
 	this.data.push(new ListValue('Type', 'type', ['normal', 'limited-time'], 'normal')
 	    .setTooltip('If you chose limited time, the value will be disapper in time')
     );
-	this.data.push(new AttributeValue('Duration', 'delay', 1, 0)
-	    .setTooltip('The duration time of value')
-	    .requireValue('Type', limited-time)
-	);
+
+    ValueAddOptions(this)
+
     this.data.push(new StringValue('Key', 'key', 'value')
         .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
     );
     this.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The amount to add to the value')
     );
+
+
 }
 
 extend('MechanicValueAttribute', 'Component');
@@ -3048,8 +3049,16 @@ var activeComponent = undefined;
 /**
  * Adds the options for item related effects to the component
  *
- * @param {Component} component - the component to add to
+ * @param {MechanicValueAdd} component - the component to add to
  */
+function ValueAddOptions(component) {
+
+    component.data.push(new AttributeValue('Duration', 'delay', 1, 0)
+        .requireValue('type', [ 'limited-time' ])
+        .setTooltip('The duration time of value')
+    );
+}
+
 function addItemOptions(component) {
     
     component.data.push(new ListValue('Check Material', 'check-mat', [ 'True', 'False' ], 'True')

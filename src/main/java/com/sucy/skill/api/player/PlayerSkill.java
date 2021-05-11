@@ -238,23 +238,23 @@ public final class PlayerSkill
      *
      * @return the ready status of the skill
      */
-    public SkillStatus getStatus()
-    {
+    public SkillStatus getStatus() {
 
         // See if it is on cooldown
-        if (isOnCooldown())
-        {
+        if (isOnCooldown()) {
             return SkillStatus.ON_COOLDOWN;
         }
 
         // If mana is enabled, check to see if the player has enough
         if (SkillAPI.getSettings().isManaEnabled()
-            && player.getMana() < skill.getManaCost(level))
-        {
+                && player.getMana() < skill.getManaCost(level)) {
 
             return SkillStatus.MISSING_MANA;
         }
-
+        if (SkillAPI.getSettings().isStaminaEnabled()
+                && player.getStamina() < skill.getStaminaCost(level)) {
+            return SkillStatus.MISSING_STAMINA;
+        }
         // The skill is available when both off cooldown and when there's enough mana
         return SkillStatus.READY;
     }

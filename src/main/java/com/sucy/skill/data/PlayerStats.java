@@ -62,6 +62,8 @@ public class PlayerStats implements StatHolder
         stats.add(statMap.get(HEALTH));
         if (SkillAPI.getSettings().isManaEnabled())
             stats.add(player.getData().getManaName());
+        if (SkillAPI.getSettings().isStaminaEnabled())
+            stats.add(player.getData().getStaminaName());
         stats.add(statMap.get(POINTS));
         stats.add(statMap.get(LEVEL));
         stats.add(statMap.get(EXP));

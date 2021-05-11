@@ -457,6 +457,13 @@ public class PlayerData {
     }
 
     /**
+     * Take the player attribute points
+     *
+     * @param amount of attribute points
+     */
+    public void takeAttribPoints(int amount) { attribPoints -= amount; }
+
+    /**
      * Sets the current amount of attribute points
      *
      * @param amount amount of points to have
@@ -1444,7 +1451,7 @@ public class PlayerData {
      * @return current player stamina
      */
     public double getStamina() {
-        return mana;
+        return stamina;
     }
 
     /**
@@ -1917,7 +1924,7 @@ public class PlayerData {
             if (!event.isCancelled()) {
                 try {
                     if (((SkillShot) skill.getData()).cast(p, level)) {
-                        return applyUse(p, skill, event.getManaCost());
+                        return applyUse(p, skill, event.getManaCost(), event.getStaminaCost());
                     } else {
                         return PlayerSkillCastFailedEvent.invoke(skill, EFFECT_FAILED);
                     }
@@ -1944,7 +1951,7 @@ public class PlayerData {
                 try {
                     final boolean canAttack = !SkillAPI.getSettings().canAttack(p, target);
                     if (((TargetSkill) skill.getData()).cast(p, target, level, canAttack)) {
-                        return applyUse(p, skill, event.getManaCost());
+                        return applyUse(p, skill, event.getManaCost(), event.getStaminaCost());
                     } else {
                         return PlayerSkillCastFailedEvent.invoke(skill, EFFECT_FAILED);
                     }
@@ -1959,7 +1966,7 @@ public class PlayerData {
         return false;
     }
 
-    private boolean applyUse(final Player player, final PlayerSkill skill, final double manaCost) {
+    private boolean applyUse(final Player player, final PlayerSkill skill, final double manaCost, final double staminaCost ) {
         skill.startCooldown();
         if (SkillAPI.getSettings().isShowSkillMessages()) {
             skill.getData().sendMessage(player, SkillAPI.getSettings().getMessageRadius());
@@ -1967,21 +1974,11 @@ public class PlayerData {
         if (SkillAPI.getSettings().isManaEnabled()) {
             useMana(manaCost, ManaCost.SKILL_CAST);
         }
+        if(SkillAPI.getSettings().isStaminaEnabled()) {
+            useStamina(staminaCost, StaminaCost.SKILL_CAST);
+        }
         skillTimer = System.currentTimeMillis() + SkillAPI.getSettings().getCastCooldown();
         return true;
-    }
-
-    /**
-     * Checks the cooldown and mana requirements for a skill
-     *
-     * @param skill    skill to check for
-     * @param cooldown whether or not to check cooldowns
-     * @param mana     whether or not to check mana requirements
-     *
-     * @return true if can use
-     */
-    public boolean check(PlayerSkill skill, boolean cooldown, boolean mana) {
-        return check(skill, cooldown, mana, false);
     }
 
     /**

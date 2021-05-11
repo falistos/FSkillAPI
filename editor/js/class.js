@@ -4,27 +4,28 @@
  * @param {string} name - name of the class
  *
  * @constructor
- */ 
-function Class(name) 
+ */
+function Class(name)
 {
 	this.dataKey = 'attributes';
 	this.componentKey = 'classes do not have components';
-    this.attribCount = 0;
-	
+	this.attribCount = 0;
+
 	// Class data
 	this.data = [
 		new StringValue('Name', 'name', name).setTooltip('The name of the class. This should not contain color codes'),
 		new StringValue('Prefix', 'prefix', '&6' + name).setTooltip('The prefix given to players who profess as the class which can contain color codes'),
 		new StringValue('Group', 'group', 'class').setTooltip('A class group are things such as "race", "class", and "trade". Different groups can be professed through at the same time, one class from each group'),
 		new StringValue('Mana Name', 'mana', '&2Mana').setTooltip('The name the class uses for mana'),
+		new StringValue('Stamina Name', 'stamina', '&6Stamina').setTooltip('The name the class uses for stamina'),
 		new IntValue('Max Level', 'max-level', 40).setTooltip('The maximum level the class can reach. If this class turns into other classes, this will also be the level it can profess into those classes.'),
 		new ListValue('Parent', 'parent', ['None'], 'None').setTooltip('The class that turns into this one. For example, if Fighter turns into Knight, then Knight would have its parent as Fighter'),
 		new ListValue('Permission', 'needs-permission', ['True', 'False'], 'False').setTooltip('Whether or not the class requires a permission to be professed as. The permission would be "skillapi.class.{className}"'),
-        new ByteListValue('Exp Sources', 'exp-source', [ 'Mob', 'Block Break', 'Block Place', 'Craft', 'Command', 'Special', 'Exp Bottle', 'Smelt', 'Quest' ], 273).setTooltip('The experience sources the class goes up from. Most of these only work if "use-exp-orbs" is enabled in the config.yml.'),
+		new ByteListValue('Exp Sources', 'exp-source', [ 'Mob', 'Block Break', 'Block Place', 'Craft', 'Command', 'Special', 'Exp Bottle', 'Smelt', 'Quest' ], 273).setTooltip('The experience sources the class goes up from. Most of these only work if "use-exp-orbs" is enabled in the config.yml.'),
 		new AttributeValue('Health', 'health', 20, 0).setTooltip('The amount of health the class has'),
 		new AttributeValue('Mana', 'mana', 20, 0).setTooltip('The amount of mana the class has'),
-		new DoubleValue('Mana Regen', 'mana-regen', 1, 0).setTooltip('The amount of mana the class regens each interval. The interval is in the config.yml and by default is once every second. If you want to regen a decimal amount per second, increase the interval.'),
 		new AttributeValue('Stamina', 'stamina', 20, 0).setTooltip('The amount of stamina the class has'),
+		new DoubleValue('Mana Regen', 'mana-regen', 1, 0).setTooltip('The amount of mana the class regens each interval. The interval is in the config.yml and by default is once every second. If you want to regen a decimal amount per second, increase the interval.'),
 		new DoubleValue('Stamina Regen', 'stamina-regen', 1, 0).setTooltip('The amount of stamina the class regens each interval. The interval is in the config.yml and by default is once every second. If you want to regen a decimal amount per second, increase the interval.'),
 		new ListValue('Skill Tree', 'tree', [ 'Basic Horizontal', 'Basic Vertical', 'Level Horizontal', 'Level Vertical', 'Flood', 'Requirement' ], 'Requirement'),
 		new StringListValue('Skills (one per line)', 'skills', []).setTooltip('The skills the class is able to use'),
@@ -36,36 +37,36 @@ function Class(name)
 		new StringListValue('Unusable Items', 'blacklist', [ ]).setTooltip('The types of items that the class cannot use (one per line)'),
 		new StringValue('Action Bar', 'action-bar', '').setTooltip('The format for the action bar. Leave blank to use the default formatting.')
 	];
-    
-    this.updateAttribs(10);
+
+	this.updateAttribs(14);
 }
 
 Class.prototype.updateAttribs = function(i)
 {
-    var j = 0;
-    var back = {};
-    while (this.data[i + j] instanceof AttributeValue)
-    {
-        back[this.data[i + j].key.toLowerCase()] = this.data[i + j];
-        j++;
-    }
-    this.data.splice(i, this.attribCount);
-    this.attribCount = 0;
-    for (j = 0; j < ATTRIBS.length; j++)
-    {
-        var attrib = ATTRIBS[j].toLowerCase();
-        var format = attrib.charAt(0).toUpperCase() + attrib.substr(1);
-        this.data.splice(i + j, 0, new AttributeValue(format, attrib.toLowerCase(), 0, 0)
-            .setTooltip('The amount of ' + attrib + ' the class should have')
-        );
-        if (back[attrib]) 
-        {
-            var old = back[attrib];
-            this.data[i + j].base = old.base;
-            this.data[i + j].scale = old.scale;
-        }
-        this.attribCount++;
-    }
+	var j = 0;
+	var back = {};
+	while (this.data[i + j] instanceof AttributeValue)
+	{
+		back[this.data[i + j].key.toLowerCase()] = this.data[i + j];
+		j++;
+	}
+	this.data.splice(i, this.attribCount);
+	this.attribCount = 0;
+	for (j = 0; j < ATTRIBS.length; j++)
+	{
+		var attrib = ATTRIBS[j].toLowerCase();
+		var format = attrib.charAt(0).toUpperCase() + attrib.substr(1);
+		this.data.splice(i + j, 0, new AttributeValue(format, attrib.toLowerCase(), 0, 0)
+			.setTooltip('The amount of ' + attrib + ' the class should have')
+		);
+		if (back[attrib])
+		{
+			var old = back[attrib];
+			this.data[i + j].base = old.base;
+			this.data[i + j].scale = old.scale;
+		}
+		this.attribCount++;
+	}
 };
 
 /**
@@ -75,56 +76,56 @@ Class.prototype.updateAttribs = function(i)
 Class.prototype.createFormHTML = function()
 {
 	var form = document.createElement('form');
-	
+
 	var header = document.createElement('h4');
 	header.innerHTML = 'Class Details';
 	form.appendChild(header);
-	
+
 	var h = document.createElement('hr');
 	form.appendChild(h);
-	
-	this.data[5].list.splice(1, this.data[5].list.length - 1);
+
+	this.data[6].list.splice(1, this.data[6].list.length - 1);
 	for (var i = 0; i < classes.length; i++)
 	{
-		if (classes[i] != this) 
+		if (classes[i] != this)
 		{
-			this.data[5].list.push(classes[i].data[0].value);
+			this.data[6].list.push(classes[i].data[0].value);
 		}
 	}
 	for (var i = 0; i < this.data.length; i++)
 	{
 		this.data[i].createHTML(form);
-        
-        // Append attributes
-        if (this.data[i].name == 'Mana')
-        {
-            var dragInstructions = document.createElement('label');
-            dragInstructions.id = 'attribute-label';
-            dragInstructions.innerHTML = 'Drag/Drop your attributes.yml file to see custom attributes';
-            form.appendChild(dragInstructions);
-            this.updateAttribs(i + 1);
-        }
+
+		// Append attributes
+		if (this.data[i].name == 'Stamina Regen')
+		{
+			var dragInstructions = document.createElement('label');
+			dragInstructions.id = 'attribute-label';
+			dragInstructions.innerHTML = 'Drag/Drop your attributes.yml file to see custom attributes';
+			form.appendChild(dragInstructions);
+			this.updateAttribs(i + 1);
+		}
 	}
-	
+
 	var hr = document.createElement('hr');
 	form.appendChild(hr);
-	
+
 	var save = document.createElement('h5');
 	save.innerHTML = 'Save Class',
-	save.classData = this;
+		save.classData = this;
 	save.addEventListener('click', function(e) {
 		this.classData.update();
 		saveToFile(this.classData.data[0].value + '.yml', this.classData.getSaveString());
 	});
 	form.appendChild(save);
-	
+
 	var del = document.createElement('h5');
 	del.innerHTML = 'Delete',
-	del.className = 'cancelButton';
+		del.className = 'cancelButton';
 	del.addEventListener('click', function(e) {
 		var list = document.getElementById('classList');
 		var index = list.selectedIndex;
-		
+
 		classes.splice(index, 1);
 		if (classes.length == 0)
 		{
@@ -136,7 +137,7 @@ Class.prototype.createFormHTML = function()
 		list.selectedIndex = index;
 	});
 	form.appendChild(del);
-	
+
 	var target = document.getElementById('classForm');
 	target.innerHTML = '';
 	target.appendChild(form);
@@ -171,11 +172,11 @@ Class.prototype.update = function()
 
 /**
  * Creates and returns a save string for the class
- */ 
+ */
 Class.prototype.getSaveString = function()
 {
 	var saveString = '';
-	
+
 	saveString += this.data[0].value + ":\n";
 	for (var i = 0; i < this.data.length; i++)
 	{
@@ -206,19 +207,19 @@ Class.prototype.load = loadSection;
  * Creates a new class and switches the view to it
  *
  * @returns {Class} the new class
- */ 
+ */
 function newClass()
 {
 	var id = 1;
 	while (isClassNameTaken('Class ' + id)) id++;
-	
+
 	activeClass = addClass('Class ' + id);
-	
+
 	var list = document.getElementById('classList');
 	list.selectedIndex = list.length - 2;
-	
+
 	activeClass.createFormHTML();
-	
+
 	return activeClass;
 }
 
@@ -228,17 +229,17 @@ function newClass()
  * @param {string} name - the name of the skill to add
  *
  * @returns {Skill} the added skill
- */ 
-function addClass(name) 
+ */
+function addClass(name)
 {
 	var c = new Class(name);
 	classes.push(c);
-	
+
 	var option = document.createElement('option');
 	option.text = name;
 	var list = document.getElementById('classList');
 	list.add(option, list.length - 1);
-	
+
 	return c;
 }
 
@@ -248,7 +249,7 @@ function addClass(name)
  * @param {string} name - name to check for
  *
  * @returns {boolean} true if the name is taken, false otherwise
- */ 
+ */
 function isClassNameTaken(name)
 {
 	return getClass(name) != null;
