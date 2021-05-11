@@ -67,7 +67,7 @@
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/me/clip/placeholderapi/</url>
         </repository>
         <repository>
             <id>bungeecord-repo</id>
