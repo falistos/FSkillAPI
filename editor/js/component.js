@@ -161,8 +161,9 @@ var Mechanic = {
     SOUND:               { name: 'Sound',               container: false, construct: MechanicSound              },
     SPEED:               { name: 'Speed',               container: false, construct: MechanicSpeed              },
     STATUS:              { name: 'Status',              container: false, construct: MechanicStatus             },
-	STMIANA:             { name: 'Stamina',             container: false, construct: MechanicStamina            },
+	STAMINA:             { name: 'Stamina',             container: false, construct: MechanicStamina            },
     TAUNT:               { name: 'Taunt',               container: false, construct: MechanicTaunt              },
+    TITLE:               { name: 'Title',               container: false, construct: MechanicTitle              },
     TRIGGER:             { name: 'Trigger',             container: true,  construct: MechanicTrigger            },
     VALUE_ADD:           { name: 'Value Add',           container: false, construct: MechanicValueAdd           },
     VALUE_ATTRIBUTE:     { name: 'Value Attribute',     container: false, construct: MechanicValueAttribute     },
@@ -2604,6 +2605,30 @@ function MechanicTaunt()
 
     this.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The amount of aggro to apply if MythicMobs is active. Use negative amounts to reduce aggro')
+    );
+}
+
+extend('MechanicTitle', 'Component');
+function MechanicTitle()
+{
+    this.super('Title', Type.MECHANIC, false);
+
+    this.description = 'Send title to player';
+
+    this.data.push(new StringValue('Title', 'title', 'title')
+        .setTooltip('The title that send to player')
+    );
+    this.data.push(new StringValue('SubTitle', 'subtitle', 'subtitle')
+        .setTooltip('The subtitle that send to player')
+    );
+    this.data.push(new AttributeValue('Fade in', 'fadein', 0.2,0)
+        .setTooltip('The time that the title fade in')
+    );
+    this.data.push(new AttributeValue('Stay', 'stay', 1, 0)
+        .setTooltip('The time that the title stay')
+    );
+    this.data.push(new AttributeValue('Fade out', 'fadeout', 0.2, 0)
+        .setTooltip('The time that the title fade out')
     );
 }
 
