@@ -257,6 +257,7 @@ public class ComponentRegistry {
         register(new ManaMechanic());
         register(new MessageMechanic());
         register(new MythicSkillsMechanic());
+        register(new OriginSkillCastMechanic());
         register(new ParticleMechanic());
         register(new ParticleAnimationMechanic());
         register(new ParticleEffectMechanic());

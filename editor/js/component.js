@@ -144,6 +144,7 @@ var Mechanic = {
     MANA:                { name: 'Mana',                container: false, construct: MechanicMana               },
     MESSAGE:             { name: 'Message',             container: false, construct: MechanicMessage            },
     MYTHICSKILLS:        { name: 'MythicSkills',        container: false, construct: MechanicMythicSkills       },
+	ORIGINSKILL:         { name: 'OriginSkill',         container: false, construct: MechanicOriginSkill        },
     PARTICLE:            { name: 'Particle',            container: false, construct: MechanicParticle           },
     PARTICLE_ANIMATION:  { name: 'Particle Animation',  container: false, construct: MechanicParticleAnimation  },
     PARTICLE_EFFECT:     { name: 'Particle Effect',     container: false, construct: MechanicParticleEffect     },
@@ -2713,6 +2714,18 @@ function MechanicMythicSkills()
 
     this.data.push(new StringValue('Skills', 'skills', 'skills')
         .setTooltip('你要施法的MythicMobs技能')
+    );
+}
+
+extend('MechanicOriginSkill', 'Component');
+function MechanicOriginSkill()
+{
+    this.super('OriginSkill', Type.MECHANIC, false);
+
+    this.description = 'OriginSkill的技能';
+
+    this.data.push(new StringValue('Skills', 'skills', 'skills')
+        .setTooltip('你要施法的OriginSkill技能')
     );
 }
 

@@ -22,13 +22,13 @@ public class MythicSkillsMechanic extends MechanicComponent {
 
         boolean worked = false;
 
-        if(skills == null){
+        if(skills == null) {
             Logger.invalid("Skill is not present");
             return false;
         }
 
         for (LivingEntity target : targets){
-            if(PluginChecker.isMythicMobsActive()){
+            if(PluginChecker.isMythicMobsActive()) {
                 MythicMobsHook.skills(caster, skills);
                 worked = true;
             }

@@ -47,6 +47,7 @@ public class PluginChecker extends SkillAPIListener {
     private static boolean mythicMobs;
     private static boolean worldGuard;
     private static boolean parties;
+    private static boolean originskill;
 
     @Override
     public void init() {
@@ -64,6 +65,7 @@ public class PluginChecker extends SkillAPIListener {
         mythicMobs = pluginManager.isPluginEnabled("MythicMobs");
         worldGuard = pluginManager.isPluginEnabled("WorldGuard");
         parties = pluginManager.isPluginEnabled("Parties");
+        originskill = pluginManager.isPluginEnabled("OriginSkill");
     }
 
     @EventHandler
@@ -92,6 +94,9 @@ public class PluginChecker extends SkillAPIListener {
                 break;
             case "Parties":
                 parties = true;
+                break;
+            case "OriginSkill":
+                originskill = true;
                 break;
         }
     }
@@ -122,6 +127,9 @@ public class PluginChecker extends SkillAPIListener {
                 break;
             case "Parties":
                 parties = false;
+                break;
+            case "OriginSkill":
+                originskill = false;
                 break;
         }
     }
@@ -168,4 +176,6 @@ public class PluginChecker extends SkillAPIListener {
     public static boolean isWorldGuardActive() { return worldGuard; }
 
     public static boolean isPartiesActive() { return parties; }
+
+    public static boolean isOriginskillActive() { return originskill; }
 }
