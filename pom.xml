@@ -200,5 +200,12 @@
             <version>7.1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>ac.github</groupId>
+            <artifactId>OriginSkill</artifactId>
+            <version>1.2.6-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/OriginSkill-1.2.6-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
