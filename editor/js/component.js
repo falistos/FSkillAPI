@@ -77,6 +77,7 @@ var Condition = {
     ELEVATION:   { name: 'Elevation',   container: true, construct: ConditionElevation  },
     ELSE:        { name: 'Else',        container: true, construct: ConditionElse       },
     ENTITY_TYPE: { name: 'Entity Type', container: true, construct: ConditionEntityType },
+    FACTION:     { name: 'Faction',     container: true, construct: ConditionFaction    },
     FIRE:        { name: 'Fire',        container: true, construct: ConditionFire       },
     FLAG:        { name: 'Flag',        container: true, construct: ConditionFlag       },
     GROUND:      { name: 'Ground',      container: true, construct: ConditionGround     },
@@ -1186,6 +1187,18 @@ function ConditionEntityType()
 
     this.data.push(new MultiListValue('Types', 'types', getEntities)
         .setTooltip('The entity types to target')
+    );
+}
+
+extend('ConditionFaction', 'Component');
+function ConditionFaction()
+{
+    this.super('Faction', Type.CONDITION, true);
+
+    this.descritpion = 'Applies child components when the target is in right faction'
+
+    this.data.push(new StringValue('Faction', 'faction', 'none')
+        .setTooltip('The entity faction to target')
     );
 }
 

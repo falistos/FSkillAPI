@@ -192,6 +192,7 @@ public class ComponentRegistry {
         register(new ElevationCondition());
         register(new ElseCondition());
         register(new EntityTypeCondition());
+        register(new FactionCondition());
         register(new FireCondition());
         register(new FlagCondition());
         register(new GroundCondition());

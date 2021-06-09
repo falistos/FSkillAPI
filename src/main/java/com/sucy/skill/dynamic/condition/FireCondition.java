@@ -33,11 +33,17 @@ import org.bukkit.entity.LivingEntity;
  */
 public class FireCondition extends ConditionComponent {
     private static final String TYPE = "type";
+    private static final String TARGET_TYPE = "target";
 
     @Override
     boolean test(final LivingEntity caster, final int level, final LivingEntity target) {
+        String targetType = settings.getString(TARGET_TYPE).toLowerCase();
         final boolean onFire = !settings.getString(TYPE, "on fire").toLowerCase().equals("not on fire");
-        return (target.getFireTicks() > 0) == onFire;
+        if (targetType.equals("target")) {
+            return (target.getFireTicks() > 0) == onFire;
+        } else {
+            return (caster.getFireTicks() > 0 ) == onFire;
+        }
     }
 
     @Override

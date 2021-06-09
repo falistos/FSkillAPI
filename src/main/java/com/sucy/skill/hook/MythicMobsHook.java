@@ -28,4 +28,7 @@ public class MythicMobsHook {
     public static void summonMobs(final String mobName, final Location location, final int level){
         MythicMobs.inst().getMobManager().spawnMob(mobName,location,level);
     }
+    public static boolean isRightFaction(final LivingEntity target, final String faction) {
+        return MythicMobs.inst().getAPIHelper().getMythicMobInstance(target).getFaction().equals(faction);
+    }
 }
