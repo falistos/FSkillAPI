@@ -11,8 +11,8 @@ public class FactionCondition extends ConditionComponent{
     public String getKey() { return "faction"; }
 
     @Override
-    boolean test (final LivingEntity caster, final int level, final  LivingEntity target) {
-        String faction = settings.getString(FACTION);
+    boolean test(final LivingEntity caster, final int level, final  LivingEntity target) {
+        final String faction = settings.getString(FACTION);
 
         if (PluginChecker.isMythicMobsActive() && MythicMobsHook.isMonster(target)){
             return MythicMobsHook.isRightFaction(target, faction);

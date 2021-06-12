@@ -195,6 +195,7 @@ public class ComponentRegistry {
         register(new FactionCondition());
         register(new FireCondition());
         register(new FlagCondition());
+        register(new FoodCondition());
         register(new GroundCondition());
         register(new HealthCondition());
         register(new InventoryCondition());
