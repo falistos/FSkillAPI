@@ -177,5 +177,5 @@ public class PluginChecker extends SkillAPIListener {
 
     public static boolean isPartiesActive() { return parties; }
 
-    public static boolean isOriginskillActive() { return originskill; }
+    public static boolean isOriginSkillActive() { return originskill; }
 }

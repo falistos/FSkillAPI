@@ -33,7 +33,7 @@ public class OriginSkillCastMechanic extends MechanicComponent {
         }
 
         for (LivingEntity target : targets) {
-            if (PluginChecker.isOriginskillActive()) {
+            if (PluginChecker.isOriginSkillActive()) {
                 OriginSkillHook.castskill(caster, new CommandHolder(true), skill);
                 worked = true;
             }

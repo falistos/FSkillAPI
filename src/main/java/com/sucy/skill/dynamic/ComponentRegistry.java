@@ -202,6 +202,7 @@ public class ComponentRegistry {
         register(new ItemCondition());
         register(new LightCondition());
         register(new LoreCondition());
+        register(new LunarCondition());
         register(new ManaCondition());
         register(new MountedCondition());
         register(new MountingCondition());
