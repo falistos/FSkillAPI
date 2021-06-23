@@ -86,6 +86,7 @@ var Condition = {
     INVENTORY:   { name: 'Inventory',   container: true, construct: ConditionInventory  },
     ITEM:        { name: 'Item',        container: true, construct: ConditionItem       },
     LIGHT:       { name: 'Light',       container: true, construct: ConditionLight      },
+    LUNAR:       { name: 'Lunar',       container: true, construct: ConditionLunar      },
     MANA:        { name: 'Mana',        container: true, construct: ConditionMana       },
     MOUNTED:     { name: 'Mounted',     container: true, construct: ConditionMounted    },
     MOUNTING:    { name: 'Mounting',    container: true, construct: ConditionMounting   },
@@ -1228,6 +1229,19 @@ function ConditionFlag()
     this.data.push(new StringValue('Key', 'key', 'key')
         .setTooltip('The unique key representing the flag. This should match the key for when you set it using the Flag mechanic or the Flat Toggle mechanic')
     );
+}
+
+extend('ConditionLunar', 'Component');
+function ConditionLunar()
+{
+    this.super('Lunar', Type.CONDITION, true);
+
+    this.description = "Applies child components when the target's world's lunar matches the settings. ";
+
+    this.data.push(new ListValue('Type', 'type', ['FULL_MOON', 'KUI_GIBBOUS_MOON', ' LAST_QUARTER', 'WANING_MOON', 'NEW_MOON', 'CRESCENT_MOON', 'FIRST_QUARTER', 'WAXING_GIBBOUS_MOON'] , 'FULL_MOON')
+        .setTooltip('The lunar type that the target world lunar matches the settings')
+    );
+
 }
 
 extend('ConditionFood', 'Component');
