@@ -40,7 +40,8 @@ var Trigger = {
     PHYSICAL_DAMAGE      : { name: 'Physical Damage',      container: true, construct: TriggerPhysicalDamage     },
     SKILL_DAMAGE         : { name: 'Skill Damage',         container: true, construct: TriggerSkillDamage        },
     TOOK_PHYSICAL_DAMAGE : { name: 'Took Physical Damage', container: true, construct: TriggerTookPhysicalDamage },
-    TOOK_SKILL_DAMAGE    : { name: 'Took Skill Damage',    container: true, construct: TriggerTookSkillDamage    }
+    TOOK_SKILL_DAMAGE    : { name: 'Took Skill Damage',    container: true, construct: TriggerTookSkillDamage    },
+    ON_SIGNAL            : { name: 'OnSignal',             container: true, construct: TriggerOnSignal           }
 };
 
 /**
@@ -162,6 +163,7 @@ var Mechanic = {
     PUSH:                { name: 'Push',                container: false, construct: MechanicPush               },
     REMEMBER_TARGETS:    { name: 'Remember Targets',    container: false, construct: MechanicRememberTargets    },
     REPEAT:              { name: 'Repeat',              container: true,  construct: MechanicRepeat             },
+    SIGNAL:              { name: 'Signal',              container: false, construct: MechanicSignal             },
     SOUND:               { name: 'Sound',               container: false, construct: MechanicSound              },
     SPEED:               { name: 'Speed',               container: false, construct: MechanicSpeed              },
     STATUS:              { name: 'Status',              container: false, construct: MechanicStatus             },
@@ -808,6 +810,18 @@ function TriggerTookSkillDamage()
     );
     this.data.push(new StringListValue('Category', 'category', [ 'default' ] )
         .setTooltip('The type of skill damage to apply for. Leave this empty to apply to all skill damage.')
+    );
+}
+
+extend('TriggerOnSignal', 'Component');
+function TriggerOnSignal()
+{
+    this.super('OnSignal', Type.TRIGGER, true);
+
+    this.description = 'Applies skill effects when a player active a signal'
+
+    this.data.push(new StringValue('Signal', 'signal', "null")
+        .setTooltip('The signal that need to be active')
     );
 }
 
@@ -1517,7 +1531,7 @@ function ConditionTool()
 
     this.description = 'Applies child components when the target is wielding a matching tool.';
 
-    this.data.push(new ListValue('Material', 'material', [ 'Any', 'Wood', 'Stone', 'Iron', 'Gold', 'Diamond' ], 'Any')
+    this.data.push(new ListValue('Material', 'material', [ 'Any', 'Wood', 'Stone', 'Iron', 'Gold', 'Diamond', 'Netherite' ], 'Any')
         .setTooltip('The material the held tool needs to be made out of')
     );
     this.data.push(new ListValue('Tool', 'tool', [ 'Any', 'Axe', 'Hoe', 'Pickaxe', 'Shovel', 'Sword' ], 'Any')
@@ -2595,6 +2609,18 @@ function MechanicRepeat()
     );
 }
 
+extend('MechanicSignal', 'Component');
+function MechanicSignal()
+{
+    this.super('Signal', Type.MECHANIC, false );
+
+    this.description = "Give target a signal"
+
+    this.data.push(new StringValue('Singal', 'signal', "null")
+        .setTooltip('The signal that give target')
+    );
+}
+
 extend('MechanicSound', 'Component');
 function MechanicSound()
 {
@@ -2686,7 +2712,7 @@ function MechanicTrigger()
 
     this.description = 'Listens for a trigger on the current targets for a duration.';
 
-    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' ], 'Death')
+    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal'], 'Death')
         .setTooltip('The trigger to listen for')
     );
     this.data.push(new AttributeValue('Duration', 'duration', 5, 0)
@@ -2748,6 +2774,11 @@ function MechanicTrigger()
     this.data.push(new DoubleValue("Max Damage", "dmg-max", 999)
         .requireValue('trigger', damageTriggers)
         .setTooltip('The maximum damage that needs to be dealt')
+    );
+    //SIGNAL
+    this.data.push(new StringValue('Signal', 'signal', 'null')
+        .requireValue('trigger', [ 'Signal' ] )
+        .setTooltip('The signal of listening')
     );
 }
 
