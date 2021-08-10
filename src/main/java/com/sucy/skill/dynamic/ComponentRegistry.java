@@ -248,7 +248,6 @@ public class ComponentRegistry {
         register(new ManaMechanic());
         register(new MessageMechanic());
         register(new MythicSkillsMechanic());
-        register(new OriginSkillCastMechanic());
         register(new ParticleMechanic());
         register(new ParticleAnimationMechanic());
         register(new ParticleEffectMechanic());
@@ -267,7 +266,6 @@ public class ComponentRegistry {
         register(new SoundMechanic());
         register(new StatusMechanic());
         register(new StaminaMechanic());
-        register(new SummonMythicMobsMechanic());
         register(new TauntMechanic());
         register(new TitleMechanic());
         register(new TriggerMechanic());
