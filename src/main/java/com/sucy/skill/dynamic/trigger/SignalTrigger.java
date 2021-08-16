@@ -23,7 +23,6 @@ public class SignalTrigger implements Trigger<OnSignalEvent> {
     /** {@inheritDoc} */
     @Override
     public boolean shouldTrigger(OnSignalEvent event, int level, Settings settings) {
-
         final String trueSignal = settings.getString("signal");
 
         return  trueSignal.equals(event.getSignal());

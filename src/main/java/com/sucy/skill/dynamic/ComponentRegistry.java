@@ -1,6 +1,7 @@
 package com.sucy.skill.dynamic;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.data.Click;
 import com.sucy.skill.dynamic.condition.*;
 import com.sucy.skill.dynamic.custom.CustomComponent;
 import com.sucy.skill.dynamic.custom.CustomEffectComponent;
@@ -139,6 +140,7 @@ public class ComponentRegistry {
         // Triggers
         register(new BlockBreakTrigger());
         register(new BlockPlaceTrigger());
+        register(new ClickTrigger());
         register(new CrouchTrigger());
         register(new DeathTrigger());
         register(new EnvironmentalTrigger());

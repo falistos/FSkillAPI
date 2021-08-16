@@ -1613,7 +1613,7 @@ var DATA_12 = {
         "Lava",
         "Footstep",
         "Cloud",
-        "Redstone",
+        "Red Dust",
         "Snowball",
         "Snow Shovel",
         "Slime",

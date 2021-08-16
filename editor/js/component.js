@@ -29,6 +29,7 @@ var Trigger = {
     BLOCK_PLACE          : { name: 'Block Place',          container: true, construct: TriggerBlockPlace         },
     CAST                 : { name: 'Cast',                 container: true, construct: TriggerCast               },
     CLEANUP              : { name: 'Cleanup',              container: true, construct: TriggerCleanup            },
+    CLICK                : { name: 'Click',                container: true, construct: TriggerClick              },
     CROUCH               : { name: 'Crouch',               container: true, construct: TriggerCrouch             },
     DEATH                : { name: 'Death',                container: true, construct: TriggerDeath              },
     ENVIRONMENT_DAMAGE   : { name: 'Environment Damage',   container: true, construct: TriggerEnvironmentDamage  },
@@ -646,6 +647,18 @@ function TriggerCleanup()
     this.super('Cleanup', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when the player disconnects or unlearns the skill. This is always applied with a skill level of 1 just for the sake of math.';
+}
+
+extend('TriggerClick', 'Component');
+function TriggerClick()
+{
+    this.super('Click', Type.TRIGGER, true);
+
+    this.description = 'Applies skills effects when the player click the key';
+
+    this.data.push(new ListValue('ClickType', 'clickType', ['LEFT', 'RIGHT', 'Q'], 'LEFT')
+        .setTooltip('The trigger key')
+    );
 }
 
 extend('TriggerCrouch', 'Component');
@@ -2712,7 +2725,7 @@ function MechanicTrigger()
 
     this.description = 'Listens for a trigger on the current targets for a duration.';
 
-    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal'], 'Death')
+    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal', 'Click'], 'Death')
         .setTooltip('The trigger to listen for')
     );
     this.data.push(new AttributeValue('Duration', 'duration', 5, 0)
@@ -2779,6 +2792,11 @@ function MechanicTrigger()
     this.data.push(new StringValue('Signal', 'signal', 'null')
         .requireValue('trigger', [ 'Signal' ] )
         .setTooltip('The signal of listening')
+    );
+    //CLCIK
+    this.data.push(new ListValue('Key', 'clickType', ['LEFT', 'RIGHT', 'Q'], 'LEFT')
+        .requireValue('trigger', [ 'Click' ])
+        .setTooltip('The key of clicking')
     );
 }
 
