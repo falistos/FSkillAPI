@@ -11,7 +11,7 @@ public class SignalTrigger implements Trigger<OnSignalEvent> {
     /** {@inheritDoc} */
     @Override
     public String getKey() {
-        return "Signal";
+        return "SIGNAL";
     }
 
     /** {@inheritDoc} */

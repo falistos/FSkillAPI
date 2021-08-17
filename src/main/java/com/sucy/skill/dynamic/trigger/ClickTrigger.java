@@ -11,7 +11,7 @@ public class ClickTrigger implements Trigger<KeyPressEvent> {
     /** {@inheritDoc} */
     @Override
     public String getKey() {
-        return "Click";
+        return "CLICK";
     }
 
     /** {@inheritDoc} */

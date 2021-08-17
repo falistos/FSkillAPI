@@ -28,6 +28,7 @@ var Trigger = {
     BLOCK_BREAK          : { name: 'Block Break',          container: true, construct: TriggerBlockBreak         },
     BLOCK_PLACE          : { name: 'Block Place',          container: true, construct: TriggerBlockPlace         },
     CAST                 : { name: 'Cast',                 container: true, construct: TriggerCast               },
+    CAST_SKILL           : { name: 'Cast Skill',           container: true, construct: TriggerCastSkill          },
     CLEANUP              : { name: 'Cleanup',              container: true, construct: TriggerCleanup            },
     CLICK                : { name: 'Click',                container: true, construct: TriggerClick              },
     CROUCH               : { name: 'Crouch',               container: true, construct: TriggerCrouch             },
@@ -640,6 +641,26 @@ function TriggerCast()
     this.super('Cast', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player casts the skill using either the cast command, the skill bar, or click combos.';
+}
+
+extend('TriggerCastSkill', 'Component');
+function TriggerCastSkill()
+{
+    this.super('CastSkill', Type.TRIGGER, true);
+
+    this.description = 'Applies skill effects when a player cast skill.';
+
+    this.data.push(new StringValue('Skill', 'skill', 'any')
+        .setTooltip('The name of the skill. put any to for any skill')
+    );
+
+    this.data.push(new DoubleValue('Mana', 'mana', '-1')
+        .setTooltip('The mana of the skill. (-1 for any data value)')
+    );
+
+    this.data.push(new DoubleValue('Stamina', 'stamina', '-1')
+        .setTooltip('The stamina of the skill. (-1 for any data value)')
+    );
 }
 
 extend('TriggerCleanup', 'Component');
@@ -2742,7 +2763,7 @@ function MechanicTrigger()
 
     this.description = 'Listens for a trigger on the current targets for a duration.';
 
-    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal', 'Click', 'ValueChange'], 'Death')
+    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal', 'Click', 'Value Change', 'Cast Skill'], 'Death')
         .setTooltip('The trigger to listen for')
     );
     this.data.push(new AttributeValue('Duration', 'duration', 5, 0)
@@ -2817,13 +2838,28 @@ function MechanicTrigger()
     );
     //ValueChange
     this.data.push(new StringValue('Key', 'key', 'any')
-        .requireValue('trigger', [ 'ValueChange' ])
+        .requireValue('trigger', [ 'Value Change' ])
         .setTooltip('The Key of value, set any for any value change')
     );
 
     this.data.push(new DoubleValue('Data','data', 0)
-        .requireValue('trigger', [ 'ValueChange' ])
+        .requireValue('trigger', [ 'Value Change' ])
         .setTooltip('The amount change of the value')
+    );
+    //CastSkill
+    this.data.push(new StringValue('Skill', 'skill', 'any')
+        .requireValue('trigger', [ 'Cast Skill' ])
+        .setTooltip('The name of the skill. put any to for any skill')
+    );
+
+    this.data.push(new DoubleValue('Mana', 'mana', '-1')
+        .requireValue('trigger', [ 'Cast Skill' ])
+        .setTooltip('The mana of the skill. (-1 for any data value)')
+    );
+
+    this.data.push(new DoubleValue('Stamina', 'stamina', '-1')
+        .requireValue('trigger', [ 'Cast Skill' ])
+        .setTooltip('The stamina of the skill. (-1 for any data value)')
     );
 }
 
