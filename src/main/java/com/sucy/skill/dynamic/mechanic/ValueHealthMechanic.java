@@ -26,6 +26,7 @@
  */
 package com.sucy.skill.dynamic.mechanic;
 
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.entity.LivingEntity;
 
@@ -60,15 +61,19 @@ public class ValueHealthMechanic extends MechanicComponent {
         switch (type) {
             case "max":
                 data.put(key, target.getMaxHealth());
+                new ValueChangeEvent(caster, key,  target.getMaxHealth());
                 break;
             case "percent":
                 data.put(key, target.getHealth() / target.getMaxHealth());
+                new ValueChangeEvent(caster, key,  target.getHealth() / target.getMaxHealth());
                 break;
             case "missing":
                 data.put(key, target.getMaxHealth() - target.getHealth());
+                new ValueChangeEvent(caster, key,  target.getMaxHealth() - target.getHealth());
                 break;
             default: // current
                 data.put(key, target.getHealth());
+                new ValueChangeEvent(caster, key,  target.getHealth());
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package com.sucy.skill.dynamic.mechanic;
 
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.hook.PlaceholderAPIHook;
 import com.sucy.skill.hook.PluginChecker;
@@ -59,6 +60,7 @@ public class ValuePlaceholderMechanic extends MechanicComponent
                         Logger.invalid(placeholder + " is not a valid numeric placeholder - PlaceholderAPI returned " + value);
                         return false;
                     }
+                    new ValueChangeEvent(caster, key, value);
             }
             return true;
         }

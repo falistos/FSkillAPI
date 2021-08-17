@@ -26,6 +26,7 @@
  */
 package com.sucy.skill.dynamic.mechanic;
 
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.entity.LivingEntity;
 
@@ -69,6 +70,7 @@ public class ValueRandomMechanic extends MechanicComponent {
         HashMap<String, Object> data = DynamicSkill.getCastData(caster);
         double rand = triangular ? 0.5 * (Math.random() + Math.random()) : Math.random();
         data.put(key, rand * (max - min) + min);
+            new ValueChangeEvent(caster, key,  rand * (max - min) + min);
         return true;
     }
 }

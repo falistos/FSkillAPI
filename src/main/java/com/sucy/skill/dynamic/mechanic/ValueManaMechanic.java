@@ -27,6 +27,7 @@
 package com.sucy.skill.dynamic.mechanic;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.entity.LivingEntity;
@@ -66,12 +67,16 @@ public class ValueManaMechanic extends MechanicComponent
         switch (type) {
             case "max":
                 data.put(key, player.getMaxMana());
+                new ValueChangeEvent(caster, key,  player.getMaxMana());
             case "percent":
                 data.put(key, player.getMana() / player.getMaxMana());
+                new ValueChangeEvent(caster, key,player.getMana() / player.getMaxMana());
             case "missing":
                 data.put(key, player.getMaxMana() - player.getMana());
+                new ValueChangeEvent(caster, key,player.getMaxMana() - player.getMana());
             default: // current
                 data.put(key, player.getMana());
+                new ValueChangeEvent(caster, key, player.getMana());
         }
         return true;
     }

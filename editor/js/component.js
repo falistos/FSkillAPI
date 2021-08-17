@@ -42,7 +42,8 @@ var Trigger = {
     SKILL_DAMAGE         : { name: 'Skill Damage',         container: true, construct: TriggerSkillDamage        },
     TOOK_PHYSICAL_DAMAGE : { name: 'Took Physical Damage', container: true, construct: TriggerTookPhysicalDamage },
     TOOK_SKILL_DAMAGE    : { name: 'Took Skill Damage',    container: true, construct: TriggerTookSkillDamage    },
-    ON_SIGNAL            : { name: 'OnSignal',             container: true, construct: TriggerOnSignal           }
+    ON_SIGNAL            : { name: 'OnSignal',             container: true, construct: TriggerOnSignal           },
+    ValueChange          : { name: 'ValueChange',          container: true, construct: TriggerValueChange        },
 };
 
 /**
@@ -835,6 +836,22 @@ function TriggerOnSignal()
 
     this.data.push(new StringValue('Signal', 'signal', "null")
         .setTooltip('The signal that need to be active')
+    );
+}
+
+extend('TriggerValueChange', 'Component');
+function TriggerValueChange()
+{
+    this.super('ValueChange', Type.TRIGGER, true);
+
+    this.description = 'Applies skill effects when a player change a value'
+
+    this.data.push(new StringValue('Key', 'key', 'any')
+        .setTooltip('The Key of value, set any for any value change')
+    );
+
+    this.data.push(new DoubleValue('Data','data', 0)
+        .setTooltip('The amount change of the value')
     );
 }
 
@@ -2725,7 +2742,7 @@ function MechanicTrigger()
 
     this.description = 'Listens for a trigger on the current targets for a duration.';
 
-    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal', 'Click'], 'Death')
+    this.data.push(new ListValue('Trigger', 'trigger', [ 'Crouch', 'Death', 'Environment Damage', 'Kill', 'Land', 'Launch', 'Physical Damage', 'Skill Damage', 'Took Physical Damage', 'Took Skill Damage' , 'Signal', 'Click', 'ValueChange'], 'Death')
         .setTooltip('The trigger to listen for')
     );
     this.data.push(new AttributeValue('Duration', 'duration', 5, 0)
@@ -2797,6 +2814,16 @@ function MechanicTrigger()
     this.data.push(new ListValue('Key', 'clickType', ['LEFT', 'RIGHT', 'Q'], 'LEFT')
         .requireValue('trigger', [ 'Click' ])
         .setTooltip('The key of clicking')
+    );
+    //ValueChange
+    this.data.push(new StringValue('Key', 'key', 'any')
+        .requireValue('trigger', [ 'ValueChange' ])
+        .setTooltip('The Key of value, set any for any value change')
+    );
+
+    this.data.push(new DoubleValue('Data','data', 0)
+        .requireValue('trigger', [ 'ValueChange' ])
+        .setTooltip('The amount change of the value')
     );
 }
 

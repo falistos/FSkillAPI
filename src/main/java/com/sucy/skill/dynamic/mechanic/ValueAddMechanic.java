@@ -27,6 +27,8 @@
 package com.sucy.skill.dynamic.mechanic;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.OnSignalEvent;
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -40,8 +42,6 @@ import java.util.List;
 public class ValueAddMechanic extends MechanicComponent {
     private static final String KEY = "key";
     private static final String AMOUNT = "amount";
-    private static final String TYPE = "type";
-    private static final String SECONDS = "delay";
 
     @Override
     public String getKey() {
@@ -64,7 +64,6 @@ public class ValueAddMechanic extends MechanicComponent {
         }
 
         String key = settings.getString(KEY);
-        String type = settings.getString(TYPE, "normal").toLowerCase();
         double amount = parseValues(caster, AMOUNT, level, 1) * targets.size();
         HashMap<String, Object> data = DynamicSkill.getCastData(caster);
         if (!data.containsKey(key)) {
@@ -72,12 +71,7 @@ public class ValueAddMechanic extends MechanicComponent {
         } else {
             data.put(key, amount + (double) data.get(key));
         }
-        if (type.equals("limited-time")) {
-            double seconds = parseValues(caster, SECONDS, level, 0);
-            Bukkit.getScheduler().runTaskLater(SkillAPI.getPlugin(SkillAPI.class),
-                    () -> data.put(key, (double) data.get(key) - amount),
-                    (long) (seconds * 20));
-        }
+        new ValueChangeEvent(caster, key, amount);
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.sucy.skill.dynamic.mechanic;
 
+import com.sucy.skill.api.event.ValueChangeEvent;
 import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,6 +41,7 @@ public class ValueDistanceMechanic extends MechanicComponent
         final String key = settings.getString(KEY);
         final HashMap<String, Object> data = DynamicSkill.getCastData(caster);
         data.put(key, targets.get(0).getLocation().distance(caster.getLocation()));
+        new ValueChangeEvent(caster, key, targets.get(0).getLocation().distance(caster.getLocation()));
         return true;
     }
 }
