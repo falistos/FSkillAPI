@@ -119,6 +119,8 @@ public class LocationTarget extends TargetComponent {
                 AIR_BLOCKS.add(material);
             }
         }
+        // Bukkit seems to think that water is not transparent
+        AIR_BLOCKS.add(Material.WATER);
     }
 
     @Override
