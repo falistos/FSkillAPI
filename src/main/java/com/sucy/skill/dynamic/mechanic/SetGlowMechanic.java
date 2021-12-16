@@ -39,6 +39,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.inventivetalent.glow.GlowAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,17 +64,15 @@ public class SetGlowMechanic extends MechanicComponent {
      */
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
-        Bukkit.broadcastMessage("fuck you glow");
         if (!(caster instanceof Player)) {
             return false;
         }
 
         final Player player = (Player) caster;
-        player.playSound(player.getLocation(), Sound.ENTITY_CAT_HISS, 1, 1);
         String color = settings.getString(COLOR);
+        double seconds = settings.getDouble(SECONDS);
         for(LivingEntity target : targets){
-            player.sendMessage("you glowed "+target.getName()+" with "+color+" for "+SECONDS+"s");
-
+            GlowAPI.setGlowing(targets, GlowAPI.Color.valueOf(color), player);
         }
         return true;
     }
