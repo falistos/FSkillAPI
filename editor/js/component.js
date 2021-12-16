@@ -193,7 +193,8 @@ var Mechanic = {
     WARP_SWAP:           { name: 'Warp Swap',           container: false, construct: MechanicWarpSwap           },
     WARP_TARGET:         { name: 'Warp Target',         container: false, construct: MechanicWarpTarget         },
     WARP_VALUE:          { name: 'Warp Value',          container: false, construct: MechanicWarpValue          },
-    WOLF:                { name: 'Wolf',                container: true,  construct: MechanicWolf               }
+    WOLF:                { name: 'Wolf',                container: true,  construct: MechanicWolf               },
+    SET_GLOW:            { name: 'Set Glow',            container: false,  construct: MechanicSetGlow               }
 };
 
 var saveIndex;
@@ -3236,6 +3237,21 @@ function MechanicWolf()
     );
     this.data.push(new StringListValue('Skills (one per line)', 'skills', [])
         .setTooltip('The skills to give the wolf. Skills are executed at the level of the skill summoning the wolf. Skills needing a Cast trigger will not work.')
+    );
+}
+
+extend('MechanicSetGlow', 'Component');
+function MechanicSetGlow()
+{
+    this.super('SetGlow', Type.MECHANIC, true);
+
+    this.description = 'glow target with color (only caster can see it)';
+
+    this.data.push(new ListValue('Glow Color', 'color', getDyes(), 'White')
+        .setTooltip('The color of glowing')
+    );
+    this.data.push(new AttributeValue('Duration', 'seconds', 10, 0)
+        .setTooltip('How long should it glow for')
     );
 }
 
