@@ -66,10 +66,14 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
     private static final String RIGHT    = "right";
     private static final String UPWARD   = "upward";
     private static final String FORWARD  = "forward";
+
+    //Missile
     private static final String MISSILE_TARGET = "missile_target";
     private static final String MISSILE_THRESHOLD = "missile_threshold";
     private static final String MISSILE_ANGLE = "missile_angle";
+    private static final String MISSILE_DELAY = "missile_delay";
 
+    //Effect
     private static final String USE_EFFECT = "use-effect";
     private static final String EFFECT_KEY = "effect-key";
 
@@ -153,10 +157,12 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
         LivingEntity missileTarget = null;
         double missileThreshold = 0;
         double missileAngle = 0;
+        double missileDelay = 0;
         if(missileTargets.size() > 0) {
             missileTarget = missileTargets.get(0);
             missileThreshold = settings.getDouble(MISSILE_THRESHOLD);
             missileAngle = settings.getDouble(MISSILE_ANGLE);
+            missileDelay = settings.getDouble(MISSILE_DELAY);
         }
 
         // Fire from each target
@@ -168,7 +174,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
             if (spread.equals("rain")) {
                 double radius = parseValues(caster, RADIUS, level, 2.0);
                 double height = parseValues(caster, HEIGHT, level, 8.0);
-                list = ParticleProjectile.rain(caster, level, loc, copy, radius, height, amount, this, missileTarget, missileThreshold, missileAngle);
+                list = ParticleProjectile.rain(caster, level, loc, copy, radius, height, amount, this, missileTarget, missileThreshold, missileAngle, missileDelay);
             } else {
                 Vector dir = target.getLocation().getDirection();
 
@@ -193,7 +199,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         copy,
                         angle,
                         amount,
-                        this, missileTarget, missileThreshold, missileAngle
+                        this, missileTarget, missileThreshold, missileAngle, missileDelay
                 );
             }
 
