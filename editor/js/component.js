@@ -3243,7 +3243,7 @@ function MechanicWolf()
 extend('MechanicSetGlow', 'Component');
 function MechanicSetGlow()
 {
-    this.super('SetGlow', Type.MECHANIC, false);
+    this.super('Set Glow', Type.MECHANIC, false);
 
     this.description = 'glow target with color (only caster can see it)';
 
