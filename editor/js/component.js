@@ -2505,6 +2505,9 @@ function MechanicParticleProjectile()
         .setTooltip('How long in seconds before the projectile will expire in case it doesn\'t hit anything')
     );
 
+    //Add missile options (homing projectile)
+    addMissileOptions(this, true);
+
     addEffectOptions(this, true);
 }
 
@@ -3407,7 +3410,29 @@ function addParticleOptions(component) {
     component.data.push(new DoubleValue('Speed', 'speed', 0.1).setTooltip('Speed of the particle. For some particles controls other parameters, such as size.')
     );
 }
+function addMissileOptions(component, optional)
+{
+    var opt = appendNone;
+    if(optional){
+        opt = appendMissileOptional;
+        component.data.push(new ListValue('Use Missile', 'use-missile', [ 'True', 'False' ], 'False')
+            .setTooltip('Whether or not to use the missile (homing projectile)..')
+        );
+    }
 
+    component.data.push(opt(new StringValue('Missile Target', 'missile_target', "none")
+        .setTooltip('The target you would like to home at'))
+    );
+    component.data.push(opt(new DoubleValue('Missile Threshold', 'missile_threshold', 3)
+        .setTooltip('The threshold of the missile'))
+    );
+    component.data.push(opt(new DoubleValue('Missile Angle', 'missile_angle', 3)
+        .setTooltip('The angle of the missile will turn'))
+    );
+    component.data.push(opt(new DoubleValue('Missile Delay', 'missile_delay', 0)
+        .setTooltip('The delay before auto homing the target'))
+    );
+}
 function addEffectOptions(component, optional)
 {
     var opt = appendNone;
@@ -3483,6 +3508,11 @@ function addEffectOptions(component, optional)
 function appendOptional(value)
 {
     value.requireValue('use-effect', [ 'True' ]);
+    return value;
+}
+function appendMissileOptional(value)
+{
+    value.requireValue('use-missile', [ 'True' ]);
     return value;
 }
 
