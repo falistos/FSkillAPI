@@ -194,7 +194,7 @@ var Mechanic = {
     WARP_TARGET:         { name: 'Warp Target',         container: false, construct: MechanicWarpTarget         },
     WARP_VALUE:          { name: 'Warp Value',          container: false, construct: MechanicWarpValue          },
     WOLF:                { name: 'Wolf',                container: true,  construct: MechanicWolf               },
-    SET_GLOW:            { name: 'Set Glow',            container: false,  construct: MechanicSetGlow               }
+    SET_GLOW:            { name: 'Set Glow',            container: false, construct: MechanicSetGlow           }
 };
 
 var saveIndex;
@@ -3243,7 +3243,7 @@ function MechanicWolf()
 extend('MechanicSetGlow', 'Component');
 function MechanicSetGlow()
 {
-    this.super('SetGlow', Type.MECHANIC, true);
+    this.super('SetGlow', Type.MECHANIC, false);
 
     this.description = 'glow target with color (only caster can see it)';
 
