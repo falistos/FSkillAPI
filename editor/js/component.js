@@ -3247,7 +3247,7 @@ function MechanicSetGlow()
 
     this.description = 'glow target with color (only caster can see it)';
 
-    this.data.push(new ListValue('Glow Color', 'color', getDyes(), 'White')
+    this.data.push(new ListValue('Glow Color', 'color', getGlowColors(), 'White')
         .setTooltip('The color of glowing')
     );
     this.data.push(new AttributeValue('Duration', 'seconds', 10, 0)
