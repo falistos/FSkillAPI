@@ -255,16 +255,19 @@ public class ParticleProjectile extends CustomProjectile
             final Vector dir = vel.multiply(1 / speed);
             final Vector towards = missileTarget.getLocation().toVector().subtract(getLocation().toVector());
             final Vector targetDir = towards.normalize();
-            final double dot = dir.dot(targetDir);
+            final double dot = dir.dot(targetDir);//degree of inaccurate
             if (dot >= missileThreshold) {
                 setVelocity(targetDir.multiply(speed));
             } else {
-                final double diff = Math.acos(dot);
-                final double t = missileAngle / diff;
-                final double sinAngle = Math.sin(diff);
+                Vector currentDir = vel.normalize();
+                Vector sum = currentDir.add(targetDir);
+                Vector newDir = sum.divide(new Vector(2,2,2));
+                Vector normalizedNewDir = newDir.normalize();
+                setVelocity(normalizedNewDir.multiply(speed));
                 //final double m = Math.sin()
                 //baseProjectile.setVelocity(result);
             }
+
         }
     }
 
