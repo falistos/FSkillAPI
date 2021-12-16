@@ -33,7 +33,9 @@ import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.listener.MechanicListener;
 import com.sucy.skill.task.RemoveTask;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -61,17 +63,19 @@ public class SetGlowMechanic extends MechanicComponent {
      */
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
+        Bukkit.broadcastMessage("fuck you glow");
         if (!(caster instanceof Player)) {
             return false;
         }
 
         final Player player = (Player) caster;
-
+        player.playSound(player.getLocation(), Sound.ENTITY_CAT_HISS, 1, 1);
         String color = settings.getString(COLOR);
         for(LivingEntity target : targets){
             player.sendMessage("you glowed "+target.getName()+" with "+color+" for "+SECONDS+"s");
+
         }
-        return false;
+        return true;
     }
 
     @Override
