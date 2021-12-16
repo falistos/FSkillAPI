@@ -3429,7 +3429,7 @@ function addMissileOptions(component, optional)
     component.data.push(opt(new DoubleValue('Missile Angle', 'missile_angle', 3)
         .setTooltip('The angle of the missile will turn'))
     );
-    component.data.push(opt(new DoubleValue('Delay', 'missile_delay', 0)
+    component.data.push(opt(new DoubleValue('Missile Delay', 'missile_delay', 0)
         .setTooltip('The delay before auto homing the target'))
     );
 }
