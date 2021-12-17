@@ -67,6 +67,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
     private static final String UPWARD   = "upward";
     private static final String FORWARD  = "forward";
 
+    private static final String COLLISION_RADIUS = "collision_radius";
     //Missile
     private static final String MISSILE_TARGET = "missile_target";
     private static final String MISSILE_THRESHOLD = "missile_threshold";
@@ -154,6 +155,8 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
         copy.set(ParticleHelper.RADIUS_KEY, parseValues(caster, ParticleHelper.RADIUS_KEY, level, 0), 0);
         final List<LivingEntity> missileTargets = RememberTarget.remember(caster, settings.getString(MISSILE_TARGET, "_none"));
 
+        double collisionRadius = settings.getDouble(COLLISION_RADIUS);
+        //Missile
         LivingEntity missileTarget = null;
         double missileThreshold = 0;
         double missileAngle = 0;
@@ -174,7 +177,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
             if (spread.equals("rain")) {
                 double radius = parseValues(caster, RADIUS, level, 2.0);
                 double height = parseValues(caster, HEIGHT, level, 8.0);
-                list = ParticleProjectile.rain(caster, level, loc, copy, radius, height, amount, this, missileTarget, missileThreshold, missileAngle, missileDelay);
+                list = ParticleProjectile.rain(caster, level, loc, copy, radius, height, amount, this, collisionRadius, missileTarget, missileThreshold, missileAngle, missileDelay);
             } else {
                 Vector dir = target.getLocation().getDirection();
 
@@ -199,7 +202,12 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         copy,
                         angle,
                         amount,
-                        this, missileTarget, missileThreshold, missileAngle, missileDelay
+                        this,
+                        collisionRadius,
+                        missileTarget,
+                        missileThreshold,
+                        missileAngle,
+                        missileDelay
                 );
             }
 
