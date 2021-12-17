@@ -48,6 +48,7 @@ import com.sucy.skill.gui.tool.GUITool;
 import com.sucy.skill.hook.PluginChecker;
 import com.sucy.skill.log.Logger;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -409,7 +410,29 @@ public class Settings {
      *
      * @return true if an ally, false otherwise
      */
+    public boolean isSameTeam(final LivingEntity attacker, final LivingEntity target) {
+        if (attacker instanceof Player && target instanceof Player) {
+            final Player a = (Player)attacker;
+            final Player b = (Player)target;
+            try {
+                if (a.getScoreboard().getPlayerTeam((OfflinePlayer)a).hasPlayer((OfflinePlayer)b)) {
+                    if (a.getName().equals("hiIamG7")) {
+                        a.sendMessage("\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd");
+                    }
+                    return true;
+                }
+            }
+            catch (NullPointerException ex) {}
+            if (a.getName().equals("hiIamG7")) {
+                a.sendMessage("\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u02d4\ufffd\ufffd\ufffd");
+            }
+        }
+        return false;
+    }
     public boolean isAlly(LivingEntity attacker, LivingEntity target) {
+        if(attacker instanceof Player && target instanceof Player){
+            if(!isSameTeam(attacker, target)) return false;
+        }
         return !canAttack(attacker, target);
     }
 

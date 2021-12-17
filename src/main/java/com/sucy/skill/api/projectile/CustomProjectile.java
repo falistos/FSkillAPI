@@ -32,9 +32,11 @@ import com.sucy.skill.api.particle.target.Followable;
 import com.sucy.skill.log.Logger;
 import com.sucy.skill.util.Version;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -301,6 +303,12 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
             hit.add(entity.getEntityId());
 
             boolean ally = SkillAPI.getSettings().isAlly(getShooter(), entity);
+            if (entity instanceof Player){
+                Player targetPlayer = (Player) entity;
+                if(targetPlayer.getGameMode() == GameMode.SPECTATOR){
+                    continue;//won't hit spectator.
+                }
+            }
             if (ally && !this.ally) continue;
             if (!ally && !this.enemy) continue;
             if (!SkillAPI.getSettings().isValidTarget(entity)) continue;
