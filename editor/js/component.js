@@ -2495,7 +2495,9 @@ function MechanicParticleProjectile()
     this.data.push(new ListValue('Pierce', 'pierce', [ 'True', 'False' ], 'False')
         .setTooltip('Whether or not this projectile should pierce through initial targets and continue hitting those behind them')
     );
-
+    this.data.push(new DoubleValue('Collision radius', 'collision_radius', 1.5)
+        .setTooltip('the collision radius centered from the bullet')
+    );
     addParticleOptions(this);
 
     this.data.push(new DoubleValue('Frequency', 'frequency', 0.05)
