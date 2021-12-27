@@ -80,6 +80,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
     //Custom model
     private static final String USE_CUSTOM_MODEL = "use_custom_model";
     private static final String CUSTOM_MODEL_MATERIAL = "custom_model_material";
+    private static final String CUSTOM_MODEL_DATA = "custom_model_data";
     private static final String CUSTOM_MODEL_NAME = "custom_model_name";
     private static final String CUSTOM_MODEL_LORE = "custom_model_lore";
     //Effect
@@ -174,10 +175,12 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
             boolean useCustomModel = settings.getBool(USE_CUSTOM_MODEL);
             if(useCustomModel) {
                 Material customModelMaterial = Material.valueOf(settings.getString(CUSTOM_MODEL_MATERIAL).toUpperCase().replace(" ", "_"));
+                int customModelData = settings.getInt(CUSTOM_MODEL_DATA);
                 String customModelName = settings.getString(CUSTOM_MODEL_NAME);
                 List<String> customModelLore = settings.getStringList(CUSTOM_MODEL_LORE);
                 ItemStack itemStack = new ItemStack(customModelMaterial);
                 ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setCustomModelData(customModelData);
                 itemMeta.setDisplayName(customModelName);
                 itemMeta.setLore(customModelLore);
                 itemStack.setItemMeta(itemMeta);
