@@ -33,15 +33,19 @@ import com.sucy.skill.api.event.ParticleProjectileHitEvent;
 import com.sucy.skill.api.event.ParticleProjectileLandEvent;
 import com.sucy.skill.api.event.ParticleProjectileLaunchEvent;
 import com.sucy.skill.api.util.ParticleHelper;
+import com.sucy.skill.dynamic.target.RememberTarget;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fake projectile that plays particles along its path
@@ -79,7 +83,7 @@ public class ParticleProjectile extends CustomProjectile
     private int      life;
     private Vector   gravity;
     private boolean  pierce;
-    private Entity   missileTarget;
+    private String   missileTargetID;
     private double   missileThreshold;
     private double   missileAngle;
     private double   missileDelay;
@@ -94,7 +98,16 @@ public class ParticleProjectile extends CustomProjectile
      * @param loc      initial location of the projectile
      * @param settings settings for the projectile
      */
-    public ParticleProjectile(LivingEntity shooter, int level, Location loc, Settings settings, double collisionRadius)
+    public ParticleProjectile(LivingEntity shooter,
+                              int level,
+                              Location loc,
+                              Settings settings,
+                              double collisionRadius,
+                              String missileTargetID,
+                              double missileThreshold,
+                              double missileAngle,
+                              double missileDelay,
+                              ItemStack customModelItemStack)
     {
         super(shooter);
 
@@ -106,25 +119,7 @@ public class ParticleProjectile extends CustomProjectile
         this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
         this.pierce = settings.getBool(PIERCE, false);
         this.collisionRadius = collisionRadius;
-        this.missileTarget = null;
-        steps = (int) Math.ceil(vel.length() * 2);
-        vel.multiply(1.0 / steps);
-        gravity.multiply(1.0 / steps);
-        Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
-    }
-    public ParticleProjectile(LivingEntity shooter, int level, Location loc, Settings settings, double collisionRadius, Entity missileTarget, double missileThreshold, double missileAngle, double missileDelay)
-    {
-        super(shooter);
-
-        this.loc = loc;
-        this.settings = settings;
-        this.vel = loc.getDirection().multiply(settings.getAttr(SPEED, level, 1.0));
-        this.freq = (int) (20 * settings.getDouble(FREQUENCY, 0.5));
-        this.life = (int) (settings.getDouble(LIFESPAN, 2) * 20);
-        this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
-        this.pierce = settings.getBool(PIERCE, false);
-        this.collisionRadius = collisionRadius;
-        this.missileTarget = missileTarget;
+        this.missileTargetID = missileTargetID;
         this.missileThreshold = missileThreshold;
         this.missileAngle = missileAngle;
         this.missileDelay = missileDelay;
@@ -144,6 +139,7 @@ public class ParticleProjectile extends CustomProjectile
             }.runTaskLater(SkillAPI.singleton, Math.round(missileDelay * 20));
         }
         Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
+        shooter.getWorld().dropItem(shooter.getLocation(), customModelItemStack);
     }
 
     /**
@@ -269,25 +265,29 @@ public class ParticleProjectile extends CustomProjectile
         }
 
         //Missile
-        if(missileTarget!=null && missileStarted){
-            final Vector vel = getVelocity();
-            final double speed = vel.length();
-            final Vector dir = vel.multiply(1 / speed);
-            final Vector towards = missileTarget.getLocation().toVector().subtract(getLocation().toVector());
-            final Vector targetDir = towards.normalize();
-            final double dot = dir.dot(targetDir);//degree of inaccurate
-            if (dot >= missileThreshold) {
-                setVelocity(targetDir.multiply(speed));
-            } else {
-                Vector currentDir = vel.normalize();
-                Vector sum = currentDir.add(targetDir);
-                Vector newDir = sum.divide(new Vector(2,2,2));
-                Vector normalizedNewDir = newDir.normalize();
-                setVelocity(normalizedNewDir.multiply(speed));
-                //final double m = Math.sin()
-                //baseProjectile.setVelocity(result);
-            }
+        final List<LivingEntity> missileTargets = RememberTarget.remember(this.getShooter(), settings.getString(missileTargetID, "_none"));
+        if(missileTargets.size() > 0) {
+            Entity missileTarget = missileTargets.get(0);
+            if (missileTarget != null && missileStarted) {
+                final Vector vel = getVelocity();
+                final double speed = vel.length();
+                final Vector dir = vel.multiply(1 / speed);
+                final Vector towards = missileTarget.getLocation().toVector().subtract(getLocation().toVector());
+                final Vector targetDir = towards.normalize();
+                final double dot = dir.dot(targetDir);//degree of inaccurate
+                if (dot >= missileThreshold) {
+                    setVelocity(targetDir.multiply(speed));
+                } else {
+                    Vector currentDir = vel.normalize();
+                    Vector sum = currentDir.add(targetDir);
+                    Vector newDir = sum.divide(new Vector(2, 2, 2));
+                    Vector normalizedNewDir = newDir.normalize();
+                    setVelocity(normalizedNewDir.multiply(speed));
+                    //final double m = Math.sin()
+                    //baseProjectile.setVelocity(result);
+                }
 
+            }
         }
     }
 
@@ -314,10 +314,11 @@ public class ParticleProjectile extends CustomProjectile
                                                        int amount,
                                                        ProjectileCallback callback,
                                                        double collisionRadius,
-                                                       Entity missileTarget,
+                                                       String missileTargetID,
                                                        double missileThreshold,
                                                        double missileAngle,
-                                                       double missileDelay)
+                                                       double missileDelay,
+                                                       ItemStack customModelItemStack)
     {
         ArrayList<Vector> dirs = calcSpread(center, angle, amount);
         ArrayList<ParticleProjectile> list = new ArrayList<ParticleProjectile>();
@@ -325,7 +326,7 @@ public class ParticleProjectile extends CustomProjectile
         {
             Location l = loc.clone();
             l.setDirection(dir);
-            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius, missileTarget, missileThreshold, missileAngle, missileDelay);
+            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius, missileTargetID, missileThreshold, missileAngle, missileDelay, customModelItemStack);
             p.setCallback(callback);
             list.add(p);
         }
@@ -355,10 +356,11 @@ public class ParticleProjectile extends CustomProjectile
                                                      int amount,
                                                      ProjectileCallback callback,
                                                      double collisionRadius,
-                                                     Entity missileTarget,
+                                                     String missileTargetID,
                                                      double missileThreshold,
                                                      double missileAngle,
-                                                     double missileDelay)
+                                                     double missileDelay,
+                                                     ItemStack customModelItemStack)
     {
         Vector vel = new Vector(0, 1, 0);
         ArrayList<Location> locs = calcRain(center, radius, height, amount);
@@ -366,7 +368,7 @@ public class ParticleProjectile extends CustomProjectile
         for (Location l : locs)
         {
             l.setDirection(vel);
-            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius,missileTarget, missileThreshold, missileAngle, missileDelay);
+            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius,missileTargetID, missileThreshold, missileAngle, missileDelay, customModelItemStack);
             p.setCallback(callback);
             list.add(p);
         }

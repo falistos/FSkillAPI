@@ -431,7 +431,8 @@ public class Settings {
     }
     public boolean isAlly(LivingEntity attacker, LivingEntity target) {
         if(attacker instanceof Player && target instanceof Player){
-            if(!isSameTeam(attacker, target)) return false;
+            if(!isSameTeam(attacker, target))
+                return false;
         }
         return !canAttack(attacker, target);
     }
