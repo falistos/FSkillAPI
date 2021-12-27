@@ -175,12 +175,17 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
             boolean useCustomModel = settings.getBool(USE_CUSTOM_MODEL);
             if(useCustomModel) {
                 Material customModelMaterial = Material.valueOf(settings.getString(CUSTOM_MODEL_MATERIAL).toUpperCase().replace(" ", "_"));
-                int customModelData = settings.getInt(CUSTOM_MODEL_DATA);
+                int customModelData = settings.getInt(CUSTOM_MODEL_DATA, 0);
                 String customModelName = settings.getString(CUSTOM_MODEL_NAME);
                 List<String> customModelLore = settings.getStringList(CUSTOM_MODEL_LORE);
                 ItemStack itemStack = new ItemStack(customModelMaterial);
                 ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setCustomModelData(customModelData);
+
+                if (SkillAPI.getSettings().useSkillModelData()) {
+                    itemMeta.setCustomModelData(customModelData);
+                } else {
+                    itemStack.setDurability((short)customModelData);
+                }
                 itemMeta.setDisplayName(customModelName);
                 itemMeta.setLore(customModelLore);
                 itemStack.setItemMeta(itemMeta);
