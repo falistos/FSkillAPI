@@ -37,7 +37,10 @@ import com.sucy.skill.dynamic.target.RememberTarget;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -89,6 +92,7 @@ public class ParticleProjectile extends CustomProjectile
     private double   missileDelay;
     private boolean  missileStarted = false;
     private double collisionRadius = 1.5;
+    private ArmorStand hiddenArmorStand = null;
 
     /**
      * Constructor
@@ -139,7 +143,16 @@ public class ParticleProjectile extends CustomProjectile
             }.runTaskLater(SkillAPI.singleton, Math.round(missileDelay * 20));
         }
         Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
-        shooter.getWorld().dropItem(shooter.getLocation(), customModelItemStack);
+        World world = shooter.getWorld();
+        if(customModelItemStack!=null){
+            //use custom model
+            Entity hiddenArmorStandEntity = world.spawnEntity(loc, EntityType.ARMOR_STAND);
+            hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
+            //Put the item on its head as a helmet
+            hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
+            hiddenArmorStand.setInvisible(true);
+            hiddenArmorStand.setGravity(false);
+        }
     }
 
     /**
@@ -289,6 +302,9 @@ public class ParticleProjectile extends CustomProjectile
 
             }
         }
+
+        //Custom model
+        hiddenArmorStand.setVelocity(vel);
     }
 
     /**
