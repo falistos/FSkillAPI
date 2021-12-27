@@ -3450,6 +3450,9 @@ function addCustomModelOptions(component, optional)
     component.data.push(opt(new ListValue('Custom Model Material', 'custom_model_material', getMaterials, 'Jack O Lantern')
         .setTooltip('The item type to use as a projectile'))
     ),
+    component.data.push(opt(new IntValue('Item Data', 'custom_model_data', 0)
+        .setTooltip('The durability value for the item to use as a projectile, most notably for dyes or colored items like wool'))
+    ),
     component.data.push(opt(new StringValue('Custom Model Name', 'custom_model_name', "default model")
         .setTooltip('The display name of the item stack'))
     );
