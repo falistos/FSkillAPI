@@ -2510,6 +2510,8 @@ function MechanicParticleProjectile()
     //Add missile options (homing projectile)
     addMissileOptions(this, true);
 
+    addCustomModelOptions(this, true);
+
     addEffectOptions(this, true);
 }
 
@@ -3435,6 +3437,26 @@ function addMissileOptions(component, optional)
         .setTooltip('The delay before auto homing the target'))
     );
 }
+function addCustomModelOptions(component, optional)
+{
+    var opt = appendNone;
+    if(optional){
+        opt = appendCustomModelOptional;
+        component.data.push(new ListValue('Use Custom model', 'use_custom_model', [ 'True', 'False' ], 'False')
+            .setTooltip('Whether or not to use custom projectile model (itemstack with 3d resource pack)')
+        );
+    }
+
+    component.data.push(new ListValue('Custom Model Material', 'custom_model_material', getMaterials, 'Jack O Lantern')
+        .setTooltip('The item type to use as a projectile')
+    ),
+    component.data.push(opt(new StringValue('Custom Model Name', 'custom_model_name', "default model")
+        .setTooltip('The display name of the item stack'))
+    );
+    component.data.push(opt(new StringListValue('Custom Model Lore', 'custom_model_lore', [])
+        .setTooltip('The lore of the item stack'))
+    );
+}
 function addEffectOptions(component, optional)
 {
     var opt = appendNone;
@@ -3515,6 +3537,11 @@ function appendOptional(value)
 function appendMissileOptional(value)
 {
     value.requireValue('use-missile', [ 'True' ]);
+    return value;
+}
+
+function appendCustomModelOptional(value){
+    value.requireValue('use_custom_model', [ 'True' ]);
     return value;
 }
 
