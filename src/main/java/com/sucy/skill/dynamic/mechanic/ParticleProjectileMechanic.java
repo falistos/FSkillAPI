@@ -72,6 +72,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
 
     private static final String COLLISION_RADIUS = "collision_radius";
     //Missile
+    private static final String MISSILE_TARGET_KEEP_UPDATING = "missile_target_keep_updating";
     private static final String MISSILE_TARGET = "missile_target";
     private static final String MISSILE_THRESHOLD = "missile_threshold";
     private static final String MISSILE_ANGLE = "missile_angle";
@@ -165,7 +166,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
 
         double collisionRadius = settings.getDouble(COLLISION_RADIUS);
         //Missile
-        LivingEntity missileTarget = null;
+        boolean missileTargetKeepUpdating = settings.getBool(MISSILE_TARGET_KEEP_UPDATING);
         String missileTargetID = settings.getString(MISSILE_TARGET);
         double missileThreshold = settings.getDouble(MISSILE_THRESHOLD);
         double missileAngle = settings.getDouble(MISSILE_ANGLE);
@@ -207,6 +208,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                 list = ParticleProjectile.rain(caster,
                         level, loc, copy, radius, height, amount, this,
                         collisionRadius,
+                        missileTargetKeepUpdating,
                         missileTargetID,
                         missileThreshold,
                         missileAngle,
@@ -238,6 +240,7 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         amount,
                         this,
                         collisionRadius,
+                        missileTargetKeepUpdating,
                         missileTargetID,
                         missileThreshold,
                         missileAngle,
