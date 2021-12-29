@@ -3424,6 +3424,9 @@ function addMissileOptions(component, optional)
         );
     }
 
+    component.data.push(opt(new StringValue('Keep Updating Target', 'missile_target_keep_updating', "none")
+        .setTooltip('only store the target when project, or keep updating the new target using the same target remember key.'))
+    );
     component.data.push(opt(new StringValue('Missile Target', 'missile_target', "none")
         .setTooltip('The target you would like to home at'))
     );
