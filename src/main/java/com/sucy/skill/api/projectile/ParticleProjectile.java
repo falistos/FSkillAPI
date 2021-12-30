@@ -26,6 +26,7 @@
  */
 package com.sucy.skill.api.projectile;
 
+import com.sk89q.worldedit.util.Direction;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.Settings;
 import com.sucy.skill.api.event.ParticleProjectileExpireEvent;
@@ -48,10 +49,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.atan2;
+import static java.lang.Math.hypot;
 
 /**
  * A fake projectile that plays particles along its path
@@ -121,6 +126,7 @@ public class ParticleProjectile extends CustomProjectile
     {
         super(shooter);
 
+        //#region Input data
         this.loc = loc;
         this.settings = settings;
         this.vel = loc.getDirection().multiply(settings.getAttr(SPEED, level, 1.0));
@@ -134,50 +140,146 @@ public class ParticleProjectile extends CustomProjectile
         this.missileThreshold = missileThreshold;
         this.missileAngle = missileAngle;
         this.missileDelay = missileDelay;
-        updateMissileTarget();
         steps = (int) Math.ceil(vel.length() * 2);
         vel.multiply(1.0 / steps);
         gravity.multiply(1.0 / steps);
+        Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
+        //#endregion
+
+        //Initializing systems
+        initMissileSystem();
+        initCustomModelSystem(customModelItemStack);
+    }
+    //#region Missile system
+    /**
+     * To initialize the missile system
+    */
+    private void initMissileSystem(){
+        //Update the missile target from remember target ID first.
+        updateMissileTarget();
         //Missile delay
         if(missileDelay == 0){
             missileStarted = true;
         }else {
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    missileStarted = true;
-                }
-            }.runTaskLater(SkillAPI.singleton, Math.round(missileDelay * 20));
+            //start the missile after a delay
+            startMissileAfterSeconds(this.missileDelay);
         }
-        Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
-        World world = shooter.getWorld();
+    }
+    /**
+     * Start the missile after a given seconds. Before that the projectile will go straight.
+     * @param missileDelay the delay in seconds
+     * */
+    private void startMissileAfterSeconds(double missileDelay){
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                missileStarted = true;
+            }
+        }.runTaskLater(SkillAPI.singleton, Math.round(missileDelay * 20));
+    }
+    /**
+     * To update the missile target from the remember target ID
+     */
+    private void updateMissileTarget(){
+        //Get the missile targets from remember target list.
+        final List<LivingEntity> missileTargets = RememberTarget.remember(this.getShooter(), missileTargetID);
+        if(missileTargets.size() > 0) {
+            currentMissileTarget = missileTargets.get(0);
+        }
+    }
+    /**
+     * To update missile system including physics and updating missile target
+     */
+    private void updateMissileSystem(){
+        if(missileTargetKeepUpdating){
+            updateMissileTarget();//update the missile target from the remember ID given in the beginning
+        }
+        if (currentMissileTarget != null && missileStarted) {
+            final Vector vel = getVelocity();
+            final double speed = vel.length();
+            final Vector dir = vel.multiply(1 / speed);
+            final Vector towards = currentMissileTarget.getLocation().toVector().subtract(getLocation().toVector());
+            final Vector targetDir = towards.normalize();
+            final double dot = dir.dot(targetDir);//degree of inaccurate
+            if (dot >= missileThreshold) {
+                setVelocity(targetDir.multiply(speed));
+            } else {
+                Vector currentDir = vel.normalize();
+                Vector sum = currentDir.add(targetDir);
+                Vector newDir = sum.divide(new Vector(2, 2, 2));
+                Vector normalizedNewDir = newDir.normalize();
+                setVelocity(normalizedNewDir.multiply(speed));
+            }
+        }
+    }
+    //#endregion
+
+    //#region Custom model (hidden armorstand)
+    /**
+     * To initialize the custom model system
+     *
+     * @param customModelItemStack the itemstack with custom 3D model
+     */
+    private void initCustomModelSystem(ItemStack customModelItemStack){
         if(customModelItemStack!=null){
-            //use custom model
-            Location armorStandLocation = loc.clone();
-            armorStandLocation.add(0, -1, 0);
-            Entity hiddenArmorStandEntity = world.spawnEntity(armorStandLocation, EntityType.ARMOR_STAND);
-            hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
-            //Put the item on its head as a helmet
-            hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
-            hiddenArmorStand.setInvulnerable(true);
-            hiddenArmorStand.setVisible(false);
-            hiddenArmorStand.setCollidable(false);
-            hiddenArmorStand.setSmall(true);
+            //create custom model
+            createHiddenArmorStand(customModelItemStack);
+
+            //update the physic of the custom model
+            updateCustomModelSystem();
         }
     }
 
+    /**
+     * To create a hidden armorstand which contain the itemstack on its head as custom model.
+     * @param customModelItemStack the itemstack with custom 3D model
+     */
+    private void createHiddenArmorStand(ItemStack customModelItemStack){
+        Location armorStandLocation = loc.clone();
+        World world = loc.getWorld();
+        armorStandLocation.setDirection(new Vector(0,0,1));
+        armorStandLocation.add(0, -1, 0);
+        Entity hiddenArmorStandEntity = world.spawnEntity(armorStandLocation, EntityType.ARMOR_STAND);
+        hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
+        //Put the item on its head as a helmet
+        hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
+        hiddenArmorStand.setInvulnerable(true);
+        hiddenArmorStand.setVisible(true);
+        hiddenArmorStand.setCollidable(false);
+        hiddenArmorStand.setSmall(true);
+    }
+
+    /**
+     * Destroy the hidden armorstand.
+     */
     public void destroyHiddenArmorStand(){
         if(hiddenArmorStand==null) return;
         hiddenArmorStand.setHealth(0.0);
     }
 
-    public void updateMissileTarget(){
-        final List<LivingEntity> missileTargets = RememberTarget.remember(this.getShooter(), settings.getString(missileTargetID, "_none"));
-        if(missileTargets.size() > 0) {
-            currentMissileTarget = missileTargets.get(0);
+    /**
+     * To update the custom model (hidden armorstand) physic. Including velocity and looking direction
+     */
+    private void updateCustomModelSystem(){
+        if(hiddenArmorStand!=null){
+            final Vector vel = getVelocity().clone();
+            final double speed = vel.length();
+            final Vector dir = vel.multiply(1 / speed);
+
+            Location armorStandLocation = loc.clone();
+            armorStandLocation.setDirection(new Vector(0,0,1));
+            armorStandLocation.add(0, -1, 0);
+            hiddenArmorStand.teleport(armorStandLocation);
+            double yaw = -atan2(dir.getX(), dir.getZ());
+            double pitch = -atan2(dir.getY(), hypot(dir.getX(), dir.getZ()));
+            EulerAngle eulerAngle = new EulerAngle(pitch, yaw, 0);
+            hiddenArmorStand.setHeadPose(eulerAngle);
+            Bukkit.broadcastMessage("getShooter().getLocation().getPitch(): "+getShooter().getLocation().getPitch());
+            hiddenArmorStand.setVelocity(getVelocity());
         }
     }
+    //#endregion
     /**
      * Retrieves the location of the projectile
      *
@@ -305,46 +407,12 @@ public class ParticleProjectile extends CustomProjectile
         }
 
         //Missile
-        if(missileTargetKeepUpdating){
-            updateMissileTarget();
-        }
-        if (currentMissileTarget != null && missileStarted) {
-            final Vector vel = getVelocity();
-            final double speed = vel.length();
-            final Vector dir = vel.multiply(1 / speed);
-            final Vector towards = currentMissileTarget.getLocation().toVector().subtract(getLocation().toVector());
-            final Vector targetDir = towards.normalize();
-            final double dot = dir.dot(targetDir);//degree of inaccurate
-            if (dot >= missileThreshold) {
-                setVelocity(targetDir.multiply(speed));
-            } else {
-                Vector currentDir = vel.normalize();
-                Vector sum = currentDir.add(targetDir);
-                Vector newDir = sum.divide(new Vector(2, 2, 2));
-                Vector normalizedNewDir = newDir.normalize();
-                setVelocity(normalizedNewDir.multiply(speed));
-                //final double m = Math.sin()
-                //baseProjectile.setVelocity(result);
-            }
-
-
-        }
+        updateMissileSystem();
 
         //Custom model
-        if(hiddenArmorStand!=null){
-            //Teleport if too far away
-            if(hiddenArmorStand.getLocation().distance(getLocation())>0.1f){
-                Location armorStandLocation = loc.clone();
-                armorStandLocation.add(0, -1, 0);
-                hiddenArmorStand.teleport(armorStandLocation);
-            }
-            //adding speed
-            Vector newVel = vel.clone();
-            hiddenArmorStand.setVelocity(newVel);
-            ArmorStandUtils.setRotationAccordingToVector(hiddenArmorStand, vel);
-        }
-    }
+        updateCustomModelSystem();
 
+    }
     /**
      * Fires a spread of projectiles from the location.
      *
