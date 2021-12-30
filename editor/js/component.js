@@ -2487,7 +2487,7 @@ function MechanicParticleProjectile()
 
     this.description = 'Launches a projectile using particles as its visual that applies child components upon landing. The target passed on will be the collided target or the location where it landed if it missed.';
 
-    addProjectileOptions(this);
+    addProjectileOptions(this, true);//second arguments mean can use speed formula for projectile
 
     this.data.push(new DoubleValue('Gravity', 'gravity', 0)
         .setTooltip('How much gravity to apply each tick. Negative values make it fall while positive values make it rise')
@@ -3317,7 +3317,7 @@ function addItemOptions(component) {
     );
 }
 
-function addProjectileOptions(component) {
+function addProjectileOptions(component, canUseSpeedFormula = false) {
     
     // General data
     component.data.push(new ListValue("Group", "group", ["Ally", "Enemy"], "Enemy")
@@ -3329,9 +3329,30 @@ function addProjectileOptions(component) {
     component.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The number of projectiles to fire')
     );
-    component.data.push(new AttributeValue('Velocity', 'velocity', 3, 0)
-        .setTooltip('How fast the projectile is launched. A negative value fires it in the opposite direction.')
-    );
+
+    if(canUseSpeedFormula){
+        whenUse = (value) =>{
+            value.requireValue('use-speed-formula', [ 'True' ]);
+            return value;
+        }
+        whenNotUse = (value) =>{
+            value.requireValue('use-speed-formula', [ 'False' ]);
+            return value;
+        }
+        component.data.push(new ListValue('Use Velocity Speed formula', 'use-speed-formula', [ 'True', 'False' ], 'False')
+            .setTooltip('Whether or not to use velocity speed formula.')
+        );
+        component.data.push(whenUse(new StringValue('Velocity Formula', 'speed_formula', "t/2", 0)
+            .setTooltip('How fast the projectile is launched. A negative value fires it in the opposite direction.')
+        ));
+        component.data.push(whenNotUse(new AttributeValue('Velocity', 'velocity', 3, 0)
+            .setTooltip('How fast the projectile is launched. A negative value fires it in the opposite direction.')
+        ));
+    }else{
+        component.data.push(new AttributeValue('Velocity', 'velocity', 3, 0)
+            .setTooltip('How fast the projectile is launched. A negative value fires it in the opposite direction.')
+        );
+    }
     
     // Cone values
     component.data.push(new AttributeValue('Angle', 'angle', 30, 0)
