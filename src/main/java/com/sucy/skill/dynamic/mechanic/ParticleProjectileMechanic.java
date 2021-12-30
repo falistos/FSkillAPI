@@ -84,6 +84,11 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
     private static final String CUSTOM_MODEL_DATA = "custom_model_data";
     private static final String CUSTOM_MODEL_NAME = "custom_model_name";
     private static final String CUSTOM_MODEL_LORE = "custom_model_lore";
+
+    //Custom speed formula
+    private static final String USE_SPEED_FORMULA = "use_speed_formula";
+    private static final String SPEED_FORMULA = "speed_formula";
+
     //Effect
     private static final String USE_EFFECT = "use-effect";
     private static final String EFFECT_KEY = "effect-key";
@@ -171,6 +176,12 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
         double missileThreshold = settings.getDouble(MISSILE_THRESHOLD);
         double missileAngle = settings.getDouble(MISSILE_ANGLE);
         double missileDelay = settings.getDouble(MISSILE_DELAY);
+        //Speed formula
+        boolean useSpeedFormula = settings.getBool(USE_SPEED_FORMULA);
+        String speedFormula = null;
+        if(useSpeedFormula)
+            speedFormula = settings.getString(SPEED_FORMULA);
+        //Custom model
         ItemStack customModelItemStack = null;
         try {
             boolean useCustomModel = settings.getBool(USE_CUSTOM_MODEL);
@@ -213,7 +224,8 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         missileThreshold,
                         missileAngle,
                         missileDelay,
-                        customModelItemStack);
+                        customModelItemStack,
+                        speedFormula);
             } else {
                 Vector dir = target.getLocation().getDirection();
 
@@ -245,7 +257,8 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         missileThreshold,
                         missileAngle,
                         missileDelay,
-                        customModelItemStack
+                        customModelItemStack,
+                        speedFormula
                 );
             }
 
