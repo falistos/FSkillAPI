@@ -275,7 +275,6 @@ public class ParticleProjectile extends CustomProjectile
             double pitch = -atan2(dir.getY(), hypot(dir.getX(), dir.getZ()));
             EulerAngle eulerAngle = new EulerAngle(pitch, yaw, 0);
             hiddenArmorStand.setHeadPose(eulerAngle);
-            Bukkit.broadcastMessage("getShooter().getLocation().getPitch(): "+getShooter().getLocation().getPitch());
             hiddenArmorStand.setVelocity(getVelocity());
         }
     }
