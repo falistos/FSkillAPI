@@ -2510,6 +2510,8 @@ function MechanicParticleProjectile()
     //Add missile options (homing projectile)
     addMissileOptions(this, true);
 
+    addCustomModelOptions(this, true);
+
     addEffectOptions(this, true);
 }
 
@@ -3422,6 +3424,9 @@ function addMissileOptions(component, optional)
         );
     }
 
+    component.data.push(opt(new ListValue('Keep Updating Target', 'missile_target_keep_updating', [ 'True', 'False' ], 'False')
+        .setTooltip('only store the target when project, or keep updating the new target using the same target remember key.'))
+    );
     component.data.push(opt(new StringValue('Missile Target', 'missile_target', "none")
         .setTooltip('The target you would like to home at'))
     );
@@ -3433,6 +3438,29 @@ function addMissileOptions(component, optional)
     );
     component.data.push(opt(new DoubleValue('Missile Delay', 'missile_delay', 0)
         .setTooltip('The delay before auto homing the target'))
+    );
+}
+function addCustomModelOptions(component, optional)
+{
+    var opt = appendNone;
+    if(optional){
+        opt = appendCustomModelOptional;
+        component.data.push(new ListValue('Use Custom model', 'use_custom_model', [ 'True', 'False' ], 'False')
+            .setTooltip('Whether or not to use custom projectile model (itemstack with 3d resource pack)')
+        );
+    }
+
+    component.data.push(opt(new ListValue('Custom Model Material', 'custom_model_material', getMaterials, 'Jack O Lantern')
+        .setTooltip('The item type to use as a projectile'))
+    ),
+    component.data.push(opt(new IntValue('Item Data', 'custom_model_data', 0)
+        .setTooltip('The durability value for the item to use as a projectile, most notably for dyes or colored items like wool'))
+    ),
+    component.data.push(opt(new StringValue('Custom Model Name', 'custom_model_name', "default model")
+        .setTooltip('The display name of the item stack'))
+    );
+    component.data.push(opt(new StringListValue('Custom Model Lore', 'custom_model_lore', [])
+        .setTooltip('The lore of the item stack'))
     );
 }
 function addEffectOptions(component, optional)
@@ -3515,6 +3543,11 @@ function appendOptional(value)
 function appendMissileOptional(value)
 {
     value.requireValue('use-missile', [ 'True' ]);
+    return value;
+}
+
+function appendCustomModelOptional(value){
+    value.requireValue('use_custom_model', [ 'True' ]);
     return value;
 }
 

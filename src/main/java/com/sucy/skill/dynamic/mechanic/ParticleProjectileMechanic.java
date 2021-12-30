@@ -42,8 +42,11 @@ import com.sucy.skill.cast.ProjectileIndicator;
 import com.sucy.skill.dynamic.TempEntity;
 import com.sucy.skill.dynamic.target.RememberTarget;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -69,11 +72,18 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
 
     private static final String COLLISION_RADIUS = "collision_radius";
     //Missile
+    private static final String MISSILE_TARGET_KEEP_UPDATING = "missile_target_keep_updating";
     private static final String MISSILE_TARGET = "missile_target";
     private static final String MISSILE_THRESHOLD = "missile_threshold";
     private static final String MISSILE_ANGLE = "missile_angle";
     private static final String MISSILE_DELAY = "missile_delay";
 
+    //Custom model
+    private static final String USE_CUSTOM_MODEL = "use_custom_model";
+    private static final String CUSTOM_MODEL_MATERIAL = "custom_model_material";
+    private static final String CUSTOM_MODEL_DATA = "custom_model_data";
+    private static final String CUSTOM_MODEL_NAME = "custom_model_name";
+    private static final String CUSTOM_MODEL_LORE = "custom_model_lore";
     //Effect
     private static final String USE_EFFECT = "use-effect";
     private static final String EFFECT_KEY = "effect-key";
@@ -153,21 +163,39 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
         copy.set(ParticleProjectile.SPEED, parseValues(caster, ParticleProjectile.SPEED, level, 1), 0);
         copy.set(ParticleHelper.PARTICLES_KEY, parseValues(caster, ParticleHelper.PARTICLES_KEY, level, 1), 0);
         copy.set(ParticleHelper.RADIUS_KEY, parseValues(caster, ParticleHelper.RADIUS_KEY, level, 0), 0);
-        final List<LivingEntity> missileTargets = RememberTarget.remember(caster, settings.getString(MISSILE_TARGET, "_none"));
 
         double collisionRadius = settings.getDouble(COLLISION_RADIUS);
         //Missile
-        LivingEntity missileTarget = null;
-        double missileThreshold = 0;
-        double missileAngle = 0;
-        double missileDelay = 0;
-        if(missileTargets.size() > 0) {
-            missileTarget = missileTargets.get(0);
-            missileThreshold = settings.getDouble(MISSILE_THRESHOLD);
-            missileAngle = settings.getDouble(MISSILE_ANGLE);
-            missileDelay = settings.getDouble(MISSILE_DELAY);
-        }
+        boolean missileTargetKeepUpdating = settings.getBool(MISSILE_TARGET_KEEP_UPDATING);
+        String missileTargetID = settings.getString(MISSILE_TARGET);
+        double missileThreshold = settings.getDouble(MISSILE_THRESHOLD);
+        double missileAngle = settings.getDouble(MISSILE_ANGLE);
+        double missileDelay = settings.getDouble(MISSILE_DELAY);
+        ItemStack customModelItemStack = null;
+        try {
+            boolean useCustomModel = settings.getBool(USE_CUSTOM_MODEL);
+            if(useCustomModel) {
+                Material customModelMaterial = Material.valueOf(settings.getString(CUSTOM_MODEL_MATERIAL).toUpperCase().replace(" ", "_"));
+                int customModelData = settings.getInt(CUSTOM_MODEL_DATA, 0);
+                String customModelName = settings.getString(CUSTOM_MODEL_NAME);
+                List<String> customModelLore = settings.getStringList(CUSTOM_MODEL_LORE);
+                ItemStack itemStack = new ItemStack(customModelMaterial);
+                ItemMeta itemMeta = itemStack.getItemMeta();
 
+                if (SkillAPI.getSettings().useSkillModelData()) {
+                    itemMeta.setCustomModelData(customModelData);
+                } else {
+                    itemStack.setDurability((short)customModelData);
+                }
+                itemMeta.setDisplayName(customModelName);
+                itemMeta.setLore(customModelLore);
+                itemStack.setItemMeta(itemMeta);
+                customModelItemStack = itemStack;
+            }
+
+        } catch (Exception ex) {
+            // Invalid or missing item material
+        }
         // Fire from each target
         for (LivingEntity target : targets) {
             Location loc = target.getLocation();
@@ -177,7 +205,15 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
             if (spread.equals("rain")) {
                 double radius = parseValues(caster, RADIUS, level, 2.0);
                 double height = parseValues(caster, HEIGHT, level, 8.0);
-                list = ParticleProjectile.rain(caster, level, loc, copy, radius, height, amount, this, collisionRadius, missileTarget, missileThreshold, missileAngle, missileDelay);
+                list = ParticleProjectile.rain(caster,
+                        level, loc, copy, radius, height, amount, this,
+                        collisionRadius,
+                        missileTargetKeepUpdating,
+                        missileTargetID,
+                        missileThreshold,
+                        missileAngle,
+                        missileDelay,
+                        customModelItemStack);
             } else {
                 Vector dir = target.getLocation().getDirection();
 
@@ -204,10 +240,12 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         amount,
                         this,
                         collisionRadius,
-                        missileTarget,
+                        missileTargetKeepUpdating,
+                        missileTargetID,
                         missileThreshold,
                         missileAngle,
-                        missileDelay
+                        missileDelay,
+                        customModelItemStack
                 );
             }
 
