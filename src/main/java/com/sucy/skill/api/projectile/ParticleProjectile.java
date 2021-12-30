@@ -107,7 +107,7 @@ public class ParticleProjectile extends CustomProjectile
     private double collisionRadius = 1.5;
     private ArmorStand hiddenArmorStand = null;
     private String speedFormula = "none";
-    private int tick = 1;
+    private int tick;
 
     /**
      * Constructor
@@ -138,6 +138,7 @@ public class ParticleProjectile extends CustomProjectile
         this.vel = loc.getDirection().multiply(settings.getAttr(SPEED, level, 1.0));
         this.freq = (int) (20 * settings.getDouble(FREQUENCY, 0.5));
         this.life = (int) (settings.getDouble(LIFESPAN, 2) * 20);
+        this.tick = 1;
         this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
         this.pierce = settings.getBool(PIERCE, false);
         this.collisionRadius = collisionRadius;
@@ -297,9 +298,8 @@ public class ParticleProjectile extends CustomProjectile
             ScriptEngineManager mgr = new ScriptEngineManager();
             ScriptEngine engine = mgr.getEngineByName("JavaScript");
             String mathLine = speedFormula.replace("t", tick+"");
-            Bukkit.broadcastMessage("math line: "+mathLine);
             try {
-                float result = (float) engine.eval(mathLine);
+                float result = Float.parseFloat(engine.eval(mathLine).toString())   ;
                 Vector vel = this.vel;
                 Vector dir = vel.normalize();
                 Vector newVel = dir.multiply(result);
