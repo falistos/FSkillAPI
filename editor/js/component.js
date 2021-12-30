@@ -3332,14 +3332,14 @@ function addProjectileOptions(component, canUseSpeedFormula = false) {
 
     if(canUseSpeedFormula){
         whenUse = (value) =>{
-            value.requireValue('use-speed-formula', [ 'True' ]);
+            value.requireValue('use_speed_formula', [ 'True' ]);
             return value;
         }
         whenNotUse = (value) =>{
-            value.requireValue('use-speed-formula', [ 'False' ]);
+            value.requireValue('use_speed_formula', [ 'False' ]);
             return value;
         }
-        component.data.push(new ListValue('Use Velocity Speed formula', 'use-speed-formula', [ 'True', 'False' ], 'False')
+        component.data.push(new ListValue('Use Velocity Speed formula', 'use_speed_formula', [ 'True', 'False' ], 'False')
             .setTooltip('Whether or not to use velocity speed formula.')
         );
         component.data.push(whenUse(new StringValue('Velocity Formula', 'speed_formula', "t/2", 0)
