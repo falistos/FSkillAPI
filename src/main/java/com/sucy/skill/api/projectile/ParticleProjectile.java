@@ -245,7 +245,7 @@ public class ParticleProjectile extends CustomProjectile
         //Put the item on its head as a helmet
         hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
         hiddenArmorStand.setInvulnerable(true);
-        hiddenArmorStand.setVisible(true);
+        hiddenArmorStand.setVisible(false);
         hiddenArmorStand.setCollidable(false);
         hiddenArmorStand.setSmall(true);
     }
