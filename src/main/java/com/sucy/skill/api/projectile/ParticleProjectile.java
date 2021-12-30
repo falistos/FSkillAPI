@@ -255,6 +255,9 @@ public class ParticleProjectile extends CustomProjectile
      */
     public void destroyHiddenArmorStand(){
         if(hiddenArmorStand==null) return;
+        //teleport it to void to prevent death animation
+        hiddenArmorStand.teleport(hiddenArmorStand.getLocation().add(0, -1000, 0));
+        //kill it
         hiddenArmorStand.setHealth(0.0);
     }
 
