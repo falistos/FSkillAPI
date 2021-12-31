@@ -52,6 +52,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +106,8 @@ public class ParticleProjectile extends CustomProjectile
     private boolean  missileStarted = false;
     private double collisionRadius = 1.5;
     private ArmorStand hiddenArmorStand = null;
+    private String speedFormula = "none";
+    private int tick;
 
     /**
      * Constructor
@@ -122,7 +127,8 @@ public class ParticleProjectile extends CustomProjectile
                               double missileThreshold,
                               double missileAngle,
                               double missileDelay,
-                              ItemStack customModelItemStack)
+                              ItemStack customModelItemStack,
+                              String speedFormula)
     {
         super(shooter);
 
@@ -132,6 +138,7 @@ public class ParticleProjectile extends CustomProjectile
         this.vel = loc.getDirection().multiply(settings.getAttr(SPEED, level, 1.0));
         this.freq = (int) (20 * settings.getDouble(FREQUENCY, 0.5));
         this.life = (int) (settings.getDouble(LIFESPAN, 2) * 20);
+        this.tick = 1;
         this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
         this.pierce = settings.getBool(PIERCE, false);
         this.collisionRadius = collisionRadius;
@@ -140,9 +147,11 @@ public class ParticleProjectile extends CustomProjectile
         this.missileThreshold = missileThreshold;
         this.missileAngle = missileAngle;
         this.missileDelay = missileDelay;
+        this.speedFormula = speedFormula;
         steps = (int) Math.ceil(vel.length() * 2);
         vel.multiply(1.0 / steps);
         gravity.multiply(1.0 / steps);
+
         Bukkit.getPluginManager().callEvent(new ParticleProjectileLaunchEvent(this));
         //#endregion
 
@@ -282,6 +291,25 @@ public class ParticleProjectile extends CustomProjectile
         }
     }
     //#endregion
+
+    //#region Speed Formula system
+    private void updateSpeedWithFormula(){
+        if(speedFormula!="none" && speedFormula!=null){
+            ScriptEngineManager mgr = new ScriptEngineManager();
+            ScriptEngine engine = mgr.getEngineByName("JavaScript");
+            String mathLine = speedFormula.replace("t", tick+"");
+            try {
+                float result = Float.parseFloat(engine.eval(mathLine).toString())   ;
+                Vector vel = this.vel;
+                Vector dir = vel.normalize();
+                Vector newVel = dir.multiply(result);
+                setVelocity(newVel);
+            } catch (ScriptException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    //#endregion
     /**
      * Retrieves the location of the projectile
      *
@@ -380,6 +408,8 @@ public class ParticleProjectile extends CustomProjectile
     @Override
     public void run()
     {
+        //update the speed formula
+        updateSpeedWithFormula();
         // Go through multiple steps to avoid tunneling
         for (int i = 0; i < steps; i++)
         {
@@ -407,6 +437,8 @@ public class ParticleProjectile extends CustomProjectile
             cancel();
             Bukkit.getPluginManager().callEvent(new ParticleProjectileExpireEvent(this));
         }
+
+        tick++;
 
         //Missile
         updateMissileSystem();
@@ -443,7 +475,8 @@ public class ParticleProjectile extends CustomProjectile
                                                        double missileThreshold,
                                                        double missileAngle,
                                                        double missileDelay,
-                                                       ItemStack customModelItemStack)
+                                                       ItemStack customModelItemStack,
+                                                       String speedFormula)
     {
         ArrayList<Vector> dirs = calcSpread(center, angle, amount);
         ArrayList<ParticleProjectile> list = new ArrayList<ParticleProjectile>();
@@ -451,7 +484,18 @@ public class ParticleProjectile extends CustomProjectile
         {
             Location l = loc.clone();
             l.setDirection(dir);
-            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius, missileTargetKeepUpdating, missileTargetID, missileThreshold, missileAngle, missileDelay, customModelItemStack);
+            ParticleProjectile p = new ParticleProjectile(shooter,
+                    level,
+                    l,
+                    settings,
+                    collisionRadius,
+                    missileTargetKeepUpdating,
+                    missileTargetID,
+                    missileThreshold,
+                    missileAngle,
+                    missileDelay,
+                    customModelItemStack,
+                    speedFormula);
             p.setCallback(callback);
             list.add(p);
         }
@@ -486,7 +530,8 @@ public class ParticleProjectile extends CustomProjectile
                                                      double missileThreshold,
                                                      double missileAngle,
                                                      double missileDelay,
-                                                     ItemStack customModelItemStack)
+                                                     ItemStack customModelItemStack,
+                                                     String speedFormula)
     {
         Vector vel = new Vector(0, 1, 0);
         ArrayList<Location> locs = calcRain(center, radius, height, amount);
@@ -494,7 +539,18 @@ public class ParticleProjectile extends CustomProjectile
         for (Location l : locs)
         {
             l.setDirection(vel);
-            ParticleProjectile p = new ParticleProjectile(shooter, level, l, settings, collisionRadius, missileTargetKeepUpdating, missileTargetID, missileThreshold, missileAngle, missileDelay, customModelItemStack);
+            ParticleProjectile p = new ParticleProjectile(shooter,
+                    level,
+                    l,
+                    settings,
+                    collisionRadius,
+                    missileTargetKeepUpdating,
+                    missileTargetID,
+                    missileThreshold,
+                    missileAngle,
+                    missileDelay,
+                    customModelItemStack,
+                    speedFormula);
             p.setCallback(callback);
             list.add(p);
         }
