@@ -1,5 +1,7 @@
 package com.sucy.skill.dynamic.condition;
 
+import com.rit.sucy.config.parse.DataSection;
+import com.sucy.skill.dynamic.DynamicSkill;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.List;
@@ -11,11 +13,6 @@ public class DistanceCondition extends ConditionComponent {
     @Override
     public String getKey() {
         return "distance";
-    }
-
-    @Override
-    public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
-        return test(caster, level, null) && executeChildren(caster, level, targets);
     }
 
     @Override
