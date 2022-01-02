@@ -11,9 +11,9 @@ public class TitleMechanic extends MechanicComponent
 {
     private static final String TITLE = "title";
     private static final String SUBTITLE = "subtitle";
-    private static final String FADEIN = "1";
-    private static final String STAY = "1";
-    private static final String FADEOUT = "1";
+    private static final String FADEIN = "fadein";
+    private static final String STAY = "stay";
+    private static final String FADEOUT = "fadeout";
 
     @Override
     public String getKey() {
