@@ -87,6 +87,7 @@ public class ParticleProjectile extends CustomProjectile
     private static final String GRAVITY = "gravity";
 
     private static final String PIERCE = "pierce";
+    private static final String PIERCE_AMOUNT = "pierce_amount";
 
     private Location loc;
     private Settings settings;
@@ -97,6 +98,7 @@ public class ParticleProjectile extends CustomProjectile
     private int      life;
     private Vector   gravity;
     private boolean  pierce;
+    private int pierceAmount;
     private boolean   missileTargetKeepUpdating;
     private String   missileTargetID;
     private double   missileThreshold;
@@ -141,6 +143,7 @@ public class ParticleProjectile extends CustomProjectile
         this.tick = 1;
         this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
         this.pierce = settings.getBool(PIERCE, false);
+        this.pierceAmount = settings.getInt(PIERCE_AMOUNT, 1);
         this.collisionRadius = collisionRadius;
         this.missileTargetKeepUpdating = missileTargetKeepUpdating;
         this.missileTargetID = missileTargetID;
@@ -337,7 +340,6 @@ public class ParticleProjectile extends CustomProjectile
     @Override
     protected Event land()
     {
-
         destroyHiddenArmorStand();
         return new ParticleProjectileLandEvent(this);
     }
