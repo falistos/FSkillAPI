@@ -2495,6 +2495,14 @@ function MechanicParticleProjectile()
     this.data.push(new ListValue('Pierce', 'pierce', [ 'True', 'False' ], 'False')
         .setTooltip('Whether or not this projectile should pierce through initial targets and continue hitting those behind them')
     );
+    var opt = (value)=>
+    {
+        value.requireValue('pierce', [ 'True' ]);
+        return value;
+    }
+    this.data.push(opt(new IntValue('Max Pierce Amount', 'max_pierce_amount', 10))
+        .setTooltip('The amount of target can be pierced')
+    );
     this.data.push(new DoubleValue('Collision radius', 'collision_radius', 1.5)
         .setTooltip('the collision radius centered from the bullet')
     );

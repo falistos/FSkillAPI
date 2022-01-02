@@ -87,7 +87,7 @@ public class ParticleProjectile extends CustomProjectile
     private static final String GRAVITY = "gravity";
 
     private static final String PIERCE = "pierce";
-    private static final String PIERCE_AMOUNT = "pierce_amount";
+    private static final String MAX_PIERCE_AMOUNT = "max_pierce_amount";
 
     private Location loc;
     private Settings settings;
@@ -98,7 +98,7 @@ public class ParticleProjectile extends CustomProjectile
     private int      life;
     private Vector   gravity;
     private boolean  pierce;
-    private int pierceAmount;
+    private int maxPierceAmount;
     private boolean   missileTargetKeepUpdating;
     private String   missileTargetID;
     private double   missileThreshold;
@@ -143,7 +143,7 @@ public class ParticleProjectile extends CustomProjectile
         this.tick = 1;
         this.gravity = new Vector(0, settings.getDouble(GRAVITY, 0), 0);
         this.pierce = settings.getBool(PIERCE, false);
-        this.pierceAmount = settings.getInt(PIERCE_AMOUNT, 1);
+        this.maxPierceAmount = settings.getInt(MAX_PIERCE_AMOUNT, 1);
         this.collisionRadius = collisionRadius;
         this.missileTargetKeepUpdating = missileTargetKeepUpdating;
         this.missileTargetID = missileTargetID;
@@ -421,7 +421,7 @@ public class ParticleProjectile extends CustomProjectile
             if (!isTraveling())
                 return;
 
-            if (!checkCollision(pierce)) break;
+            if (!checkCollision(pierce, maxPierceAmount)) break;
         }
 
         // Particle along path

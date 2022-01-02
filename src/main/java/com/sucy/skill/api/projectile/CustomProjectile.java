@@ -93,6 +93,7 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
     private boolean enemy = true;
     private boolean ally = false;
     private boolean valid = true;
+    private int currentPierceCount = 0;
 
     /**
      * Constructs a new custom projectile and starts its timer task
@@ -295,7 +296,7 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
      * Checks if the projectile collides with a given list of entities
      * Returns true if another check should happen, false other wise
      */
-    protected boolean checkCollision(final boolean pierce) {
+    protected boolean checkCollision(final boolean pierce, final int maxPierceAmount) {
         for (LivingEntity entity : getColliding()) {
             if (entity == thrower || hit.contains(entity.getEntityId())) {
                 continue;
@@ -315,10 +316,12 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
 
             Bukkit.getPluginManager().callEvent(hit(entity));
 
+            currentPierceCount++;
+
             if (callback != null)
                 callback.callback(this, entity);
 
-            if (!pierce) {
+            if (!pierce || currentPierceCount > maxPierceAmount) {
                 cancel();
                 return false;
             }
