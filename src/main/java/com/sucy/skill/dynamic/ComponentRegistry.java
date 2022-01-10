@@ -1,6 +1,7 @@
 package com.sucy.skill.dynamic;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.util.ActionBar;
 import com.sucy.skill.data.Click;
 import com.sucy.skill.dynamic.condition.*;
 import com.sucy.skill.dynamic.custom.CustomComponent;
@@ -292,5 +293,6 @@ public class ComponentRegistry {
         register(new WarpValueMechanic());
         register(new WolfMechanic());
         register(new SetGlowMechanic());
+        register(new ActionBarMechanic());
     }
 }
