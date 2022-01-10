@@ -194,7 +194,8 @@ var Mechanic = {
     WARP_TARGET:         { name: 'Warp Target',         container: false, construct: MechanicWarpTarget         },
     WARP_VALUE:          { name: 'Warp Value',          container: false, construct: MechanicWarpValue          },
     WOLF:                { name: 'Wolf',                container: true,  construct: MechanicWolf               },
-    SET_GLOW:            { name: 'Set Glow',            container: false, construct: MechanicSetGlow           }
+    SET_GLOW:            { name: 'Set Glow',            container: false, construct: MechanicSetGlow            },
+    ACTION_BAR:          { name: 'Action bar',          container: false, construct: MechanicActionBar          }
 };
 
 var saveIndex;
@@ -2769,6 +2770,17 @@ function MechanicTitle()
     );
     this.data.push(new AttributeValue('Fade out', 'fadeout', 0.2, 0)
         .setTooltip('The time that the title fade out')
+    );
+}
+extend('MechanicActionBar', 'Component');
+function MechanicActionBar()
+{
+    this.super('Action bar', Type.MECHANIC, false);
+
+    this.description = 'Send action bar message to player (appear above tool list)';
+
+    this.data.push(new StringValue('Text', 'text', 'text')
+        .setTooltip('The message that send to player')
     );
 }
 
