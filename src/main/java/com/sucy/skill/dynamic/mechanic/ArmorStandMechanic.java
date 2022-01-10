@@ -64,11 +64,12 @@ public class ArmorStandMechanic extends MechanicComponent {
             ArmorStand armorStand = target.getWorld().spawn(loc, ArmorStand.class, as -> {
                 try {
                     as.setMarker(marker);
-                    as.setInvulnerable(true);
                 } catch (NoSuchMethodError ignored) {}
                 try {
-                    as.setSilent(true);
+                    as.setSilent(marker);
                 } catch (NoSuchMethodError ignored) {}
+                as.setCollidable(!marker);
+                as.setInvulnerable(marker);
                 as.setGravity(gravity);
                 as.setCustomName(name);
                 as.setCustomNameVisible(nameVisible);
@@ -77,7 +78,7 @@ public class ArmorStandMechanic extends MechanicComponent {
                 as.setBasePlate(base);
                 as.setVisible(visible);
             });
-            SkillAPI.setMeta(armorStand, MechanicListener.ARMOR_STAND, true);
+            //SkillAPI.setMeta(armorStand, MechanicListener.ARMOR_STAND, true);
             armorStands.add(armorStand);
 
             ArmorStandInstance instance;
