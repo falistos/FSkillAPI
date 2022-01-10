@@ -2006,13 +2006,15 @@ public class PlayerData {
 
         // On Cooldown
         if (status == SkillStatus.ON_COOLDOWN && cooldown) {
-            SkillAPI.getLanguage().sendMessage(
-                    ErrorNodes.COOLDOWN,
-                    getPlayer(),
-                    FilterType.COLOR,
-                    RPGFilter.COOLDOWN.setReplacement(skill.getCooldown() + ""),
-                    RPGFilter.SKILL.setReplacement(skill.getData().getName())
-            );
+            if(SkillAPI.getSettings().getShowCooldownError()) {
+                SkillAPI.getLanguage().sendMessage(
+                        ErrorNodes.COOLDOWN,
+                        getPlayer(),
+                        FilterType.COLOR,
+                        RPGFilter.COOLDOWN.setReplacement(skill.getCooldown() + ""),
+                        RPGFilter.SKILL.setReplacement(skill.getData().getName())
+                );
+            }
             return PlayerSkillCastFailedEvent.invoke(skill, ON_COOLDOWN);
         }
 

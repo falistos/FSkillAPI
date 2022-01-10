@@ -162,6 +162,7 @@ Skills:
   - 'wall sign'
   - 'sign post'
 #
+
 Items:
   #
   # Whether or not to check for class, level, and attribute
@@ -329,6 +330,9 @@ Casting:
   #
   # Global cooldown between skill casts in seconds
   cooldown: 0
+
+  # weather or not to show error when cooldowning
+  show-cooldown-error: false
   #
   # Settings for skill target indicators that play effects
   # to show where a skill will hit

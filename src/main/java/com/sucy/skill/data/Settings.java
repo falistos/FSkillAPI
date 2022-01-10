@@ -1250,6 +1250,7 @@ public class Settings {
     private static final String CAST_SLOT      = CAST_BASE + "slot";
     private static final String CAST_ITEM      = CAST_BASE + "item";
     private static final String CAST_COOLDOWN  = CAST_BASE + "cooldown";
+    private static final String SHOW_COOLDOWN_ERROR  = CAST_BASE + "show-cooldown-error";
     private static final String CAST_HOVER     = CAST_BASE + "hover-item";
     private static final String CAST_INSTANT   = CAST_BASE + "instant-item";
 
@@ -1258,6 +1259,7 @@ public class Settings {
     private boolean   combatEnabled;
     private int       castSlot;
     private long      castCooldown;
+    private boolean   showCooldownError;
     private ItemStack castItem;
     private ItemStack hoverItem;
     private ItemStack instantItem;
@@ -1299,6 +1301,13 @@ public class Settings {
     }
 
     /**
+     * @return weather or not to show error when cooldowning
+     */
+    public boolean getShowCooldownError() {
+        return showCooldownError;
+    }
+
+    /**
      * @return cast item to use in the slot
      */
     public ItemStack getCastItem() {
@@ -1319,6 +1328,7 @@ public class Settings {
         combatEnabled = config.getBoolean(CAST_COMBAT);
         castSlot = config.getInt(CAST_SLOT) - 1;
         castCooldown = (long) (config.getDouble(CAST_COOLDOWN) * 1000);
+        showCooldownError = config.getBoolean(SHOW_COOLDOWN_ERROR);
         castItem = GUITool.parseItem(config.getSection(CAST_ITEM));
         hoverItem = GUITool.parseItem(config.getSection(CAST_HOVER));
         instantItem = GUITool.parseItem(config.getSection(CAST_INSTANT));
