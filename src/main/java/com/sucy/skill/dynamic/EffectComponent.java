@@ -35,6 +35,7 @@ import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.cast.IIndicator;
 import com.sucy.skill.cast.IndicatorType;
 import com.sucy.skill.log.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -47,7 +48,7 @@ import java.util.Map;
  * A component for dynamic skills which takes care of one effect
  */
 public abstract class EffectComponent {
-    private static final String ICON_KEY   = "icon-key";
+    private static final String ICON_KEY = "icon-key";
     private static final String COUNTS_KEY = "counts";
 
     private static boolean passed;
@@ -112,9 +113,15 @@ public abstract class EffectComponent {
      * @return true if has an effect, false otherwise
      */
     private boolean hasEffect() {
-        if (indicatorType != IndicatorType.NONE) { return true; }
+        if (indicatorType != IndicatorType.NONE) {
+            return true;
+        }
 
-        for (EffectComponent child : children) { if (child.hasEffect()) { return true; } }
+        for (EffectComponent child : children) {
+            if (child.hasEffect()) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -127,7 +134,6 @@ public abstract class EffectComponent {
      * @param key      key of the value to grab
      * @param level    level of the skill
      * @param fallback default value for the attribute
-     *
      * @return the value with attribute modifications if applicable
      */
     protected double parseValues(LivingEntity caster, String key, int level, double fallback) {
@@ -154,12 +160,13 @@ public abstract class EffectComponent {
      * @param caster   the caster of the skill
      * @param key      key of the value
      * @param fallback fallback value in case the settings don't have it
-     *
      * @return the settings value or, if not a number, the cast data value
      */
     protected double getNum(LivingEntity caster, String key, double fallback) {
         String val = settings.getString(key);
-        if (val == null) { return fallback; }
+        if (val == null) {
+            return fallback;
+        }
 
         try {
             return Double.parseDouble(val);
@@ -198,7 +205,6 @@ public abstract class EffectComponent {
      * @param caster  caster of the skill
      * @param level   level of the skill
      * @param targets targets to execute on
-     *
      * @return true if executed, false if conditions not met
      */
     protected boolean executeChildren(LivingEntity caster, int level, List<LivingEntity> targets) {
@@ -220,13 +226,13 @@ public abstract class EffectComponent {
         children.forEach(child -> child.cleanUp(caster));
     }
 
-    protected void doCleanUp(final LivingEntity caster) { }
+    protected void doCleanUp(final LivingEntity caster) {
+    }
 
     /**
      * Gets the skill data for the caster
      *
      * @param caster caster of the skill
-     *
      * @return skill data for the caster or null if not found
      */
     protected PlayerSkill getSkillData(LivingEntity caster) {
@@ -239,55 +245,65 @@ public abstract class EffectComponent {
 
     protected String filter(LivingEntity caster, LivingEntity target, String text) {
         // Grab values
-        int i = text.lastIndexOf('{');
-        if (i < 0) { return filterSpecialChars(text); }
 
-        int j = text.indexOf('}', i);
-        if (j < 0) { return filterSpecialChars(text); }
-
-        StringBuilder builder = new StringBuilder();
-        HashMap<String, Object> data = DynamicSkill.getCastData(caster);
-
-        int k = 0;
-        while (i >= 0 && j > i) {
-            String key = text.substring(i + 1, j);
-            if (data.containsKey(key)) {
-                Object obj = data.get(key);
-                if (obj instanceof Player) { obj = ((Player) obj).getName(); } else if (obj instanceof LivingEntity) {
-                    obj = MobManager.getName((LivingEntity) obj);
+        int repeatTimes = 1;//max opened bracket amount
+        int openedBracket = 0;
+        for(int i = 0 ; i < text.length() ; i++) {
+            char c = text.charAt(i);
+            if(c=='{') {
+                repeatTimes++;
+                openedBracket++;
+                if(openedBracket > repeatTimes) {
+                    repeatTimes = openedBracket;
                 }
-                builder.append(text, k, i);
-                builder.append(obj);
-
-                k = j + 1;
-            } else if (key.equals("player")) {
-                builder.append(text, k, i);
-                builder.append(caster.getName());
-
-                k = j + 1;
-            } else if (key.equals("target")) {
-                builder.append(text, k, i);
-                builder.append(target.getName());
-
-                k = j + 1;
-            } else if (key.equals("targetUUID")) {
-                builder.append(text, k, i);
-                builder.append(target.getUniqueId().toString());
-
-                k = j + 1;
-            }else{
-                builder.append(text, k, i);
-                builder.append("null");
+            }else if(c=='}') {
+                openedBracket--;
             }
-            i = text.indexOf('{', j);
-            j = text.indexOf('}', i);
         }
-        builder.append(text.substring(k));
-        if(text.chars().filter(ch -> ch == '{').count()>1){
-            return filter(caster, target, builder.toString());
-        }else{
-            return filterSpecialChars(builder.toString());
+        for(int i = 0 ; i < repeatTimes ; i++) {
+            text = filterOnce(caster, target, text);
         }
+        return filterSpecialChars(text);
+    }
+
+
+    protected String filterOnce(LivingEntity caster, LivingEntity target, String text) {
+        boolean openedBracket = false;
+        String textInBracket = "";
+        String result = "";
+        HashMap<String, Object> data = DynamicSkill.getCastData(caster);
+        for(int i = 0 ; i < text.length() ; i++) {
+            char c = text.charAt(i);
+            if(c=='{') {
+                openedBracket = true;
+                textInBracket = "";
+            }else if(c=='}') {
+                if (data.containsKey(textInBracket)) {
+                    Object obj = data.get(textInBracket);
+                    if (obj instanceof Player) {
+                        obj = ((Player) obj).getName();
+                    } else if (obj instanceof LivingEntity) {
+                        obj = MobManager.getName((LivingEntity) obj);
+                    }
+                    result+=obj;
+                }else if (textInBracket.equals("player")) {
+                    result += caster.getName();
+                } else if (textInBracket.equals("target")) {
+                    result += target.getName();
+                } else if (textInBracket.equals("targetUUID")) {
+                    result += target.getUniqueId().toString();
+                } else {
+                    result += "{"+textInBracket+"}";
+                }
+                openedBracket = false;
+
+            }else{
+                textInBracket+=c;
+                if(!openedBracket)
+                    result += c;
+            }
+        }
+        return result;
     }
 
     private static String filterSpecialChars(String string) {
