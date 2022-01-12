@@ -272,6 +272,9 @@ public class ComponentRegistry {
         register(new TauntMechanic());
         register(new TitleMechanic());
         register(new TriggerMechanic());
+        register(new ValueRoundMechanic());
+        register(new ValueFloorMechanic());
+        register(new ValueCeilMechanic());
         register(new ValueAddMechanic());
         register(new ValueAttributeMechanic());
         register(new ValueCopyMechanic());
