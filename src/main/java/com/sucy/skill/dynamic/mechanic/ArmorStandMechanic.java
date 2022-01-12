@@ -62,9 +62,6 @@ public class ArmorStandMechanic extends MechanicComponent {
         double autoRotationX = parseValues(caster, AUTO_ROTATION_X, level,0);
         double autoRotationY = parseValues(caster, AUTO_ROTATION_Y, level,0);
         double autoRotationZ = parseValues(caster, AUTO_ROTATION_Z, level,0);
-        Bukkit.broadcastMessage("auto rotation x: "+autoRotationX);
-        Bukkit.broadcastMessage("auto rotation y: "+autoRotationY);
-        Bukkit.broadcastMessage("auto rotation z: "+autoRotationZ);
         List<LivingEntity> armorStands = new ArrayList<>();
         for (LivingEntity target : targets) {
             Location loc = target.getLocation().clone();
