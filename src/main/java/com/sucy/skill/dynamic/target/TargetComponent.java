@@ -1,6 +1,7 @@
 package com.sucy.skill.dynamic.target;
 
 import com.rit.sucy.config.parse.DataSection;
+import com.rit.sucy.mobs.MobManager;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.target.TargetHelper;
 import com.sucy.skill.cast.*;
@@ -14,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -154,4 +156,96 @@ public abstract class TargetComponent extends EffectComponent {
     public enum IncludeCaster {
         TRUE, FALSE, IN_AREA
     }
+    public String filter(LivingEntity caster, LivingEntity target, String text) {
+        // Grab values
+
+        int repeatTimes = 1;//max opened bracket amount
+        int openedBracket = 0;
+        for(int i = 0 ; i < text.length() ; i++) {
+            char c = text.charAt(i);
+            if(c=='{') {
+                repeatTimes++;
+                openedBracket++;
+                if(openedBracket > repeatTimes) {
+                    repeatTimes = openedBracket;
+                }
+            }else if(c=='}') {
+                openedBracket--;
+            }
+        }
+        for(int i = 0 ; i < repeatTimes ; i++) {
+            text = filterOnce(caster, target, text);
+        }
+        return filterSpecialChars(text);
+    }
+
+
+    public String filterOnce(LivingEntity caster, LivingEntity target, String text) {
+        boolean openedBracket = false;
+        String textInBracket = "";
+        String result = "";
+        HashMap<String, Object> data = DynamicSkill.getCastData(caster);
+        for(int i = 0 ; i < text.length() ; i++) {
+            char c = text.charAt(i);
+            if(c=='{') {
+                openedBracket = true;
+                textInBracket = "";
+            }else if(c=='}') {
+                if (data.containsKey(textInBracket)) {
+                    Object obj = data.get(textInBracket);
+                    if (obj instanceof Player) {
+                        obj = ((Player) obj).getName();
+                    } else if (obj instanceof LivingEntity) {
+                        obj = MobManager.getName((LivingEntity) obj);
+                    }
+                    result+=obj;
+                }else if (textInBracket.equals("player")) {
+                    result += caster.getName();
+                } else if (textInBracket.equals("target")) {
+                    result += target.getName();
+                } else if (textInBracket.equals("targetUUID")) {
+                    result += target.getUniqueId().toString();
+                } else {
+                    result += "{"+textInBracket+"}";
+                }
+                openedBracket = false;
+
+            }else{
+                textInBracket+=c;
+                if(!openedBracket)
+                    result += c;
+            }
+        }
+        return result;
+    }
+
+    private static String filterSpecialChars(String string) {
+        int i = 0;
+        int j = string.indexOf('&');
+        StringBuilder builder = new StringBuilder();
+        while (j >= 0) {
+            String key = string.substring(j+1,j+3);
+            switch (key) {
+                case "rc":
+                    builder.append(string, i, j);
+                    builder.append('}');
+                    i = j+3;
+                    break;
+                case "lc":
+                    builder.append(string, i, j);
+                    builder.append('{');
+                    i = j+3;
+                    break;
+                case "sq":
+                    builder.append(string, i, j);
+                    builder.append('\'');
+                    i = j+3;
+                    break;
+            }
+            j = string.indexOf('&',i);
+        }
+        builder.append(string.substring(i));
+        return builder.toString();
+    }
+
 }
