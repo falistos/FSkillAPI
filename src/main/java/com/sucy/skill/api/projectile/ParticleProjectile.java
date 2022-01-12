@@ -211,7 +211,7 @@ public class ParticleProjectile extends CustomProjectile
             final Vector vel = getVelocity();
             final double speed = vel.length();
             final Vector dir = vel.multiply(1 / speed);
-            final Vector towards = currentMissileTarget.getLocation().toVector().subtract(getLocation().toVector());
+            final Vector towards = currentMissileTarget.getLocation().add(0,1,0).toVector().subtract(getLocation().toVector());
             final Vector targetDir = towards.normalize();
             final double dot = dir.dot(targetDir);//degree of inaccurate
             if (dot >= missileThreshold) {
@@ -256,6 +256,11 @@ public class ParticleProjectile extends CustomProjectile
         hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
         //Put the item on its head as a helmet
         hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
+        try {
+            hiddenArmorStand.setMarker(true);
+        }catch(Exception e){
+        }
+        hiddenArmorStand.setSilent(true);
         hiddenArmorStand.setInvulnerable(true);
         hiddenArmorStand.setVisible(false);
         hiddenArmorStand.setCollidable(false);

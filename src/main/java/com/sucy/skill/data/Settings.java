@@ -445,7 +445,7 @@ public class Settings {
      */
     public boolean isValidTarget(final LivingEntity target) {
         return (!target.hasMetadata("NPC") || affectNpcs)
-                && (!target.getType().name().equals("ARMOR_STAND") || affectArmorStands);
+                && (!target.getType().name().equals("ARMOR_STAND") || (affectArmorStands && !target.isSilent()));
     }
 
     /**
