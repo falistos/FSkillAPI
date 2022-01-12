@@ -78,7 +78,8 @@ public class ItemMechanic extends MechanicComponent
         {
             return false;
         }
-        int amount = settings.getInt(AMOUNT, 1);
+
+        int amount = (int)Math.round(parseValues(caster, AMOUNT, level,0));
         int durability = settings.getInt(DATA, 0);
         int data = settings.getInt(BYTE, 0);
 
