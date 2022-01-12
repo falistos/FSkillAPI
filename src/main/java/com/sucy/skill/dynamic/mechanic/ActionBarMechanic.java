@@ -38,7 +38,7 @@ public class ActionBarMechanic extends MechanicComponent
             {
                 Player player = (Player) target;
                 text = replaceTextWithPlayerSkillStatus(text, player);
-                ActionBar.show(player, text);
+                ActionBar.show(player,filter(caster, target, text));
                 worked = true;
             }
         }
