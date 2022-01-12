@@ -8,6 +8,8 @@ import com.sucy.skill.task.RemoveTask;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class ArmorStandMechanic extends MechanicComponent {
     private static final String FORWARD = "forward";
     private static final String UPWARD = "upward";
     private static final String RIGHT = "right";
+    private static final String AUTO_ROTATION_X = "auto-rotation-x";
+    private static final String AUTO_ROTATION_Y = "auto-rotation-y";
+    private static final String AUTO_ROTATION_Z = "auto-rotation-z";
 
     @Override
     public String getKey() { return "armor stand"; }
@@ -53,6 +58,9 @@ public class ArmorStandMechanic extends MechanicComponent {
         double forward = parseValues(caster, FORWARD, level, 0);
         double upward = parseValues(caster, UPWARD, level, 0);
         double right = parseValues(caster, RIGHT, level, 0);
+        double autoRotationX = settings.getDouble(AUTO_ROTATION_X, 0);
+        double autoRotationY = settings.getDouble(AUTO_ROTATION_Y, 0);
+        double autoRotationZ = settings.getDouble(AUTO_ROTATION_Z, 0);
 
         List<LivingEntity> armorStands = new ArrayList<>();
         for (LivingEntity target : targets) {
@@ -77,6 +85,18 @@ public class ArmorStandMechanic extends MechanicComponent {
                 as.setArms(arms);
                 as.setBasePlate(base);
                 as.setVisible(visible);
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        if(as==null) {
+                            cancel();
+                            return;
+                        }
+                        EulerAngle headPose = as.getHeadPose();
+                        headPose.add(autoRotationX, autoRotationY, autoRotationZ);
+                        as.setHeadPose(headPose);
+                    }
+                }.runTaskTimer(SkillAPI.singleton, 0, 1);
             });
             //SkillAPI.setMeta(armorStand, MechanicListener.ARMOR_STAND, true);
             armorStands.add(armorStand);
