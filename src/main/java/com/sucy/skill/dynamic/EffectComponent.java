@@ -275,6 +275,9 @@ public abstract class EffectComponent {
                 builder.append(target.getUniqueId().toString());
 
                 k = j + 1;
+            }else{
+                builder.append(text, k, i);
+                builder.append("null");
             }
             i = text.indexOf('{', j);
             j = text.indexOf('}', i);
