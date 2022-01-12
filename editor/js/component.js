@@ -174,6 +174,9 @@ var Mechanic = {
     TAUNT:               { name: 'Taunt',               container: false, construct: MechanicTaunt              },
     TITLE:               { name: 'Title',               container: false, construct: MechanicTitle              },
     TRIGGER:             { name: 'Trigger',             container: true,  construct: MechanicTrigger            },
+    VALUE_ROUND:           { name: 'Value Round',         container: false, construct: MechanicValueRound         },
+    VALUE_FLOOR:           { name: 'Value Floor',         container: false, construct: MechanicValueFloor         },
+    VALUE_CEIL:           { name: 'Value Ceil',          container: false, construct: MechanicValueCeil          },
     VALUE_ADD:           { name: 'Value Add',           container: false, construct: MechanicValueAdd           },
     VALUE_ATTRIBUTE:     { name: 'Value Attribute',     container: false, construct: MechanicValueAttribute     },
     VALUE_COPY:          { name: 'Value Copy',          container: false, construct: MechanicValueCopy          },
@@ -2934,8 +2937,39 @@ function MechanicValueAdd()
     this.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The amount to add to the value')
     );
+}
+extend('MechanicValueRound', 'Component');
+function MechanicValueRound()
+{
+    this.super('Value Round', Type.MECHANIC, false);
 
+    this.description = 'round a stored value under a unique key for the caster. ';
 
+    this.data.push(new StringValue('Key', 'key', 'value')
+        .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
+    );
+}
+extend('MechanicValueFloor', 'Component');
+function MechanicValueFloor()
+{
+    this.super('Value Floor', Type.MECHANIC, false);
+
+    this.description = 'only get the integer part of a stored value under a unique key for the caster. ';
+
+    this.data.push(new StringValue('Key', 'key', 'value')
+        .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
+    );
+}
+extend('MechanicValueCeil', 'Component');
+function MechanicValueCeil()
+{
+    this.super('Value Ceil', Type.MECHANIC, false);
+
+    this.description = 'ceil a stored value under a unique key for the caster. ';
+
+    this.data.push(new StringValue('Key', 'key', 'value')
+        .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
+    );
 }
 
 extend('MechanicValueAttribute', 'Component');
