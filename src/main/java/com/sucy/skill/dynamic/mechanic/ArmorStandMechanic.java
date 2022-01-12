@@ -5,6 +5,7 @@ import com.sucy.skill.api.armorstand.ArmorStandInstance;
 import com.sucy.skill.api.armorstand.ArmorStandManager;
 import com.sucy.skill.listener.MechanicListener;
 import com.sucy.skill.task.RemoveTask;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -58,10 +59,12 @@ public class ArmorStandMechanic extends MechanicComponent {
         double forward = parseValues(caster, FORWARD, level, 0);
         double upward = parseValues(caster, UPWARD, level, 0);
         double right = parseValues(caster, RIGHT, level, 0);
-        double autoRotationX = settings.getDouble(AUTO_ROTATION_X, 0);
-        double autoRotationY = settings.getDouble(AUTO_ROTATION_Y, 0);
-        double autoRotationZ = settings.getDouble(AUTO_ROTATION_Z, 0);
-
+        double autoRotationX = parseValues(caster, AUTO_ROTATION_X, level,0);
+        double autoRotationY = parseValues(caster, AUTO_ROTATION_Y, level,0);
+        double autoRotationZ = parseValues(caster, AUTO_ROTATION_Z, level,0);
+        Bukkit.broadcastMessage("auto rotation x: "+autoRotationX);
+        Bukkit.broadcastMessage("auto rotation y: "+autoRotationY);
+        Bukkit.broadcastMessage("auto rotation z: "+autoRotationZ);
         List<LivingEntity> armorStands = new ArrayList<>();
         for (LivingEntity target : targets) {
             Location loc = target.getLocation().clone();
@@ -93,7 +96,7 @@ public class ArmorStandMechanic extends MechanicComponent {
                             return;
                         }
                         EulerAngle headPose = as.getHeadPose();
-                        headPose.add(autoRotationX, autoRotationY, autoRotationZ);
+                        headPose = headPose.add(autoRotationX, autoRotationY, autoRotationZ);
                         as.setHeadPose(headPose);
                     }
                 }.runTaskTimer(SkillAPI.singleton, 0, 1);
