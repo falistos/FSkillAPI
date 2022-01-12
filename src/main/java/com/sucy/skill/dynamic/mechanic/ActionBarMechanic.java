@@ -49,22 +49,29 @@ public class ActionBarMechanic extends MechanicComponent
         String className = data.getClass("legend").getData().getName();
         PlayerSkill playerSkill1 = data.getSkill(className+"_skill_1");
         float skill1Cooldown = playerSkill1.getCooldown();
+        double skill1RequiredMana = playerSkill1.getManaCost();
         int skill1CooldownInt = Math.round(skill1Cooldown);
         PlayerSkill playerSkill2 = data.getSkill(className+"_skill_2");
         float skill2Cooldown = playerSkill2.getCooldown();
+        double skill2RequiredMana = playerSkill2.getManaCost();
         int skill2CooldownInt = Math.round(skill2Cooldown);
+        double playerMana = data.getMana();
 
         String skill1Status, skill2Status;
         String bold = ""+ChatColor.BOLD;
         if(skill1Cooldown > 0){
-            skill1Status = ChatColor.GOLD+bold+"小招: "+ChatColor.AQUA+bold+skill1CooldownInt+"s";
+            skill1Status = ChatColor.DARK_AQUA+bold+skill1CooldownInt+"s";
+        }else if(playerMana < skill1RequiredMana){
+            skill1Status = ChatColor.AQUA+bold+"魔力不足";
         }else{
-            skill1Status = ChatColor.GOLD+bold+"小招: "+ChatColor.GREEN+bold+"右鍵使用";
+            skill1Status = ChatColor.GREEN+bold+"右鍵使用";
         }
         if(skill2Cooldown > 0){
-            skill2Status = ChatColor.GOLD+bold+"大招: "+ChatColor.AQUA+bold+skill2CooldownInt+"s";
+            skill2Status = ChatColor.AQUA+bold+skill2CooldownInt+"s";
+        }else if(playerMana < skill2RequiredMana){
+            skill2Status = ChatColor.AQUA+bold+"魔力不足";
         }else{
-            skill2Status = ChatColor.GOLD+bold+"大招: "+ChatColor.GREEN+bold+"F鍵使用";
+            skill2Status = ChatColor.GREEN+bold+"F鍵使用";
         }
         text = text.replace("{skill_1_status}", skill1Status);
         text = text.replace("{skill_2_status}", skill2Status);
