@@ -58,7 +58,6 @@ public class PassiveMechanic extends MechanicComponent {
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
         if (tasks.containsKey(caster.getEntityId())) { return false; }
-        Bukkit.broadcastMessage("executing passive. target size: "+targets.size());
         if (targets.size() > 0) {
             final int period = (int) (parseValues(caster, PERIOD, level, 1.0) * 20);
             final PassiveTask task = new PassiveTask(caster, level, targets, period);
@@ -99,7 +98,6 @@ public class PassiveMechanic extends MechanicComponent {
         public void cancel() {
             super.cancel();
             tasks.remove(caster.getEntityId());
-            Bukkit.broadcastMessage("fuck canceled hahaha");
 
         }
 
@@ -108,18 +106,15 @@ public class PassiveMechanic extends MechanicComponent {
             for (int i = 0; i < targets.size(); i++) {
                 if (targets.get(i).isDead() || !targets.get(i).isValid()) {
                     targets.remove(i);
-                    Bukkit.broadcastMessage("fuck canceled 1");
                 }
             }
             if (!skill.isActive(caster) || targets.size() == 0) {
                 cancel();
-                Bukkit.broadcastMessage("fuck canceled 2");
                 return;
             } else if (caster instanceof Player) {
                 PlayerSkill data = getSkillData(caster);
                 if (data == null || !data.isUnlocked() || !((Player) caster).isOnline()) {
                     cancel();
-                    Bukkit.broadcastMessage("fuck canceled 3");
                     return;
                 }
             }
@@ -128,7 +123,6 @@ public class PassiveMechanic extends MechanicComponent {
 
             if (skill.checkCancelled()) {
                 cancel();
-                Bukkit.broadcastMessage("fuck canceled 4");
             }
         }
     }
