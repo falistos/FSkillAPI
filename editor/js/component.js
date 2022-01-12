@@ -1688,7 +1688,7 @@ function MechanicArmor()
     this.data.push(new ListValue('Material', 'material', getMaterials, 'Arrow')
         .setTooltip('The type of item to set')
     );
-    this.data.push(new IntValue('Amount', 'amount', 1)
+    this.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The quantity of the item to set')
     );
     this.data.push(new IntValue('Durability', 'durability', 0)
@@ -2280,7 +2280,7 @@ function MechanicItem()
     this.data.push(new ListValue('Material', 'material', getMaterials, 'Arrow')
         .setTooltip('The type of item to give to the player')
     );
-    this.data.push(new IntValue('Amount', 'amount', 1)
+    this.data.push(new AttributeValue('Amount', 'amount', 1, 0)
         .setTooltip('The quantity of the item to give to the player')
     );
     this.data.push(new IntValue('Durability', 'data', 0)

@@ -49,7 +49,7 @@ public class ArmorMechanic extends MechanicComponent {
         } catch (IllegalArgumentException exception) { return false; }
         Material material;
         try { material = Material.valueOf(mat); } catch (Exception ex) { return false; }
-        int amount = settings.getInt(AMOUNT, 1);
+        int amount = (int)Math.round(parseValues(caster, AMOUNT, level,0));
         int durability = settings.getInt(DURABILITY, 0);
         int data = settings.getInt(DATA, 0);
         boolean overwrite = settings.getBool(OVERWRITE, false);
