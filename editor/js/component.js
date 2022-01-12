@@ -1760,6 +1760,15 @@ function MechanicArmorStand()
     this.data.push(new AttributeValue('Right Offset', 'right', 0, 0)
         .setTooltip('How far to the right the armorstand should be of the target. A negative value will put it to the left.')
     );
+    this.data.push(new AttributeValue('Auto rotation x', 'auto-rotation-x', 0, 0)
+        .setTooltip('auto head rotation in x axis per ticks')
+    );
+    this.data.push(new AttributeValue('Auto rotation y', 'auto-rotation-y', 0, 0)
+        .setTooltip('auto head rotation in x axis per ticks')
+    );
+    this.data.push(new AttributeValue('Auto rotation z', 'auto-rotation-z', 0, 0)
+        .setTooltip('auto head rotation in x axis per ticks')
+    );
 }
 
 extend('MechanicArmorStandPose', 'Component');
