@@ -62,7 +62,7 @@ public class ValueRandomMechanic extends MechanicComponent {
             return false;
         }
 
-        String key = settings.getString(KEY);
+        String key = filter(caster, null, settings.getString(KEY));
         boolean triangular = settings.getString(TYPE).toUpperCase().equals("triangular");
         double min = parseValues(caster, MIN, level, 1);
         double max = parseValues(caster, MAX, level, 1);

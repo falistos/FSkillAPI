@@ -39,7 +39,7 @@ public class ArmorStandMechanic extends MechanicComponent {
 
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
-        String key = settings.getString(KEY, skill.getName());
+        String key = filter(caster, null, settings.getString(KEY, skill.getName()));
         int duration = (int) (20 * parseValues(caster, DURATION, level, 5));
         String name = settings.getString(NAME, "Armor Stand");
         boolean nameVisible = settings.getBool(NAME_VISIBLE, false);

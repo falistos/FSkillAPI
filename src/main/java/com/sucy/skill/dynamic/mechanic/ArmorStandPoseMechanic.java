@@ -20,12 +20,12 @@ public class ArmorStandPoseMechanic extends MechanicComponent {
 
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
-        EulerAngle head = eulerAngle(settings.getString(HEAD, ""));
-        EulerAngle body = eulerAngle(settings.getString(BODY, ""));
-        EulerAngle leftArm = eulerAngle(settings.getString(LEFT_ARM, ""));
-        EulerAngle rightArm = eulerAngle(settings.getString(RIGHT_ARM, ""));
-        EulerAngle leftLeg = eulerAngle(settings.getString(LEFT_LEG, ""));
-        EulerAngle rightLeg = eulerAngle(settings.getString(RIGHT_LEG, ""));
+        EulerAngle head = eulerAngle(filter(caster, null, settings.getString(HEAD, "")));
+        EulerAngle body = eulerAngle(filter(caster, null, settings.getString(BODY, "")));
+        EulerAngle leftArm = eulerAngle(filter(caster, null, settings.getString(LEFT_ARM, "")));
+        EulerAngle rightArm = eulerAngle(filter(caster, null, settings.getString(RIGHT_ARM, "")));
+        EulerAngle leftLeg = eulerAngle(filter(caster, null, settings.getString(LEFT_LEG, "")));
+        EulerAngle rightLeg = eulerAngle(filter(caster, null, settings.getString(RIGHT_LEG, "")));
 
         for (LivingEntity target : targets) {
             if (!(target instanceof ArmorStand)) continue;

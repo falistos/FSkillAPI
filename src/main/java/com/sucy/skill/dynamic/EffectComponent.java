@@ -239,7 +239,7 @@ public abstract class EffectComponent {
 
     protected String filter(LivingEntity caster, LivingEntity target, String text) {
         // Grab values
-        int i = text.indexOf('{');
+        int i = text.lastIndexOf('{');
         if (i < 0) { return filterSpecialChars(text); }
 
         int j = text.indexOf('}', i);
@@ -280,7 +280,11 @@ public abstract class EffectComponent {
             j = text.indexOf('}', i);
         }
         builder.append(text.substring(k));
-        return filterSpecialChars(builder.toString());
+        if(text.chars().filter(ch -> ch == '{').count()>1){
+            return filter(caster, target, builder.toString());
+        }else{
+            return filterSpecialChars(builder.toString());
+        }
     }
 
     private static String filterSpecialChars(String string) {
