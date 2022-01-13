@@ -31,6 +31,14 @@ public class ArmorStandUtils {
         loc.setPitch((float) (pitch - 90.0F));
         return loc;
     }
+    public static Vector convertEulerAngleToVector(EulerAngle euler){
+        double pitch = euler.getX();
+        double yaw = euler.getY();
+        double x =  Math.cos(yaw)*Math.cos(pitch);
+        double y = Math.sin(yaw)*Math.cos(pitch);
+        double z = Math.sin(pitch);
+        return new Vector(x,y,z);
+    }
     public static EulerAngle convertVectorToEulerAngle(Vector vec) {
 
         double x = vec.getX();
