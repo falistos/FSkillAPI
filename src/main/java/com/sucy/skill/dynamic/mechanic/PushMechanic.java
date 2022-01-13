@@ -38,6 +38,7 @@ import java.util.List;
  */
 public class PushMechanic extends MechanicComponent {
     private static final String SPEED  = "speed";
+    private static final String IGNORE_VERTICAL  = "ignore-vertical";
     private static final String SOURCE = "source";
 
     @Override
@@ -62,7 +63,7 @@ public class PushMechanic extends MechanicComponent {
 
         final double speed = parseValues(caster, SPEED, level, 3.0);
         final String type = settings.getString("type", "scaled").toLowerCase();
-
+        final boolean ignoreVertical = settings.getBool(IGNORE_VERTICAL);
         final List<LivingEntity> sources = RememberTarget.remember(caster, settings.getString(SOURCE, "_none"));
         final Location center = sources.isEmpty() ? caster.getLocation() : sources.get(0).getLocation();
 
@@ -76,7 +77,8 @@ public class PushMechanic extends MechanicComponent {
             } else { // "scaled"
                 vel.multiply(speed / vel.lengthSquared());
             }
-            vel.setY(vel.getY() / 5 + 0.5);
+            if(ignoreVertical)
+                vel.setY(vel.getY() / 5 + 0.5);
             target.setVelocity(vel);
             worked = true;
         }

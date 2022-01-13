@@ -2651,6 +2651,9 @@ function MechanicPush()
     this.data.push(new AttributeValue('Speed', 'speed', 3, 1)
       .setTooltip('How fast to push the target away. Use a negative value to pull them closer.')
   );
+    this.data.push(new ListValue('Ignore vertical', 'ignore-vertical', [ 'True', 'False' ], 'True')
+        .setTooltip('Ignore vertical or not')
+    );
     this.data.push(new StringValue('Source', 'source', 'none')
         .setTooltip('The source to push/pull from. This should be a key used in a Remember Targets mechanic. If no targets are remembered, this will default to the caster.')
     );
