@@ -29,10 +29,14 @@ package com.sucy.skill.api.event;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.manager.AttributeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.w3c.dom.Attr;
+
+import java.util.HashMap;
 
 public class PlayerCastSkillEvent extends Event implements Cancellable
 {
@@ -50,7 +54,8 @@ public class PlayerCastSkillEvent extends Event implements Cancellable
         this.skill = skill;
         this.player = player;
         this.manaCost = skill.getManaCost();
-        int manaCostReducePercent = playerData.getAttributeData().get(AttributeManager.MANA_COST);
+        double manaCostReducePercent = playerData.scaleStat(AttributeManager.MANA_COST, 0);
+        if(manaCostReducePercent!=0)
         this.manaCost*=((100-manaCostReducePercent)/100);
 
         this.staminaCost = skill.getStaminaCost();

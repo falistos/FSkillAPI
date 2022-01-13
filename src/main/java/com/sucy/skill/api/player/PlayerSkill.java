@@ -246,8 +246,10 @@ public final class PlayerSkill
         }
 
         // If mana is enabled, check to see if the player has enough
+        double manaCostReduceStat = getPlayerData().scaleStat(AttributeManager.MANA_COST, 0);
+        double manaCostReducePercent = ((100-manaCostReduceStat)/100);
         if (SkillAPI.getSettings().isManaEnabled()
-                && player.getMana() < skill.getManaCost(level)) {
+                && player.getMana() < (skill.getManaCost(level)*manaCostReducePercent)) {
 
             return SkillStatus.MISSING_MANA;
         }

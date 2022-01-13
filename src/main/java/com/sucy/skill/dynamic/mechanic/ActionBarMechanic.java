@@ -6,6 +6,8 @@ import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.util.ActionBar;
+import com.sucy.skill.manager.AttributeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -57,18 +59,21 @@ public class ActionBarMechanic extends MechanicComponent
         int skill2CooldownInt = Math.round(skill2Cooldown);
         double playerMana = data.getMana();
 
+        double manaCostReduceStat = data.scaleStat(AttributeManager.MANA_COST, 0);
+        double manaCostReducePercent = ((100-manaCostReduceStat)/100);
+
         String skill1Status, skill2Status;
         String bold = ""+ChatColor.BOLD;
         if(skill1Cooldown > 0){
             skill1Status = ChatColor.DARK_AQUA+bold+skill1CooldownInt+"s";
-        }else if(playerMana < skill1RequiredMana){
+        }else if(playerMana < skill1RequiredMana*manaCostReducePercent){
             skill1Status = ChatColor.AQUA+bold+"魔力不足";
         }else{
             skill1Status = ChatColor.GREEN+bold+"右鍵使用";
         }
         if(skill2Cooldown > 0){
             skill2Status = ChatColor.AQUA+bold+skill2CooldownInt+"s";
-        }else if(playerMana < skill2RequiredMana){
+        }else if(playerMana < skill2RequiredMana*manaCostReducePercent){
             skill2Status = ChatColor.AQUA+bold+"魔力不足";
         }else{
             skill2Status = ChatColor.GREEN+bold+"F鍵使用";
