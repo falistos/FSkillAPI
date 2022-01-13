@@ -163,7 +163,7 @@ public abstract class EffectComponent {
      * @return the settings value or, if not a number, the cast data value
      */
     protected double getNum(LivingEntity caster, String key, double fallback) {
-        String val = settings.getString(key);
+        String val = filter(caster, null, settings.getString(KEY));
         if (val == null) {
             return fallback;
         }

@@ -58,7 +58,7 @@ public class ValueRoundMechanic extends MechanicComponent {
             return false;
         }
 
-        String key = settings.getString(KEY);
+        String key = filter(caster, null, settings.getString(KEY));
         HashMap<String, Object> data = DynamicSkill.getCastData(caster);
         if (data.containsKey(key)) {
             data.put(key, Math.round((double) data.get(key)));

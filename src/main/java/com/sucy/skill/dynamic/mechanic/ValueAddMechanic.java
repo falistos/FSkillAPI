@@ -63,7 +63,7 @@ public class ValueAddMechanic extends MechanicComponent {
             return false;
         }
 
-        String key = settings.getString(KEY);
+        String key = filter(caster, null, settings.getString(KEY));
         double amount = parseValues(caster, AMOUNT, level, 1) * targets.size();
         HashMap<String, Object> data = DynamicSkill.getCastData(caster);
         if (!data.containsKey(key)) {

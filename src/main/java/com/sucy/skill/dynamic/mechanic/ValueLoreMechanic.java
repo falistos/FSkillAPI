@@ -60,7 +60,7 @@ public class ValueLoreMechanic extends MechanicComponent {
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
         if (targets.size() == 0 || !settings.has(KEY)) { return false; }
 
-        String key = settings.getString(KEY);
+        String key = filter(caster, null, settings.getString(KEY));
         double multiplier = parseValues(caster, MULTIPLIER, level, 1);
         boolean offhand = settings.getString(HAND, "").equalsIgnoreCase("offhand");
         String regex = settings.getString(REGEX, "Damage: {value}");

@@ -53,7 +53,7 @@ public class ValueHealthMechanic extends MechanicComponent {
      */
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
-        final String key = settings.getString(KEY);
+        final String key = filter(caster, null, settings.getString(KEY));
         final String type = settings.getString(TYPE, "current").toLowerCase();
         final HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 

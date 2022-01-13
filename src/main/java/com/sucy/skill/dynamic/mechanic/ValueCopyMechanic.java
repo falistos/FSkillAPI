@@ -27,7 +27,7 @@ public class ValueCopyMechanic extends MechanicComponent {
             return false;
         }
 
-        final String key = settings.getString(KEY);
+        final String key = filter(caster, null, settings.getString(KEY));
         final String destination = settings.getString(TARGET, key);
         final boolean toTarget = settings.getString(TO_TARGET, "true").equalsIgnoreCase("true");
 

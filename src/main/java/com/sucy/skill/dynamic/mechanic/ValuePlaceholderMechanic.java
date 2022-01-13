@@ -43,7 +43,7 @@ public class ValuePlaceholderMechanic extends MechanicComponent
 
         if (targets.get(0) instanceof Player)
         {
-            final String key = settings.getString(KEY);
+            final String key = filter(caster, null, settings.getString(KEY));
             final String placeholder = settings.getString(PLACEHOLDER);
             final String type = settings.getString(TYPE).toUpperCase();
 

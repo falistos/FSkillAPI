@@ -61,7 +61,7 @@ public class FlagMechanic extends MechanicComponent
             return false;
         }
 
-        String key = settings.getString(KEY);
+        String key = filter(caster, null, settings.getString(KEY));
         double seconds = parseValues(caster, SECONDS, level, 3.0);
         int ticks = (int) (seconds * 20);
         for (LivingEntity target : targets)
