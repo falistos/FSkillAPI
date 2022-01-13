@@ -52,6 +52,7 @@ import com.sucy.skill.language.NotificationNodes;
 import com.sucy.skill.language.RPGFilter;
 import com.sucy.skill.language.SkillNodes;
 import com.sucy.skill.log.Logger;
+import com.sucy.skill.manager.AttributeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -391,6 +392,7 @@ public abstract class Skill implements IconHolder
      */
     public double getManaCost(int level)
     {
+
         return settings.getAttr(SkillAttribute.MANA, level);
     }
 
