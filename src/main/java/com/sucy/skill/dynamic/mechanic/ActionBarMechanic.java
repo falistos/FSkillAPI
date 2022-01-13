@@ -65,7 +65,7 @@ public class ActionBarMechanic extends MechanicComponent
         String skill1Status, skill2Status;
         String bold = ""+ChatColor.BOLD;
         if(skill1Cooldown > 0){
-            skill1Status = ChatColor.DARK_AQUA+bold+skill1CooldownInt+"s";
+            skill1Status = ChatColor.AQUA+bold+skill1CooldownInt+"s";
         }else if(playerMana < skill1RequiredMana*manaCostReducePercent){
             skill1Status = ChatColor.AQUA+bold+"魔力不足";
         }else{
