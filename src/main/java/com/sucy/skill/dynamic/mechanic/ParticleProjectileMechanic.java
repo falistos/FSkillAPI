@@ -41,8 +41,12 @@ import com.sucy.skill.cast.IndicatorType;
 import com.sucy.skill.cast.ProjectileIndicator;
 import com.sucy.skill.dynamic.TempEntity;
 import com.sucy.skill.dynamic.target.RememberTarget;
+import com.sucy.skill.util.ArmorStandUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -228,6 +232,20 @@ public class ParticleProjectileMechanic extends MechanicComponent implements Pro
                         speedFormula);
             } else {
                 Vector dir = target.getLocation().getDirection();
+                if(target.getType() == EntityType.ARMOR_STAND){
+                    ArmorStand armorStand = (ArmorStand) target;
+                    loc = armorStand.getLocation();
+                    //Bukkit.broadcastMessage("armorstand data: ");
+                    //Bukkit.broadcastMessage("pitch: "+loc.getPitch()+", to radian: "+Math.toRadians(loc.getPitch()));
+                    //Bukkit.broadcastMessage("yaw: "+loc.getYaw()+", to radian: "+Math.toRadians(loc.getYaw()));
+                    //Bukkit.broadcastMessage("head pose euler: "+armorStand.getHeadPose().getX()+","+armorStand.getHeadPose().getY()+","+armorStand.getHeadPose().getZ());
+                    loc.setYaw(loc.getYaw()+(float)Math.toDegrees(armorStand.getHeadPose().getY()));
+                    loc.setPitch(loc.getPitch()+(float)Math.toDegrees(armorStand.getHeadPose().getX()));
+                    Vector newDirection = loc.getDirection();
+                    //Bukkit.broadcastMessage("new direction: "+newDirection.getX()+","+newDirection.getY()+","+newDirection.getZ());
+                    dir = newDirection;
+                    armorStand.teleport(loc);
+                }
 
                 double right = parseValues(caster, RIGHT, level, 0);
                 double upward = parseValues(caster, UPWARD, level, 0);
