@@ -27,8 +27,8 @@ public class TitleMechanic extends MechanicComponent
         if (targets.size() == 0)
             return false;
 
-        String title = TextFormatter.colorString(settings.getString(TITLE));
-        String subtitle = TextFormatter.colorString(settings.getString(SUBTITLE));
+        String title = filter(caster, null, TextFormatter.colorString(settings.getString(TITLE)));
+        String subtitle = filter(caster, null, TextFormatter.colorString(settings.getString(SUBTITLE)));
         int fadein = (int)parseValues(caster, FADEIN, level, 1);
         int stay = (int)parseValues(caster, STAY, level, 1);
         int fadeout = (int)parseValues(caster, FADEOUT, level, 1);
