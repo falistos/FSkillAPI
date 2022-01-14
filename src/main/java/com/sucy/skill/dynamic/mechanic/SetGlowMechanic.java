@@ -70,8 +70,8 @@ public class SetGlowMechanic extends MechanicComponent {
 
         final Player player = (Player) caster;
         String color = settings.getString(COLOR);
-        double seconds = settings.getDouble(SECONDS);
-        if(color.equals("NONE")){
+        //double seconds = settings.getDouble(SECONDS);
+        if(GlowAPI.Color.valueOf(color) == GlowAPI.Color.NONE){
             GlowAPI.setGlowing(targets, null, player);
         }else{
             GlowAPI.setGlowing(targets, GlowAPI.Color.valueOf(color), player);
