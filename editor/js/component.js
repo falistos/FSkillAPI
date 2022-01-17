@@ -3057,7 +3057,7 @@ function MechanicValuePitch()
     );
 }
 extend('MechanicValueYaw', 'Component');
-function MechanicValuePitch()
+function MechanicValueYaw()
 {
     this.super('Value Yaw', Type.MECHANIC, false);
 
