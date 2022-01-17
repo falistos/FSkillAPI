@@ -279,6 +279,8 @@ public class ComponentRegistry {
         register(new ValueAttributeMechanic());
         register(new ValueCopyMechanic());
         register(new ValueDistanceMechanic());
+        register(new ValuePitchMechanic());
+        register(new ValueYawMechanic());
         register(new ValueHealthMechanic());
         register(new ValueLocationMechanic());
         register(new ValueLoreMechanic());

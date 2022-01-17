@@ -182,6 +182,8 @@ var Mechanic = {
     VALUE_COPY:          { name: 'Value Copy',          container: false, construct: MechanicValueCopy          },
     VALUE_DISTANCE:      { name: 'Value Distance',      container: false, construct: MechanicValueDistance      },
     VALUE_HEALTH:        { name: 'Value Health',        container: false, construct: MechanicValueHealth        },
+    VALUE_PITCH:         { name: 'Value Pitch',         container: false, construct: MechanicValuePitch         },
+    VALUE_YAW:           { name: 'Value Yaw',           container: false, construct: MechanicValueYaw           },
     VALUE_LOCATION:      { name: 'Value Location',      container: false, construct: MechanicValueLocation      },
     VALUE_LORE:          { name: 'Value Lore',          container: false, construct: MechanicValueLore          },
     VALUE_LORE_SLOT:     { name: 'Value Lore Slot',     container: false, construct: MechanicValueLoreSlot      },
@@ -3041,6 +3043,28 @@ function MechanicValueHealth()
     );
     this.data.push(new ListValue('Type', 'type', [ 'Current', 'Max', 'Missing', 'Percent' ], 'Current')
         .setTooltip('Current provides the health the target has, max provides their total health, missing provides how much health they have lost, and percent is the ratio of health to total health.')
+    );
+}
+extend('MechanicValuePitch', 'Component');
+function MechanicValuePitch()
+{
+    this.super('Value Pitch', Type.MECHANIC, false);
+
+    this.description = 'Stores the target\'s current pitch as a value under a given key for the caster';
+
+    this.data.push(new StringValue('Key', 'key', 'value')
+        .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
+    );
+}
+extend('MechanicValueYaw', 'Component');
+function MechanicValuePitch()
+{
+    this.super('Value Yaw', Type.MECHANIC, false);
+
+    this.description = 'Stores the target\'s current yaw as a value under a given key for the caster';
+
+    this.data.push(new StringValue('Key', 'key', 'value')
+        .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
     );
 }
 

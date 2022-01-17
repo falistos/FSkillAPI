@@ -4,9 +4,11 @@ import com.sucy.skill.hook.DisguiseHook;
 import com.sucy.skill.hook.PluginChecker;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.utilities.reflection.FakeBoundingBox;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -59,7 +61,13 @@ public abstract class TargetHelper {
         for (Entity entity : list)
         {
             if (!isInFront(source, entity) || !(entity instanceof LivingEntity)) continue;
-
+            //Skip spectator
+            if(entity instanceof Player){
+                Player player = (Player) entity;
+                if(player.getGameMode()== GameMode.SPECTATOR){
+                    continue;
+                }
+            }
             AABB aabb = getAABB(entity);
             aabb.expand(tolerance);
             AABB.Vec3D collision = aabb.intersectsRay(ray, 0, range);
