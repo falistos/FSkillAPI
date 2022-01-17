@@ -3055,6 +3055,9 @@ function MechanicValuePitch()
     this.data.push(new StringValue('Key', 'key', 'value')
         .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
     );
+    this.data.push(new ListValue("Radian", "radian", [ 'True', 'False' ], 'True')
+        .setTooltip('if this set to true, it will return a radian value, else it will return a degree value')
+    );
 }
 extend('MechanicValueYaw', 'Component');
 function MechanicValueYaw()
@@ -3065,6 +3068,9 @@ function MechanicValueYaw()
 
     this.data.push(new StringValue('Key', 'key', 'value')
         .setTooltip('The unique key to store the value under. This key can be used in place of attribute values to use the stored value.')
+    );
+    this.data.push(new ListValue("Radian", "radian", [ 'True', 'False' ], 'True')
+        .setTooltip('if this set to true, it will return a radian value, else it will return a degree value')
     );
 }
 

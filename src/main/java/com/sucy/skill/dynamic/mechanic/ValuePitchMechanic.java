@@ -35,7 +35,7 @@ import java.util.List;
 
 public class ValuePitchMechanic extends MechanicComponent {
     private static final String KEY  = "key";
-    private static final String TYPE = "type";
+    private static final String RADIAN = "radian";
 
     @Override
     public String getKey() {
@@ -54,11 +54,15 @@ public class ValuePitchMechanic extends MechanicComponent {
     @Override
     public boolean execute(LivingEntity caster, int level, List<LivingEntity> targets) {
         final String key = filter(caster, null, settings.getString(KEY));
+        final boolean useRadian = settings.getBool(RADIAN);
         final HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 
         final LivingEntity target = targets.get(0);
-        data.put(key, target.getLocation().getPitch());
-        new ValueChangeEvent(caster, key,  target.getLocation().getPitch());
+        double result = target.getLocation().getPitch();
+        if(useRadian)
+            result = Math.toRadians(result);
+        data.put(key, result);
+        new ValueChangeEvent(caster, key,  result);
         return true;
     }
 }
