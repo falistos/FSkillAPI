@@ -164,16 +164,39 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
         for (int i = 0; i < amount / 2; i++) {
             for (int direction = -1; direction <= 1; direction += 2) {
                 // Initial calculations
+                //Bukkit.broadcastMessage("ID: "+i+", dir: "+direction+","+ "angleIncrement: "+angleIncrement);
                 double bonusAngle = angle / 2 * direction - angleIncrement * i * direction;
+
+                //Bukkit.broadcastMessage("bonus angle: "+bonusAngle);
                 double totalAngle = hAngle + bonusAngle;
+
+                //Bukkit.broadcastMessage("hAngle: "+hAngle);
+                //Bukkit.broadcastMessage("total angle: "+totalAngle);
                 double vAngle = vBaseAngle * Math.cos(bonusAngle * DEGREE_TO_RAD);
+                //Bukkit.broadcastMessage("vAngle: "+vAngle);
                 double x = Math.cos(vAngle);
-
                 // Get the velocity
-                vel.setX(x * Math.cos(totalAngle * DEGREE_TO_RAD));
-                vel.setY(Math.sin(vAngle));
-                vel.setZ(x * Math.sin(totalAngle * DEGREE_TO_RAD));
+                //Bukkit.broadcastMessage("awayFromX: "+Math.sin(Math.toRadians(totalAngle)));
+                //Bukkit.broadcastMessage("abs(awayFromX): "+Math.abs(Math.sin(Math.toRadians(totalAngle))));
 
+                //awayFromXAxis will be 0 when not facing X direction, will be 1 when facing it
+                double awayFromXAxis = Math.abs(Math.sin(Math.toRadians(hAngle)));
+
+                //Bukkit.broadcastMessage("awayFromZ: "+Math.cos(Math.toRadians(totalAngle)));
+                //Bukkit.broadcastMessage("abs(awayfromZ): "+Math.abs(Math.cos(Math.toRadians(totalAngle))));
+
+                //awayFromZAxis will be 0 when not facing Z direction, will be 1 when facing it
+                double awayFromZAxis = Math.abs(Math.cos(Math.toRadians(hAngle)));
+
+                //Bukkit.broadcastMessage("awayFromXAxis+x: "+(awayFromXAxis+x));
+                //Bukkit.broadcastMessage("awayFromZAxis+x: "+(awayFromZAxis+x));
+                vel.setX(Math.min(awayFromXAxis+x, 1)*Math.cos(totalAngle * DEGREE_TO_RAD));
+                vel.setY(Math.sin(vAngle));
+                vel.setZ(Math.min(awayFromZAxis+x, 1)*Math.sin(totalAngle * DEGREE_TO_RAD));
+
+                //Bukkit.broadcastMessage("vel X: "+vel.getX());
+                //Bukkit.broadcastMessage("vel Y: "+vel.getY());
+                //Bukkit.broadcastMessage("vel Z: "+vel.getZ());
                 // Launch the projectile
                 list.add(vel.clone());
             }
