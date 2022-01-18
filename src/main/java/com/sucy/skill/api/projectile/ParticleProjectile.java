@@ -238,6 +238,13 @@ public class ParticleProjectile extends CustomProjectile
             //create custom model
             createHiddenArmorStand(customModelItemStack);
 
+            //Put the item on its head as a helmet
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
+                }
+            }.runTaskLater(SkillAPI.singleton, 1);
             //update the physic of the custom model
             updateCustomModelSystem();
         }
@@ -254,8 +261,6 @@ public class ParticleProjectile extends CustomProjectile
         armorStandLocation.add(0, -1, 0);
         Entity hiddenArmorStandEntity = world.spawnEntity(armorStandLocation, EntityType.ARMOR_STAND);
         hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
-        //Put the item on its head as a helmet
-        hiddenArmorStand.getEquipment().setHelmet(customModelItemStack);
         try {
             hiddenArmorStand.setMarker(true);
         }catch(Exception e){
@@ -441,6 +446,7 @@ public class ParticleProjectile extends CustomProjectile
         life--;
         if (life <= 0)
         {
+            destroyHiddenArmorStand();
             cancel();
             Bukkit.getPluginManager().callEvent(new ParticleProjectileExpireEvent(this));
         }
