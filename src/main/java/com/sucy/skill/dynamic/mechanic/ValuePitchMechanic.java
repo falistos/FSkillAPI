@@ -58,7 +58,7 @@ public class ValuePitchMechanic extends MechanicComponent {
         final HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 
         final LivingEntity target = targets.get(0);
-        double result = target.getLocation().getPitch();
+        double result = target.getEyeLocation().getPitch();
         if(useRadian)
             result = Math.toRadians(result);
         data.put(key, result);

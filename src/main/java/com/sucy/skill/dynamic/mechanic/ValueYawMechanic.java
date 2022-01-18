@@ -58,7 +58,7 @@ public class ValueYawMechanic extends MechanicComponent {
         final HashMap<String, Object> data = DynamicSkill.getCastData(caster);
 
         final LivingEntity target = targets.get(0);
-        double result = target.getLocation().getYaw();
+        double result = target.getEyeLocation().getYaw();
         if(useRadian)
             result = Math.toRadians(result);
         data.put(key, result);
