@@ -33,6 +33,7 @@ import com.rit.sucy.config.parse.NumberParser;
 import com.rit.sucy.text.TextFormatter;
 import com.rit.sucy.version.VersionManager;
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.DefaultCombatProtection;
 import com.sucy.skill.api.ReadOnlySettings;
 import com.sucy.skill.api.Settings;
 import com.sucy.skill.api.event.SkillDamageEvent;
@@ -59,8 +60,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -787,7 +790,10 @@ public abstract class Skill implements IconHolder
                 skillDamage = true;
                 target.setNoDamageTicks(0);
                 if (knockback) { target.damage(event.getDamage(), source); }
-                else { target.damage(event.getDamage()); }
+                else {
+                    Vector velocity = target.getVelocity();
+                    target.damage(damage, source);
+                    target.setVelocity(velocity);}
                 skillDamage = false;
                 if (PluginChecker.isNoCheatActive()) NoCheatHook.unexempt(player);
             } else {
@@ -801,11 +807,19 @@ public abstract class Skill implements IconHolder
                     if (VersionManager.isVersionAtMost(VersionManager.V1_5_2)) {
                         // 1.5.2 and earlier used integer values
                         if (knockback) { target.damage((int) damage, source); }
-                        else { target.damage((int) damage); }
+                        else {
+                            Vector velocity = target.getVelocity();
+                            target.damage((int) damage, source);
+                            target.setVelocity(velocity);
+                        }
                     } else {
                         // 1.6.2 and beyond use double values
                         if (knockback) { target.damage(damage, source); }
-                        else { target.damage(damage); }
+                        else {
+                            Vector velocity = target.getVelocity();
+                            target.damage(damage, source);
+                            target.setVelocity(velocity);
+                        }
                     }
 
                     // Reset damage timer to before the damage was applied

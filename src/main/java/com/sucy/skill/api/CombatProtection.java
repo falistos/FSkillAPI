@@ -32,9 +32,10 @@ public interface CombatProtection {
                 return false;
             }
 
-            DefaultCombatProtection.FakeEntityDamageByEntityEvent event = new DefaultCombatProtection.FakeEntityDamageByEntityEvent(attacker, target, EntityDamageEvent.DamageCause.CUSTOM, 1.0D);
-            Bukkit.getPluginManager().callEvent(event);
-            return !event.isCancelled();
+            //DefaultCombatProtection.FakeEntityDamageByEntityEvent event = new DefaultCombatProtection.FakeEntityDamageByEntityEvent(attacker, target, EntityDamageEvent.DamageCause.VOID, 1D);
+            //Bukkit.getPluginManager().callEvent(event);
+            //return !event.isCancelled();
+            return true;
         }
     }
 
