@@ -58,6 +58,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -793,7 +794,10 @@ public abstract class Skill implements IconHolder
                 else {
                     Vector velocity = target.getVelocity();
                     target.damage(damage, source);
-                    target.setVelocity(velocity);}
+                    if(target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue()==0){
+                        target.setVelocity(velocity);
+                    }
+                }
                 skillDamage = false;
                 if (PluginChecker.isNoCheatActive()) NoCheatHook.unexempt(player);
             } else {
@@ -810,7 +814,9 @@ public abstract class Skill implements IconHolder
                         else {
                             Vector velocity = target.getVelocity();
                             target.damage((int) damage, source);
-                            target.setVelocity(velocity);
+                            if(target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue()==0){
+                                target.setVelocity(velocity);
+                            }
                         }
                     } else {
                         // 1.6.2 and beyond use double values
@@ -818,7 +824,9 @@ public abstract class Skill implements IconHolder
                         else {
                             Vector velocity = target.getVelocity();
                             target.damage(damage, source);
-                            target.setVelocity(velocity);
+                            if(target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue()==0){
+                                target.setVelocity(velocity);
+                            }
                         }
                     }
 
