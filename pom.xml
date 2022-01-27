@@ -126,6 +126,13 @@
             <systemPath>${basedir}/lib/MCCore-1.67.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>at.actionbar.main</groupId>
+            <artifactId>actionbarAPI</artifactId>
+            <version>1.67</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/ActionbarAPI.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>com.sucy.party</groupId>
             <artifactId>parties</artifactId>
             <version>1.13</version>
@@ -152,11 +159,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.InventivetalentDev</groupId>
+            <groupId>com.github.metalshark</groupId>
             <artifactId>GlowAPI</artifactId>
-            <version>1.4.6-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/GlowAPI_v1.4.6-SNAPSHOT.jar</systemPath>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

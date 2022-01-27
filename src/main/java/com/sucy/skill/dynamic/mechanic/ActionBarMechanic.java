@@ -1,5 +1,6 @@
 package com.sucy.skill.dynamic.mechanic;
 
+import at.actionbar.main.ActionbarAPI;
 import com.rit.sucy.text.TextFormatter;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
@@ -40,7 +41,7 @@ public class ActionBarMechanic extends MechanicComponent
             {
                 Player player = (Player) target;
                 text = replaceTextWithPlayerSkillStatus(text, player);
-                ActionBar.show(player,filter(caster, target, text));
+                ActionbarAPI.sendActionbar(player,filter(caster, target, text));
                 worked = true;
             }
         }
