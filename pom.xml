@@ -159,9 +159,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.metalshark</groupId>
+            <groupId>org.inventivetalent.glow</groupId>
             <artifactId>GlowAPI</artifactId>
-            <version>2.0.0</version>
+            <version>1.4.20</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/GlowAPI_v1.4.20-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -210,7 +212,8 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.5.0</version>
+            <version>4.7.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
