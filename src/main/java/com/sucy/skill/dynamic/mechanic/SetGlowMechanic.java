@@ -32,13 +32,12 @@ import com.sucy.skill.api.skills.PassiveSkill;
 import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.listener.MechanicListener;
+import com.sucy.skill.manager.GlowManager;
 import com.sucy.skill.task.RemoveTask;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Sound;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.inventivetalent.glow.GlowAPI;
 
 import java.util.ArrayList;
@@ -67,14 +66,26 @@ public class SetGlowMechanic extends MechanicComponent {
         if (!(caster instanceof Player)) {
             return false;
         }
-
+        //Data input
         final Player player = (Player) caster;
         String color = settings.getString(COLOR);
+        double seconds = parseValues(caster, "seconds", level, 1);
+        long ticks = (int) (seconds * 20);
+
         //double seconds = settings.getDouble(SECONDS);
-        if(GlowAPI.Color.valueOf(color) == GlowAPI.Color.NONE){
-            GlowAPI.setGlowing(targets, null, player);
-        }else{
-            GlowAPI.setGlowing(targets, GlowAPI.Color.valueOf(color), player);
+        for(LivingEntity entity : targets){
+            if(entity.getType() == EntityType.ARMOR_STAND){
+                continue;
+            }
+            if(GlowAPI.Color.valueOf(color) == GlowAPI.Color.NONE){
+                //Bukkit.broadcastMessage("Removed GLOW of "+entity.getName()+" for "+player.getName());
+                GlowAPI.setGlowing(entity, null, player);
+                GlowManager.instance.getPlayerVisionData(player).setEntityGlowTimeRemain(entity, 0);
+            }else{
+                //Bukkit.broadcastMessage("Set GLOW of "+entity.getName()+" for "+player.getName());
+                GlowAPI.setGlowing(entity, GlowAPI.Color.valueOf(color), player);
+                GlowManager.instance.getPlayerVisionData(player).setEntityGlowTimeRemain(entity, ticks);
+            }
         }
         return true;
     }
