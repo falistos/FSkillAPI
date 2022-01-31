@@ -1723,6 +1723,9 @@ function MechanicArmorStand()
     this.data.push(new StringValue('Armor Stand Key', 'key', 'default')
         .setTooltip('The key to refer to the armorstand by. Only one armorstand of each key can be active per target at the time')
     );
+    this.data.push(new StringValue('Model Engine ID', 'model-engine-id', 'none')
+        .setTooltip('Need ModelEngine in order to works. this would turn armorstand into custom model')
+    );
     this.data.push(new AttributeValue('Duration', 'duration', 5, 0)
         .setTooltip('How long the armorstand lasts before being deleted')
     );

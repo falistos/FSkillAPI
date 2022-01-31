@@ -5,7 +5,11 @@ import com.sucy.skill.api.armorstand.ArmorStandInstance;
 import com.sucy.skill.api.armorstand.ArmorStandManager;
 import com.sucy.skill.listener.MechanicListener;
 import com.sucy.skill.task.RemoveTask;
+import com.ticxo.modelengine.api.ModelEngineAPI;
+import com.ticxo.modelengine.api.model.ActiveModel;
+import com.ticxo.modelengine.api.model.ModeledEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -39,6 +43,7 @@ public class ArmorStandMechanic extends MechanicComponent {
     private static final String AUTO_ROTATION_X = "auto-rotation-x";
     private static final String AUTO_ROTATION_Y = "auto-rotation-y";
     private static final String AUTO_ROTATION_Z = "auto-rotation-z";
+    private static final String MODEL_ENGINE_ID = "model-engine-id";
 
     @Override
     public String getKey() { return "armor stand"; }
@@ -62,6 +67,8 @@ public class ArmorStandMechanic extends MechanicComponent {
         double autoRotationX = parseValues(caster, AUTO_ROTATION_X, level,0);
         double autoRotationY = parseValues(caster, AUTO_ROTATION_Y, level,0);
         double autoRotationZ = parseValues(caster, AUTO_ROTATION_Z, level,0);
+        String modelEngineID = settings.getString(MODEL_ENGINE_ID, "none");
+
         List<LivingEntity> armorStands = new ArrayList<>();
         for (LivingEntity target : targets) {
             Location loc = target.getLocation().clone();
@@ -97,6 +104,27 @@ public class ArmorStandMechanic extends MechanicComponent {
                         as.setHeadPose(headPose);
                     }
                 }.runTaskTimer(SkillAPI.singleton, 0, 1);
+                try {
+                    if (modelEngineID != null && !modelEngineID.equals("none")) {
+                        ActiveModel model = ModelEngineAPI.api.getModelManager().createActiveModel(modelEngineID);
+
+                        if (model == null) {
+                            caster.sendMessage("SkillAPI Armor stand Failed to load model engine with ID: " + ChatColor.WHITE + modelEngineID);
+                        } else {
+                            ModeledEntity modeledEntity = ModelEngineAPI.api.getModelManager().createModeledEntity(as);
+
+                            if (modeledEntity == null) {
+                                caster.sendMessage("Failed to create modelled entity");
+                            } else {
+                                modeledEntity.addActiveModel(model);
+                                modeledEntity.detectPlayers();
+                            }
+                        }
+
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             });
             //SkillAPI.setMeta(armorStand, MechanicListener.ARMOR_STAND, true);
             armorStands.add(armorStand);
