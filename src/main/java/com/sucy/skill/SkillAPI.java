@@ -126,6 +126,7 @@ public class SkillAPI extends JavaPlugin {
         if (PluginChecker.isBungeeActive()) { BungeeHook.init(this); }
 
         // Set up managers
+        new GlowManager(5);
         comboManager = new ComboManager();
         registrationManager = new RegistrationManager(this);
         cmd = new CmdManager(this);
