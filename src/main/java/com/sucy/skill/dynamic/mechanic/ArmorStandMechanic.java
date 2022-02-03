@@ -1,5 +1,9 @@
 package com.sucy.skill.dynamic.mechanic;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.armorstand.ArmorStandInstance;
 import com.sucy.skill.api.armorstand.ArmorStandManager;
@@ -13,10 +17,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,28 +110,49 @@ public class ArmorStandMechanic extends MechanicComponent {
                         as.setHeadPose(headPose);
                     }
                 }.runTaskTimer(SkillAPI.singleton, 0, 1);
-                try {
-                    if (modelEngineID != null && !modelEngineID.equals("none")) {
-                        ActiveModel model = ModelEngineAPI.api.getModelManager().createActiveModel(modelEngineID);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (modelEngineID != null && !modelEngineID.equals("none")) {
+                                ActiveModel model = ModelEngineAPI.api.getModelManager().createActiveModel(modelEngineID);
 
-                        if (model == null) {
-                            caster.sendMessage("SkillAPI Armor stand Failed to load model engine with ID: " + ChatColor.WHITE + modelEngineID);
-                        } else {
-                            ModeledEntity modeledEntity = ModelEngineAPI.api.getModelManager().createModeledEntity(as);
+                                if (model == null) {
+                                    caster.sendMessage("SkillAPI Armor stand Failed to load model engine with ID: " + ChatColor.WHITE + modelEngineID);
+                                } else {
+                                    ModeledEntity modeledEntity = ModelEngineAPI.api.getModelManager().createModeledEntity(as);
 
-                            if (modeledEntity == null) {
-                                caster.sendMessage("Failed to create modelled entity");
-                            } else {
-                                modeledEntity.addActiveModel(model);
-                                modeledEntity.detectPlayers();
+                                    if (modeledEntity == null) {
+                                        caster.sendMessage("Failed to create modelled entity");
+                                    } else {
+                                        modeledEntity.addActiveModel(model);
+                                        modeledEntity.detectPlayers();
+                                    }
+                                }
+
                             }
+                        }catch(Exception e){
+                            e.printStackTrace();
                         }
-
                     }
-                }catch(Exception e){
-                    e.printStackTrace();
+                }.runTaskLater(SkillAPI.singleton, 1);
+            });
+            /*
+            SkillAPI.singleton.protocolManager.addPacketListener(new PacketAdapter(SkillAPI.singleton, PacketType.Play.Server.SPAWN_ENTITY_LIVING)
+            {
+                //for out packets
+                @Override
+                public void onPacketSending(PacketEvent event)
+                {
+                    Bukkit.broadcastMessage("entity spawn living packet created");
+                    int entityID = event.getPacket().getIntegers().read(0);
+                    if(entityID == armorStand.getEntityId()){
+                        event.setCancelled(true);
+                        Bukkit.broadcastMessage("cancelled sending spawn armorstand packet to user");
+                    }
                 }
             });
+            */
             //SkillAPI.setMeta(armorStand, MechanicListener.ARMOR_STAND, true);
             armorStands.add(armorStand);
 

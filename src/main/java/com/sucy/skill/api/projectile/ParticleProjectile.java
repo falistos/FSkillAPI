@@ -36,10 +36,10 @@ import com.sucy.skill.api.event.ParticleProjectileLaunchEvent;
 import com.sucy.skill.api.util.ParticleHelper;
 import com.sucy.skill.dynamic.target.RememberTarget;
 import com.sucy.skill.util.ArmorStandUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.ticxo.modelengine.api.ModelEngineAPI;
+import com.ticxo.modelengine.api.model.ActiveModel;
+import com.ticxo.modelengine.api.model.ModeledEntity;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -259,17 +259,17 @@ public class ParticleProjectile extends CustomProjectile
         World world = loc.getWorld();
         armorStandLocation.setDirection(new Vector(0,0,1));
         armorStandLocation.add(0, -1, 0);
-        Entity hiddenArmorStandEntity = world.spawnEntity(armorStandLocation, EntityType.ARMOR_STAND);
-        hiddenArmorStand = ((ArmorStand) hiddenArmorStandEntity);
-        try {
-            hiddenArmorStand.setMarker(true);
-        }catch(Exception e){
-        }
-        hiddenArmorStand.setSilent(true);
-        hiddenArmorStand.setInvulnerable(true);
-        hiddenArmorStand.setVisible(false);
-        hiddenArmorStand.setCollidable(false);
-        hiddenArmorStand.setSmall(true);
+        hiddenArmorStand = world.spawn(armorStandLocation, ArmorStand.class, as -> {
+            try {
+                as.setMarker(true);
+            }catch(Exception e){
+            }
+            as.setSilent(true);
+            as.setInvulnerable(true);
+            as.setVisible(false);
+            as.setCollidable(false);
+            as.setSmall(true);
+        });
     }
 
     /**

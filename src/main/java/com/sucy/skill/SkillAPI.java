@@ -24,6 +24,8 @@
 
 package com.sucy.skill;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.rit.sucy.config.CommentedConfig;
 import com.rit.sucy.config.CommentedLanguageConfig;
 import com.rit.sucy.version.VersionManager;
@@ -91,10 +93,11 @@ public class SkillAPI extends JavaPlugin {
     private ComboManager        comboManager;
     private RegistrationManager registrationManager;
     private AttributeManager    attributeManager;
+    public  ProtocolManager     protocolManager;
 
-    private MainThread mainThread;
-    private BukkitTask manaTask;
-    private BukkitTask staminaTask;
+    private MainThread          mainThread;
+    private BukkitTask          manaTask;
+    private BukkitTask          staminaTask;
 
     private boolean loaded = false;
     private boolean disabling = false;
@@ -109,6 +112,7 @@ public class SkillAPI extends JavaPlugin {
         if (singleton != null) { throw new IllegalStateException("Cannot enable SkillAPI twice!"); }
         singleton = this;
 
+        protocolManager = ProtocolLibrary.getProtocolManager();
         mainThread = new MainThread();
         Particle.init();
         EffectManager.init();
