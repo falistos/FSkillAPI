@@ -50,18 +50,19 @@ import java.util.Map;
 public class BlockMechanic extends MechanicComponent {
     private static final Vector UP = new Vector(0, 1, 0);
 
-    private static final String SHAPE   = "shape";
-    private static final String TYPE    = "type";
-    private static final String RADIUS  = "radius";
-    private static final String WIDTH   = "width";
-    private static final String HEIGHT  = "height";
-    private static final String DEPTH   = "depth";
-    private static final String BLOCK   = "block";
-    private static final String DATA    = "data";
-    private static final String SECONDS = "seconds";
-    private static final String FORWARD = "forward";
-    private static final String UPWARD  = "upward";
-    private static final String RIGHT   = "right";
+    private static final String SHAPE     = "shape";
+    private static final String TYPE      = "type";
+    private static final String RADIUS    = "radius";
+    private static final String PERMANENT = "permanent";
+    private static final String WIDTH     = "width";
+    private static final String HEIGHT    = "height";
+    private static final String DEPTH     = "depth";
+    private static final String BLOCK     = "block";
+    private static final String DATA      = "data";
+    private static final String SECONDS   = "seconds";
+    private static final String FORWARD   = "forward";
+    private static final String UPWARD    = "upward";
+    private static final String RIGHT     = "right";
 
     private static final HashMap<Location, Integer>    pending  = new HashMap<Location, Integer>();
     private static final HashMap<Location, BlockState> original = new HashMap<Location, BlockState>();
@@ -95,6 +96,7 @@ public class BlockMechanic extends MechanicComponent {
         String type = settings.getString(TYPE, "solid").toLowerCase();
         boolean solid = type.equals("solid");
         boolean air = type.equals("air");
+        boolean permanent = settings.getBool(PERMANENT, false);
 
         double forward = parseValues(caster, FORWARD, level, 0);
         double upward = parseValues(caster, UPWARD, level, 0);
@@ -194,12 +196,15 @@ public class BlockMechanic extends MechanicComponent {
             state.setType(block);
             state.setData(new MaterialData(block, data));
             state.update(true, false);
+
         }
 
         // Revert after duration
-        final RevertTask task = new RevertTask(caster, states);
-        task.runTaskLater(Bukkit.getPluginManager().getPlugin("SkillAPI"), ticks);
-        tasks.computeIfAbsent(caster.getEntityId(), ArrayList::new).add(task);
+        if(!permanent) {
+            final RevertTask task = new RevertTask(caster, states);
+            task.runTaskLater(Bukkit.getPluginManager().getPlugin("SkillAPI"), ticks);
+            tasks.computeIfAbsent(caster.getEntityId(), ArrayList::new).add(task);
+        }
 
         return true;
     }
