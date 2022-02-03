@@ -1816,7 +1816,15 @@ function MechanicBlock()
     this.data.push(new IntValue('Block Data', 'data', 0)
         .setTooltip('The block data to apply, mostly applicable for things like signs, woods, steps, or the similar')
     );
-    this.data.push(new AttributeValue('Seconds', 'seconds', 5, 0)
+
+    this.data.push(new ListValue('Permanent', 'permanent', [ 'True', 'False' ], 'False')
+        .setTooltip('Whether the block will last forever')
+    );
+    var showWhenNotPermanent = (value) =>{
+        value.requireValue('permanent', [ 'False' ]);
+        return value;
+    }
+    this.data.push(showWhenNotPermanent(new AttributeValue('Seconds', 'seconds', 5, 0))
         .setTooltip('How long the blocks should be replaced for')
     );
     this.data.push(new AttributeValue('Forward Offset', 'forward', 0, 0)
