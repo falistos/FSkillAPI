@@ -29,6 +29,7 @@ package com.sucy.skill.dynamic.mechanic;
 import com.sucy.skill.SkillAPI;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +92,7 @@ public class RepeatMechanic extends MechanicComponent {
         private final boolean            stopOnFail;
 
         private int count;
+        private boolean            instant = false;
 
         RepeatTask(
                 LivingEntity caster,
@@ -103,16 +105,26 @@ public class RepeatMechanic extends MechanicComponent {
             this.caster = caster;
             this.count = count;
             this.stopOnFail = stopOnFail;
-
-            SkillAPI.schedule(this, delay, period);
+            if(period <= 0){
+                this.instant = true;
+                final int level = skill.getActiveLevel(caster);
+                for(int i = 0 ; i < count ; i++){
+                    executeChildren(caster, level, targets);
+                }
+            }else {
+                SkillAPI.schedule(this, delay, period);
+            }
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            final List<RepeatTask> casterTasks = tasks.get(caster.getEntityId());
-            if (casterTasks != null) {
-                casterTasks.remove(this);
+            //If not instant, then cancel. Else no need
+            if(!instant) {
+                super.cancel();
+                final List<RepeatTask> casterTasks = tasks.get(caster.getEntityId());
+                if (casterTasks != null) {
+                    casterTasks.remove(this);
+                }
             }
         }
 
