@@ -26,9 +26,15 @@
  */
 package com.sucy.skill.dynamic.mechanic;
 
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.dynamic.target.RememberTarget;
+import com.sucy.skill.manager.AttributeManager;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -69,6 +75,21 @@ public class PushMechanic extends MechanicComponent {
 
         boolean worked = false;
         for (LivingEntity target : targets) {
+            double resistKnockback = 0;
+            if(target instanceof Player){
+                Player targetPlayer = (Player) target;
+                PlayerData data = SkillAPI.getPlayerData(targetPlayer);
+                resistKnockback = data.scaleStat(AttributeManager.KNOCKBACK_RESIST, 0);
+            }
+            //If slow falling. we won't apply anti-knockback at push mechanics
+            boolean isSlowFalling = false;
+            if(target.hasPotionEffect(PotionEffectType.LEVITATION)) {
+                if (target.getPotionEffect(PotionEffectType.LEVITATION).getAmplifier() > 127){
+                    isSlowFalling = true;
+                }
+            }
+            if(resistKnockback>=1 && !isSlowFalling)
+                continue;
             final Vector vel = target.getLocation().subtract(center).toVector();
             if (vel.lengthSquared() == 0) {
                 continue;
@@ -79,6 +100,9 @@ public class PushMechanic extends MechanicComponent {
             }
             if(ignoreVertical)
                 vel.setY(vel.getY() / 5 + 0.5);
+            if(!isSlowFalling) {
+                vel.multiply(1 - resistKnockback);
+            }
             target.setVelocity(vel);
             worked = true;
         }
