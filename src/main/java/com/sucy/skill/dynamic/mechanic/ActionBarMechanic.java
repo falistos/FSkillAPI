@@ -7,6 +7,8 @@ import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.util.ActionBar;
+import com.sucy.skill.api.util.FlagManager;
+import com.sucy.skill.api.util.StatusFlag;
 import com.sucy.skill.manager.AttributeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -69,6 +71,8 @@ public class ActionBarMechanic extends MechanicComponent
             skill1Status = ChatColor.AQUA+bold+skill1CooldownInt+"s";
         }else if(playerMana < skill1RequiredMana*manaCostReducePercent){
             skill1Status = ChatColor.AQUA+bold+"魔力不足";
+        }else if(FlagManager.hasFlag(player, StatusFlag.SILENCE)){
+            skill1Status = ChatColor.RED+bold+"無法施放";
         }else{
             skill1Status = ChatColor.GREEN+bold+"右鍵使用";
         }
@@ -76,6 +80,8 @@ public class ActionBarMechanic extends MechanicComponent
             skill2Status = ChatColor.AQUA+bold+skill2CooldownInt+"s";
         }else if(playerMana < skill2RequiredMana*manaCostReducePercent){
             skill2Status = ChatColor.AQUA+bold+"魔力不足";
+        }else if(FlagManager.hasFlag(player, StatusFlag.SILENCE)){
+            skill2Status = ChatColor.RED+bold+"無法施放";
         }else{
             skill2Status = ChatColor.GREEN+bold+"F鍵使用";
         }
