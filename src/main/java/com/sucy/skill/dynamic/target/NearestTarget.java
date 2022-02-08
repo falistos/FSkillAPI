@@ -53,9 +53,9 @@ public class NearestTarget extends TargetComponent {
         for (LivingEntity target : targets) {
             final Comparator<LivingEntity> comparator = new DistanceComparator(target.getLocation());
             Nearby.getLivingNearby(target, radius).stream()
+                    .filter((t) -> isValidTarget(caster, caster, t))
                     .min(comparator)
                     .ifPresent(result::add);
-
         }
         return result;
     }
