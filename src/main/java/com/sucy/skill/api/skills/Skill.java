@@ -794,7 +794,7 @@ public abstract class Skill implements IconHolder
                 else {
                     Vector velocity = target.getVelocity();
                     target.damage(damage, source);
-                    if(target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue()==0){
+                    if(target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue()<0.5){
                         target.setVelocity(velocity);
                     }
                 }
