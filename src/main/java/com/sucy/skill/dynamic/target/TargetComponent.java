@@ -9,6 +9,8 @@ import com.sucy.skill.dynamic.ComponentType;
 import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.dynamic.EffectComponent;
 import com.sucy.skill.dynamic.TempEntity;
+import com.sucy.skill.hook.PluginChecker;
+import com.sucy.skill.hook.WorldGuardHook;
 import com.sucy.skill.listener.MechanicListener;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -151,6 +153,12 @@ public abstract class TargetComponent extends EffectComponent {
         if(target instanceof Player){
             Player player = (Player) target;
             if(player.getGameMode() == GameMode.SPECTATOR){
+                return false;
+            }
+        }
+
+        if (PluginChecker.isWorldGuardActive()) {
+            if (WorldGuardHook.getRegionIds(target.getLocation()).stream().anyMatch(id -> SkillAPI.getSettings().areSkillsDisabledForRegion(id))) {
                 return false;
             }
         }
