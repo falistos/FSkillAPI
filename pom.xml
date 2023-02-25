@@ -139,12 +139,6 @@
             <systemPath>${basedir}/lib/ActionbarAPI.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.51.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
             <version>10.0.26</version>
