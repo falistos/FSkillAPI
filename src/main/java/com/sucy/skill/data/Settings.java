@@ -33,8 +33,6 @@ import com.rit.sucy.config.parse.DataSection;
 import com.rit.sucy.config.parse.NumberParser;
 import com.rit.sucy.text.TextFormatter;
 import com.rit.sucy.version.VersionManager;
-import com.sucy.party.Parties;
-import com.sucy.party.Party;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.CombatProtection;
 import com.sucy.skill.api.DefaultCombatProtection;
@@ -348,7 +346,6 @@ public class Settings {
     private static final String TARGET_MONSTER = TARGET_BASE + "monsters-enemy";
     private static final String TARGET_PASSIVE = TARGET_BASE + "passive-ally";
     private static final String TARGET_PLAYER  = TARGET_BASE + "player-ally";
-    private static final String TARGET_PARTIES = TARGET_BASE + "parties-ally";
     private static final String TARGET_NPC     = TARGET_BASE + "affect-npcs";
     private static final String TARGET_STANDS  = TARGET_BASE + "affect-armor-stands";
 
@@ -359,7 +356,6 @@ public class Settings {
     private boolean monsterEnemy;
     private boolean passiveAlly;
     private boolean playerAlly;
-    private boolean partiesAlly;
     private boolean affectNpcs;
     private boolean affectArmorStands;
 
@@ -382,13 +378,6 @@ public class Settings {
                 if (monsterEnemy || monsterWorlds.contains(attacker.getWorld().getName())) { return true; }
             } else if (target instanceof Player) {
                 if (playerAlly || playerWorlds.contains(attacker.getWorld().getName())) { return false; }
-
-                if (PluginChecker.isPartiesActive() && partiesAlly) {
-                    final Parties parties = Parties.getPlugin(Parties.class);
-                    final Party p1 = parties.getJoinedParty(player);
-                    final Party p2 = parties.getJoinedParty((Player) target);
-                    return p1 == null || p1 != p2;
-                }
 
                 if (PluginChecker.isFactionsActive())
                     return FactionsHook.canAttack(attacker, target);
@@ -478,7 +467,6 @@ public class Settings {
             playerAlly = false;
         } else { playerAlly = config.getBoolean(TARGET_PLAYER); }
 
-        partiesAlly = config.getBoolean(TARGET_PARTIES);
         affectArmorStands = config.getBoolean(TARGET_STANDS);
         affectNpcs = config.getBoolean(TARGET_NPC);
     }

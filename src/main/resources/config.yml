@@ -62,9 +62,6 @@ Targeting:
   # - world2
   player-ally: false
   #
-  # Whether or not to check for player allies via Parties
-  parties-ally: false
-  #
   # Whether or not for skills to affect NPCs
   affect-npcs: false
   #
