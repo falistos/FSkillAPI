@@ -45,6 +45,7 @@ import com.sucy.skill.data.formula.Formula;
 import com.sucy.skill.data.formula.value.CustomValue;
 import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.gui.tool.GUITool;
+import com.sucy.skill.hook.FactionsHook;
 import com.sucy.skill.hook.PluginChecker;
 import com.sucy.skill.log.Logger;
 import org.bukkit.Material;
@@ -388,6 +389,10 @@ public class Settings {
                     final Party p2 = parties.getJoinedParty((Player) target);
                     return p1 == null || p1 != p2;
                 }
+
+                if (PluginChecker.isFactionsActive())
+                    return FactionsHook.canAttack(attacker, target);
+
                 return combatProtection.canAttack(player, (Player) target);
             }
             return combatProtection.canAttack(player, target);
