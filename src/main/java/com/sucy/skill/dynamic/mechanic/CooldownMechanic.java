@@ -64,31 +64,36 @@ public class CooldownMechanic extends MechanicComponent {
         String type = settings.getString(TYPE, "all").toLowerCase();
         double value = parseValues(caster, VALUE, level, 0);
 
-        PlayerData playerData = SkillAPI.getPlayerData((Player) caster);
+        for (LivingEntity ent : targets) {
+            if (!(ent instanceof Player)) continue;
+            Player target = (Player) ent;
+            PlayerData playerData = SkillAPI.getPlayerData(target);
 
-        PlayerSkill skillData = playerData.getSkill(skill);
-        if (skillData == null && !skill.equals("all")) {
-            skillData = playerData.getSkill(this.skill.getName());
-        }
+            PlayerSkill skillData = playerData.getSkill(skill);
+            if (skillData == null && !skill.equals("all")) {
+                skillData = playerData.getSkill(this.skill.getName());
+            }
 
-        boolean worked = false;
-        if (skill.equals("all")) {
-            for (PlayerSkill data : playerData.getSkills()) {
+            boolean worked = false;
+            if (skill.equals("all")) {
+                for (PlayerSkill data : playerData.getSkills()) {
+                    if (type.equals("percent")) {
+                        data.subtractCooldown(value * data.getCooldown() / 100);
+                    } else {
+                        data.subtractCooldown(value);
+                    }
+                    worked = true;
+                }
+            } else if (skillData != null) {
                 if (type.equals("percent")) {
-                    data.subtractCooldown(value * data.getCooldown() / 100);
+                    skillData.subtractCooldown(value * skillData.getCooldown() / 100);
                 } else {
-                    data.subtractCooldown(value);
+                    skillData.subtractCooldown(value);
                 }
                 worked = true;
             }
-        } else if (skillData != null) {
-            if (type.equals("percent")) {
-                skillData.subtractCooldown(value * skillData.getCooldown() / 100);
-            } else {
-                skillData.subtractCooldown(value);
-            }
-            worked = true;
+            return worked;
         }
-        return worked;
+        return false;
     }
 }
