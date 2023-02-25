@@ -150,7 +150,9 @@ public class RegistrationManager {
                     continue;
                 }
                 try {
+                    Logger.log(LogType.REGISTRATION, 2, "Loading skill: " + key);
                     DynamicSkill skill = new DynamicSkill(key);
+                    Logger.log(LogType.REGISTRATION, 5, "Config for skill " + key + ": " + skillConfig.getConfig().getSection(key));
                     skill.load(skillConfig.getConfig().getSection(key));
                     if (!SkillAPI.isSkillRegistered(skill.getName())) {
                         api.addDynamicSkill(skill);
@@ -184,7 +186,9 @@ public class RegistrationManager {
                     String name = file.getName().replace(".yml", "");
                     try {
                         CommentedConfig sConfig = new CommentedConfig(api, SKILL_DIR + name);
+                        Logger.log(LogType.REGISTRATION, 2, "Loading skill: " + name + " ("+sConfig.getFileName()+")");
                         DynamicSkill skill = new DynamicSkill(name);
+                        Logger.log(LogType.REGISTRATION, 5, "Config for skill " + name + ": " + skillConfig.getConfig().getSection(name));
                         skill.load(sConfig.getConfig().getSection(name));
                         if (!SkillAPI.isSkillRegistered(skill.getName())) {
                             api.addDynamicSkill(skill);
