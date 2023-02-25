@@ -151,11 +151,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.inventivetalent.glow</groupId>
+            <groupId>com.github.metalshark</groupId>
             <artifactId>GlowAPI</artifactId>
             <version>2.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/GlowAPI_v2.0.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
