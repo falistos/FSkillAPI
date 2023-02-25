@@ -41,7 +41,6 @@ public class PluginChecker extends SkillAPIListener {
     private static boolean vault;
     private static boolean libsDisguises;
     private static boolean noCheatPlus;
-    private static boolean rpgInventory;
     private static boolean papi;
     private static boolean bungee;
     private static boolean mythicMobs;
@@ -55,7 +54,6 @@ public class PluginChecker extends SkillAPIListener {
         vault = pluginManager.isPluginEnabled("Vault") && VaultHook.isValid();
         libsDisguises = pluginManager.isPluginEnabled("LibsDisguises");
         noCheatPlus = pluginManager.isPluginEnabled("NoCheatPlus");
-        rpgInventory = pluginManager.isPluginEnabled("RPGInventory");
         papi = pluginManager.isPluginEnabled("PlaceholderAPI");
         try {
             Class.forName("net.md_5.bungee.Util");
@@ -77,9 +75,6 @@ public class PluginChecker extends SkillAPIListener {
                 break;
             case "NoCheatPlus":
                 noCheatPlus = true;
-                break;
-            case "RPGInventory":
-                rpgInventory = true;
                 break;
             case "PlaceholderAPI":
                 papi = true;
@@ -107,9 +102,6 @@ public class PluginChecker extends SkillAPIListener {
                 break;
             case "NoCheatPlus":
                 noCheatPlus = false;
-                break;
-            case "RPGInventory":
-                rpgInventory = false;
                 break;
             case "PlaceholderAPI":
                 papi = true;
@@ -146,13 +138,6 @@ public class PluginChecker extends SkillAPIListener {
      * @return true if active, false otherwise
      */
     public static boolean isNoCheatActive() { return noCheatPlus; }
-
-    /**
-     * Checks whether or not RPGInventory is active on the server
-     *
-     * @return true if active, false otherwise
-     */
-    public static boolean isRPGInventoryActive() { return rpgInventory; }
 
     public static boolean isPlaceholderAPIActive() { return papi; }
 

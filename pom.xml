@@ -145,13 +145,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>ru.endlesscode</groupId>
-            <artifactId>rpginventory</artifactId>
-            <version>1.0.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RPGInventory-1.0.6.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
             <version>10.0.26</version>
