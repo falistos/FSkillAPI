@@ -68,6 +68,8 @@ public class FlagData
     {
         FlagApplyEvent event = new FlagApplyEvent(entity, flag, ticks);
         Bukkit.getPluginManager().callEvent(event);
+        ticks = event.getTicks();
+
         if (event.isCancelled()) return;
 
         // Permanent flag

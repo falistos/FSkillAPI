@@ -87,6 +87,16 @@ public class FlagApplyEvent extends Event implements Cancellable
     }
 
     /**
+     * Sets the number of ticks the flag is to be applied for
+     *
+     * @param ticks the number of ticks
+     */
+    public void setTicks(int ticks)
+    {
+        this.ticks = ticks;
+    }
+
+    /**
      * Checks whether or not the event is cancelled
      *
      * @return true if cancelled, false otherwise
