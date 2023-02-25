@@ -3,6 +3,7 @@ package com.sucy.skill.dynamic.target;
 import com.rit.sucy.config.parse.DataSection;
 import com.rit.sucy.mobs.MobManager;
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.SkillTargetEvent;
 import com.sucy.skill.api.target.TargetHelper;
 import com.sucy.skill.cast.*;
 import com.sucy.skill.dynamic.ComponentType;
@@ -142,6 +143,8 @@ public abstract class TargetComponent extends EffectComponent {
                     count++;
                 }
             }
+
+            SkillTargetEvent.invoke(getSkillData(caster), caster, list);
         });
         if (self.equals(IncludeCaster.TRUE)) list.add(caster);
         return list;
