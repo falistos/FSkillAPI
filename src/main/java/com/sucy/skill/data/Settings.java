@@ -45,7 +45,9 @@ import com.sucy.skill.dynamic.DynamicSkill;
 import com.sucy.skill.gui.tool.GUITool;
 import com.sucy.skill.hook.FactionsHook;
 import com.sucy.skill.hook.PluginChecker;
+import com.sucy.skill.hook.WorldGuardHook;
 import com.sucy.skill.log.Logger;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -438,6 +440,21 @@ public class Settings {
      * @return true if a valid target, false otherwise
      */
     public boolean isValidTarget(final LivingEntity target) {
+        if (target.getType() == EntityType.PLAYER) {
+            Player player = (Player) target;
+            if (player.getGameMode() == GameMode.SPECTATOR || player.getGameMode() == GameMode.CREATIVE) {
+                return false;
+            }
+        }
+
+        if (PluginChecker.isWorldGuardActive()) {
+            if (WorldGuardHook.getRegionIds(target.getLocation())
+                    .stream()
+                    .noneMatch(id -> SkillAPI.getSettings().areSkillsDisabledForRegion(id))) {
+                return false;
+            }
+        }
+
         return (!target.hasMetadata("NPC") || affectNpcs)
                 && (!target.getType().name().equals("ARMOR_STAND") || (affectArmorStands && !target.isSilent()));
     }

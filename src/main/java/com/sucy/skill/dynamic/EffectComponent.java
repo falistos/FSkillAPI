@@ -34,15 +34,22 @@ import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.cast.IIndicator;
 import com.sucy.skill.cast.IndicatorType;
+import com.sucy.skill.dynamic.target.TargetComponent;
+import com.sucy.skill.hook.PluginChecker;
+import com.sucy.skill.hook.WorldGuardHook;
 import com.sucy.skill.log.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A component for dynamic skills which takes care of one effect
@@ -208,14 +215,18 @@ public abstract class EffectComponent {
      * @return true if executed, false if conditions not met
      */
     protected boolean executeChildren(LivingEntity caster, int level, List<LivingEntity> targets) {
-        if (targets.isEmpty()) {
+        final List<LivingEntity> targetsFiltered = targets.stream()
+                .filter(target -> SkillAPI.getSettings().isValidTarget(target))
+                .collect(Collectors.toList());
+
+        if (targetsFiltered.isEmpty()) {
             return false;
         }
 
         boolean worked = false;
         for (EffectComponent child : children) {
             boolean counts = !child.settings.getString(COUNTS_KEY, "true").toLowerCase().equals("false");
-            passed = child.execute(caster, level, targets);
+            passed = child.execute(caster, level, targetsFiltered);
             worked = (passed && counts) || worked;
         }
         return worked;
