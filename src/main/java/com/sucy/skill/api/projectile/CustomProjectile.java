@@ -274,8 +274,8 @@ public abstract class CustomProjectile extends BukkitRunnable implements Metadat
      * Invalid would mean landing on the ground or leaving the loaded chunks.
      */
     protected boolean isTraveling() {
-        // Leaving a loaded chunk
-        if (!getLocation().getChunk().isLoaded()) {
+        // Leaving a loaded chunk or entering an invalid location
+        if (!getLocation().getChunk().isLoaded() || !SkillAPI.getSettings().isValidTargetLocation(getLocation())) {
             cancel();
             Bukkit.getPluginManager().callEvent(expire());
             return false;

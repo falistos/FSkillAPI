@@ -47,10 +47,7 @@ import com.sucy.skill.hook.FactionsHook;
 import com.sucy.skill.hook.PluginChecker;
 import com.sucy.skill.hook.WorldGuardHook;
 import com.sucy.skill.log.Logger;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -447,16 +444,30 @@ public class Settings {
             }
         }
 
-        if (PluginChecker.isWorldGuardActive()) {
-            if (WorldGuardHook.getRegionIds(target.getLocation())
-                    .stream()
-                    .noneMatch(id -> SkillAPI.getSettings().areSkillsDisabledForRegion(id))) {
-                return false;
-            }
+        if (!isValidTargetLocation(target.getLocation())) {
+            return false;
         }
 
         return (!target.hasMetadata("NPC") || affectNpcs)
                 && (!target.getType().name().equals("ARMOR_STAND") || (affectArmorStands && !target.isSilent()));
+    }
+
+    /**
+     * Checks whether or not a location is valid for skills.
+     *
+     * @param location location to check
+     * @return true if a valid location, false otherwise
+     */
+    public boolean isValidTargetLocation(Location location) {
+        if (PluginChecker.isWorldGuardActive()) {
+            if (WorldGuardHook.getRegionIds(location)
+                    .stream()
+                    .anyMatch(id -> SkillAPI.getSettings().areSkillsDisabledForRegion(id))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
