@@ -140,10 +140,11 @@ public abstract class TargetComponent extends EffectComponent {
                     count++;
                 }
             }
-
-            SkillTargetEvent.invoke(getSkillData(caster), caster, list);
         });
         if (self.equals(IncludeCaster.TRUE)) list.add(caster);
+
+        SkillTargetEvent.invoke(getSkillData(caster), caster, list);
+
         return list;
     }
 
